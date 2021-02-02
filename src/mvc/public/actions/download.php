@@ -4,9 +4,9 @@
  *
  **/
 
-/** @var $ctrl \bbn\mvc\controller */
+/** @var $ctrl \bbn\Mvc\Controller */
 if (isset($ctrl->post['id_media'])) {
-  $model = $ctrl->get_model($ctrl->post);
+  $model = $ctrl->getModel($ctrl->post);
   if (!empty($model['file'])) {
     $ctrl->obj->file = $model['file'];
   }

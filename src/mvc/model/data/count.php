@@ -5,13 +5,13 @@
  * Date: 20/03/2018
  * Time: 16:06
  *
- * @var $model \bbn\mvc\model
+ * @var $model \bbn\Mvc\Model
  */
 
 $states = ['ready', 'sending', 'sent', 'suspended', 'error', 'draft', 'cancelled'];
 $res = [];
 foreach ( $states as $s ){
-  $res[$s] = $model->db->select_one([
+  $res[$s] = $model->db->selectOne([
     'table' => 'bbn_emailings',
     'fields' => ['COUNT(bbn_emailings.id)'],
     'join' => [[

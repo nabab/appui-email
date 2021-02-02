@@ -2,55 +2,55 @@
 /*
  * Describe what it does!
  *
- * @var $ctrl \bbn\mvc\controller 
+ * @var $ctrl \bbn\Mvc\Controller 
  *
  */
-use bbn\x;
+use bbn\X;
 
-$em         = new bbn\user\emails($ctrl->db);
-$pw         = new bbn\appui\passwords($ctrl->db);
+$em         = new bbn\User\Emails($ctrl->db);
+$pw         = new bbn\Appui\Passwords($ctrl->db);
 $deleted    = [];
 $subscribed = [];
 $added      = [];
 /*
-$added[]  = $em->add_account(
+$added[]  = $em->addAccount(
   [
-    'pass'  => $pw->user_get('74af26b82a8d11eba49b366237393031', $model->inc->user),
+    'pass'  => $pw->userGet('74af26b82a8d11eba49b366237393031', $model->inc->user),
     'login' => 'thomas@babna.com',
     'host'  => 'server.babna.com',
     'type'  => 'imap'
   ]
 );
-$added[]  = $em->delete_account('07d079aa2ba011eba49b366237393031');
+$added[]  = $em->deleteAccount('07d079aa2ba011eba49b366237393031');
 */
 // CLI
 $done = [];
-$accounts = $em->get_accounts();
+$accounts = $em->getAccounts();
 foreach ($accounts as $a) {
-  x::adump($em->get_folders($a['id']));
-  //$deleted[] = $em->delete_account($a['id']);
+  X::adump($em->getFolders($a['id']));
+  //$deleted[] = $em->deleteAccount($a['id']);
   /*
-  //$em->sync_folders($a['id']);
-  x::map(
+  //$em->syncFolders($a['id']);
+  X::map(
     function ($folder) use (&$em, &$done, &$a) {
-      $check = $em->check_folder($folder);
+      $check = $em->checkFolder($folder);
       if ($check) {
-        $done[$a['host'].' - '.$folder['uid']] = $em->sync_emails($folder);
+        $done[$a['host'].' - '.$folder['uid']] = $em->syncEmails($folder);
       }
       return $folder;
     },
-    $em->get_folders($a['id']),
+    $em->getFolders($a['id']),
     'items'
   );
-  $subscribed[$a['login']] = $em->get_folders($a['id']);
-  //var_dump($em->get_folders($a['id']));
+  $subscribed[$a['login']] = $em->getFolders($a['id']);
+  //var_dump($em->getFolders($a['id']));
   */
 }
 
-x::adump([
+X::adump([
   'done' => $done,
-  //'types' => bbn\user\emails::get_folder_types(),
-  //'folders' => bbn\user\emails::get_options('folders'),
+  //'types' => bbn\User\Emails::getFolderTypes(),
+  //'folders' => bbn\User\Emails::getOptions('folders'),
   //'added' => $added,
   'subscribed' => $subscribed,
   'deleted' => $deleted,

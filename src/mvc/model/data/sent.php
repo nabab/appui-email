@@ -1,7 +1,7 @@
 <?php
-/** @var \bbn\mvc\model $model */
+/** @var \bbn\Mvc\Model $model */
 if ( isset($model->data['limit']) ){
-  $grid = new \bbn\appui\grid($model->db, $model->data, [
+  $grid = new \bbn\Appui\Grid($model->db, $model->data, [
     'table' => 'bbn_emails',
     'fields' => [
       'bbn_emails.id',
@@ -41,11 +41,11 @@ if ( isset($model->data['limit']) ){
   ]);
   
   if ( $grid->check() ){
-    $note = new \bbn\appui\note($model->db);
-    $tmp_grid = $grid->get_datatable();
+    $note = new \bbn\Appui\Note($model->db);
+    $tmp_grid = $grid->getDatatable();
     $tmp_grid['data'] = array_map(function($a)use($note){
       if(!empty($a['id_note'])){
-        $a['attachments'] = $note->get_medias($a['id_note']);
+        $a['attachments'] = $note->getMedias($a['id_note']);
         return $a;
       }
       return $a;

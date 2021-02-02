@@ -5,7 +5,7 @@
  * Date: 23/03/2018
  * Time: 19:19
  *
- * @var $model \bbn\mvc\model
+ * @var $model \bbn\Mvc\Model
  */
 
 if ( 
@@ -14,7 +14,7 @@ if (
   !empty($model->data['title']) &&
   !empty($model->data['name'])
 ){
-  $masks = new \bbn\appui\masks($model->db);
+  $masks = new \bbn\Appui\Masks($model->db);
   if ( $masks->update([
     'id_note' => $model->data['id_note'],
     'title' => $model->data['title'],

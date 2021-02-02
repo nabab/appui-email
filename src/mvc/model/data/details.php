@@ -5,11 +5,11 @@
  * Date: 20/03/2018
  * Time: 16:06
  *
- * @var $model \bbn\mvc\model
+ * @var $model \bbn\Mvc\Model
  */
 
 if ( !empty($model->data['data']) && !empty($model->data['data']['id']) ){
-  $grid = new \bbn\appui\grid($model->db, $model->data, [
+  $grid = new \bbn\Appui\Grid($model->db, $model->data, [
     'table' => 'bbn_emails',
     'fields' => [
       'id',
@@ -46,11 +46,11 @@ if ( !empty($model->data['data']) && !empty($model->data['data']['id']) ){
     ]
   ]);
   if ( $grid->check() ){
-    $note = new \bbn\appui\note($model->db);
-    $tmp_grid = $grid->get_datatable();
+    $note = new \bbn\Appui\Note($model->db);
+    $tmp_grid = $grid->getDatatable();
     $tmp_grid['data'] = array_map(function($a)use($note){
       if ( !empty($a['id_note']) ){
-        $a['attachments'] = $note->get_medias($a['id_note']);
+        $a['attachments'] = $note->getMedias($a['id_note']);
         return $a;
       }
       return $a;

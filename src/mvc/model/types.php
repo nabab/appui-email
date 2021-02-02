@@ -1,15 +1,15 @@
 <?php
-/** @var $model \bbn\mvc\model */
+/** @var $model \bbn\Mvc\Model */
 
 
 if ( isset($model->data['action']) ){
-  $notes = new \bbn\appui\note($model->db);
+  $notes = new \bbn\Appui\Note($model->db);
   switch ( $model->data['action'] ){
     case 'select':
-      if ( isset($model->data['value']) && \bbn\str::is_integer($model->data['value']) ){
+      if ( isset($model->data['value']) && \bbn\Str::isInteger($model->data['value']) ){
         $order = "ORDER BY nom";
         if ( isset($model->data['order'], $model->data['dir']) ){
-          $fields = array_keys($model->db->get_columns("bbn_notes_masks"));
+          $fields = array_keys($model->db->getColumns("bbn_notes_masks"));
           $dirs = ['asc', 'desc'];
           if ( in_array($model->data['order'], $fields) && in_array($model->data['dir'], $dirs) ){
             $order = "ORDER BY ".$model->data['order']." ".$model->data['dir'];
@@ -18,7 +18,7 @@ if ( isset($model->data['action']) ){
 
         return [
           'total' => $model->db->count('bbn_notes_masks', ['categorie' => $model->data['value']]),
-          'data' => $model->db->get_rows("
+          'data' => $model->db->getRows("
           SELECT bbn_notes_masks.*, bbn_notes.*, bbn_notes_versions.*
           FROM bbn_notes_masks
           	JOIN bbn_notes
@@ -38,12 +38,12 @@ if ( isset($model->data['action']) ){
       break;
 
     case 'defaut':
-      $masks = new \bbn\appui\masks($model->db);
+      $masks = new \bbn\Appui\Masks($model->db);
       $res = [
         'success' => false
       ];
-      if ( \bbn\str::is_uid($model->data['id_note']) &&
-        $masks->set_default($model->data['id_note'])
+      if ( \bbn\Str::isUid($model->data['id_note']) &&
+        $masks->setDefault($model->data['id_note'])
       ){
         $res['success'] = true;
       }
@@ -53,11 +53,11 @@ if ( isset($model->data['action']) ){
     case 'insert':
       $res = ['success' => false];
       if ( isset($model->data['name'], $model->data['content'], $model->data['id_user'], $model->data['title'], $model->data['id_type']) ){
-        $masks = new \bbn\appui\masks($model->db);
+        $masks = new \bbn\Appui\Masks($model->db);
         $defaut = 0;
         if (
           !empty($model->data['default']) &&
-          $id_default = $masks->get_default($model->data['id_type'])
+          $id_default = $masks->getDefault($model->data['id_type'])
         ){
           $model->db->update('bbn_notes_masks', ['def' => 0], ['id_note' => $id_defaut]);
         }
@@ -91,7 +91,7 @@ if ( isset($model->data['action']) ){
         $info['defaut'] = 0;
         $i = 1;
         $title = $info['name'].' - copie '.$i;
-        while ( $model->db->select_one('bbn_notes_masks', 'id', ['categorie' => $info['categorie'], 'nom' => $title]) ){
+        while ( $model->db->selectOne('bbn_notes_masks', 'id', ['categorie' => $info['categorie'], 'nom' => $title]) ){
           $i++;
           $title = $info['nom'].' - copie '.$i;
         }
@@ -99,7 +99,7 @@ if ( isset($model->data['action']) ){
         $model->db->insert('bbn_notes_masks', $info);
         return [
           'total' => $model->db->count('bbn_notes_masks', ['categorie' => $info['categorie']]),
-          'data' => $model->db->get_rows("
+          'data' => $model->db->getRows("
           SELECT *
           FROM bbn_notes_masks
           WHERE bbn_h = 1
@@ -122,13 +122,13 @@ if ( isset($model->data['action']) ){
   }
 }
 else{
-  $notes = new \bbn\appui\masks($model->db);
+  $notes = new \bbn\Appui\Masks($model->db);
   $masks = array_map(function($a){
     $a['content'] = '';
     return $a;
-  }, $notes->get_all());
+  }, $notes->getAll());
   return [
-    'is_dev' => $model->inc->user->is_dev(),
+    'is_dev' => $model->inc->user->isDev(),
     'categories' => $masks
   ];
 }

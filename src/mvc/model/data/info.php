@@ -5,7 +5,7 @@
  * Date: 20/03/2018
  * Time: 16:06
  *
- * @var $model \bbn\mvc\model
+ * @var $model \bbn\Mvc\Model
  */
 
 $cfg = [
@@ -67,5 +67,5 @@ return [
     'current' => $current,
     'next' => $next
   ],
-  'count' => !empty($model->data['updateCount']) ? $model->get_model(APPUI_EMAILS_ROOT.'data/count') : false
+  'count' => !empty($model->data['updateCount']) ? $model->getModel(APPUI_EMAILS_ROOT.'data/count') : false
 ];

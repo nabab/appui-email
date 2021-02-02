@@ -5,15 +5,15 @@
  * Date: 20/03/2018
  * Time: 16:02
  *
- * @var $model \bbn\mvc\model
+ * @var $model \bbn\Mvc\Model
  */
 
 
-//$recipients = $model->inc->options->full_options($model->inc->options->from_code('emails_listes'));
+//$recipients = $model->inc->options->fullOptions($model->inc->options->fromCode('emails_listes'));
 return [
   'root' => APPUI_EMAILS_ROOT,
-  'root_usergroup' => $model->plugin_url('appui-usergroup').'/',
-  'types' => $model->db->get_rows("
+  'root_usergroup' => $model->pluginUrl('appui-usergroup').'/',
+  'types' => $model->db->getRows("
     SELECT bbn_notes_masks.id_note AS id, bbn_notes_masks.name AS text
     FROM bbn_notes_masks
       JOIN bbn_notes_versions
@@ -25,13 +25,13 @@ return [
     GROUP BY bbn_notes_masks.id_note
     ORDER BY text
   "),
-  'count' => $model->get_model(APPUI_EMAILS_ROOT.'data/count'),
-  'recipients' => $model->inc->options->text_value_options('emails_listes'),
+  'count' => $model->getModel(APPUI_EMAILS_ROOT.'data/count'),
+  'recipients' => $model->inc->options->textValueOptions('emails_listes'),
   'senders' => array_map(function($a){
     return [
       'text' => $a['text'],
       'value' => $a['id'],
       'desc' => $a['desc']
     ];
-  }, $model->inc->options->full_options('sender', 'mailing', 'appui'))
+  }, $model->inc->options->fullOptions('sender', 'mailing', 'appui'))
 ];

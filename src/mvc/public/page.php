@@ -5,11 +5,11 @@
  * Date: 21/03/2018
  * Time: 20:01
  *
- * @var $ctrl \bbn\mvc\controller
+ * @var $ctrl \bbn\Mvc\Controller
  */
 
 $ctrl->obj->url = APPUI_EMAILS_ROOT . 'page';
 
-$ctrl->set_color('teal', 'white')
-	->set_icon('nf nf-fa-envelope')
+$ctrl->setColor('teal', 'white')
+	->setIcon('nf nf-fa-envelope')
 	->combo(_("eMails"), ['root' => APPUI_EMAILS_ROOT, 'page' => $ctrl->arguments[0]]);

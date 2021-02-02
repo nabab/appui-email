@@ -5,7 +5,7 @@ $r = [
 ];
 
 if ( isset($model->data['id']) ){
-  $masks = new \bbn\appui\masks($model->db);
+  $masks = new \bbn\Appui\Masks($model->db);
   $template = $masks->get($model->data['id']);
   if ( $template ){
     $r['success'] = true;

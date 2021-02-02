@@ -3,50 +3,50 @@
  * Describe what it does!
  *
  **/
-use bbn\x;
+use bbn\X;
 
-/** @var $model \bbn\mvc\model*/
-$em         = new bbn\user\emails($model->db);
-$pw         = new bbn\appui\passwords($model->db);
+/** @var $model \bbn\Mvc\Model*/
+$em         = new bbn\User\Emails($model->db);
+$pw         = new bbn\Appui\Passwords($model->db);
 $deleted    = [];
 $subscribed = [];
 $added      = [];
 /*
-$added[]  = $em->add_account(
+$added[]  = $em->addAccount(
   [
-    'pass'  => $pw->user_get('74af26b82a8d11eba49b366237393031', $model->inc->user),
+    'pass'  => $pw->userGet('74af26b82a8d11eba49b366237393031', $model->inc->user),
     'login' => 'thomas@babna.com',
     'host'  => 'server.babna.com',
     'type'  => 'imap'
   ]
 );
-$added[]  = $em->delete_account('07d079aa2ba011eba49b366237393031');
+$added[]  = $em->deleteAccount('07d079aa2ba011eba49b366237393031');
 */
 // CLI
 $done = [];
-$accounts = $em->get_accounts();
+$accounts = $em->getAccounts();
 foreach ($accounts as $a) {
   $deleted[] = $em->reset($a['id']);
   /*
-  $em->sync_folders($a['id']);
-  x::map(
+  $em->syncFolders($a['id']);
+  X::map(
     function ($folder) use (&$em, &$done) {
-      if ($folder = $em->check_folder($folder)) {
-        $done[$folder['uid']] = $em->sync_emails($folder);
+      if ($folder = $em->checkFolder($folder)) {
+        $done[$folder['uid']] = $em->syncEmails($folder);
       }
     },
-    $em->get_folders($a['id']),
+    $em->getFolders($a['id']),
     'items'
   );
-  $subscribed[$a['login']] = $em->get_folders($a['id']);
+  $subscribed[$a['login']] = $em->getFolders($a['id']);
   break;
   */
 }
 
 return [
   'done' => $done,
-  //'types' => bbn\user\emails::get_folder_types(),
-  //'folders' => bbn\user\emails::get_options('folders'),
+  //'types' => bbn\User\Emails::getFolderTypes(),
+  //'folders' => bbn\User\Emails::getOptions('folders'),
   //'added' => $added,
   'subscribed' => $subscribed,
   //'deleted' => $deleted,

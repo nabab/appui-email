@@ -4,6 +4,6 @@
  *
  **/
 
-/** @var $this \bbn\mvc\model*/
-$mailings = new \bbn\appui\mailings($model->db);
-return ['last' => $mailings->get_lasts(), 'next' => $mailings->get_nexts(), 'sendings' => $mailings->get_sendings()];
+/** @var $this \bbn\Mvc\Model*/
+$mailings = new \bbn\Appui\Mailings($model->db);
+return ['last' => $mailings->getLasts(), 'next' => $mailings->getNexts(), 'sendings' => $mailings->getSendings()];

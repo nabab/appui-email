@@ -1,8 +1,8 @@
 <?php
 $success = false;
-$mailings = new \bbn\appui\mailings($model->db);
+$mailings = new \bbn\Appui\Mailings($model->db);
 //delete all ready emails
-$emails = $model->db->rselect_all([
+$emails = $model->db->rselectAll([
   'table' => 'bbn_emails',
   'fields' => [
     'bbn_emails.id',
@@ -40,12 +40,12 @@ $emails = $model->db->rselect_all([
   ]]
 ]);
 
-$user = new \bbn\user($model->db);
+$user = new \bbn\User($model->db);
 $n = null;
-if ( !empty($emails) && !empty($model->data['id_user']) && $user->is_admin($model->data['id_user']) ){
+if ( !empty($emails) && !empty($model->data['id_user']) && $user->isAdmin($model->data['id_user']) ){
   $n = 0;
   foreach($emails as $e){
-    if ( $mailings->delete_email($e['id'])){
+    if ( $mailings->deleteEmail($e['id'])){
       $n++;
     }
   }

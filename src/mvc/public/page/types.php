@@ -5,8 +5,8 @@
  * Date: 23/03/2018
  * Time: 13:36
  *
- * @var $ctrl \bbn\mvc\controller
+ * @var $ctrl \bbn\Mvc\Controller
  */
 $ctrl
-  ->set_icon('nf nf-fa-list')
+  ->setIcon('nf nf-fa-list')
   ->combo(_("Letters Types"), true);

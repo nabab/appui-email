@@ -1,5 +1,5 @@
 <div class="appui-email bbn-overlay">
-  <bbn-router class="appui_emails_nav"
+  <bbn-router class="appui_email_nav"
               :scrollable="true"
               :autoload="true"
               :nav="true"

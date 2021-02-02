@@ -7,22 +7,22 @@
  *
  */
 
-/* @var $model bbn\mvc\model */
+/* @var $model bbn\Mvc\Model */
 
 if (
     (!empty($model->data['recipients']) || empty($model->data['sent']) ) &&
     isset($model->data['content'], $model->data['title'], $model->data['sender'])
 ){
-  if ( empty($model->data['sent']) || !\bbn\date::validateSQL($model->data['sent']) ){
+  if ( empty($model->data['sent']) || !\bbn\Date::validateSQL($model->data['sent']) ){
     $model->data['sent'] = null;
   }
-  $mailings = new \bbn\appui\mailings($model->db);
+  $mailings = new \bbn\Appui\Mailings($model->db);
   $orig = [];
   $to_insert = false;
   $to_update = false;
   $to_delete = false;
   if ( !empty($model->data['id']) ){
-    $orig = $mailings->get_mailing($model->data['id']);
+    $orig = $mailings->getMailing($model->data['id']);
     if ( !$orig['sent'] && $model->data['sent'] ){
       $to_insert = true;
     }
@@ -64,7 +64,7 @@ if (
     }
     return [
       'success' => true,
-      'count' => $model->get_model(APPUI_EMAILS_ROOT.'data/count')
+      'count' => $model->getModel(APPUI_EMAILS_ROOT.'data/count')
     ];
   }
 }

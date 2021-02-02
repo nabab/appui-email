@@ -1,28 +1,28 @@
 <?php
-use bbn\x;
+use bbn\X;
 /*
 return [[
   'id' => 'appui-email-0',
   'frequency' => 30,
   'function' => function(array $data) use($model){
-    $em = new bbn\user\emails($model->db);
-    $accounts = $em->get_accounts();
+    $em = new bbn\User\Emails($model->db);
+    $accounts = $em->getAccounts();
     $tot = 0;
     foreach ($accounts as $a) {
       if ($tot < 500) {
-        x::map(
+        X::map(
           function ($folder) use (&$em, &$a, &$tot) {
             if ($tot < 500) {
-              $check = $em->check_folder($folder);
+              $check = $em->checkFolder($folder);
               if ($check) {
-                $tot += $em->sync_emails($folder, 100);
-                x::log('hello from poller mail '.$tot);
+                $tot += $em->syncEmails($folder, 100);
+                X::log('hello from poller mail '.$tot);
               }
             }
 
             return $folder;
           },
-          $em->get_folders($a['id']),
+          $em->getFolders($a['id']),
           'items'
         );
       }

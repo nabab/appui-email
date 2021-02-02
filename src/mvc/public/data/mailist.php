@@ -1,6 +1,6 @@
 <?php
-/** @var \bbn\mvc\controller $ctrl */
+/** @var \bbn\Mvc\Controller $ctrl */
 if (!empty($ctrl->arguments[0]) && ($ctrl->arguments[0] === 'num')) {
-  $ctrl->add_data(['num' => true]);
+  $ctrl->addData(['num' => true]);
 }
 $ctrl->action();

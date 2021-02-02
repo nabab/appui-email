@@ -1,13 +1,13 @@
 <?php
-/* @var \bbn\mvc\model $model */
+/* @var \bbn\Mvc\Model $model */
 
 if ( 
   !empty($model->data['id_note']) && 
   !empty($model->data['version']) &&
-  ($notes = new \bbn\appui\note($model->db)) &&
-  ($version = $notes->get_full($model->data['id_note'], $model->data['version'])) &&
-  ($ftype = $model->inc->options->from_root_code('file', 'media', 'note', 'appui')) &&
-  ($ltype = $model->inc->options->from_root_code('link', 'media', 'note', 'appui'))
+  ($notes = new \bbn\Appui\Note($model->db)) &&
+  ($version = $notes->getFull($model->data['id_note'], $model->data['version'])) &&
+  ($ftype = $model->inc->options->fromRootCode('file', 'media', 'note', 'appui')) &&
+  ($ltype = $model->inc->options->fromRootCode('link', 'media', 'note', 'appui'))
 ){
   $mailing = $model->db->rselect([
     'table' => 'bbn_emailings',
@@ -42,7 +42,7 @@ if (
         'id' => $m['id'],
         'name' => $m['name'],
         'title' => $m['title'],
-        'extension' => '.'.\bbn\str::file_ext($m['name'])
+        'extension' => '.'.\bbn\Str::fileExt($m['name'])
       ];
     }
     if ( $m['type'] === $ltype ){

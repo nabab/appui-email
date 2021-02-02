@@ -5,7 +5,7 @@
  * Date: 06/04/2018
  * Time: 12:25
  *
- * @var $model \bbn\mvc\model
+ * @var $model \bbn\Mvc\Model
  */
 
 if ( !empty($model->data['id']) &&
@@ -13,6 +13,6 @@ if ( !empty($model->data['id']) &&
 ){
   return [
     'success' => true,
-    'count' => $model->get_model(APPUI_EMAILS_ROOT.'data/count')
+    'count' => $model->getModel(APPUI_EMAILS_ROOT.'data/count')
   ];
 }

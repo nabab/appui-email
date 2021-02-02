@@ -1,8 +1,8 @@
 <?php
-/** @var \bbn\mvc\model $model */
+/** @var \bbn\Mvc\Model $model */
 $limit = isset($model->data['limit']) && is_int($model->data['limit']) ? $model->data['limit'] : 5;
 $res = [
-  'ready' => $model->db->rselect_all([
+  'ready' => $model->db->rselectAll([
     'table' => 'bbn_emailings',
     'fields' => [
       'bbn_emailings.id',
@@ -54,7 +54,7 @@ $res = [
     ]],
     'limit' => $limit
   ]),
-  'sent' => $model->db->rselect_all([
+  'sent' => $model->db->rselectAll([
     'table' => 'bbn_emailings',
     'fields' => [
       'bbn_emailings.id',

@@ -2,11 +2,11 @@
 /*
  * Describe what it does!
  *
- * @var $ctrl \bbn\mvc\controller 
+ * @var $ctrl \bbn\Mvc\Controller 
  *
  */
-if ($ctrl->has_arguments()) {
-  if ($model = $ctrl->get_model(['id' => $ctrl->arguments[0]])) {
-    echo $ctrl->get_view($model);
+if ($ctrl->hasArguments()) {
+  if ($model = $ctrl->getModel(['id' => $ctrl->arguments[0]])) {
+    echo $ctrl->getView($model);
   }
 }

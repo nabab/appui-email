@@ -5,14 +5,14 @@
  * Date: 15/06/2018
  * Time: 17:32
  *
- * @var $model \bbn\mvc\model
+ * @var $model \bbn\Mvc\Model
  */
 
 if (
   !empty($model->data['id']) 
   && !empty($model->data['users'])
-  && ($mailings = new \bbn\appui\mailings($model->db))
-  && ($mail = $mailings->get_mailing($model->data['id']))
+  && ($mailings = new \bbn\Appui\Mailings($model->db))
+  && ($mail = $mailings->getMailing($model->data['id']))
 ){
  
   $num = 0;
@@ -30,7 +30,7 @@ if (
     $model->data['users'] = [$model->data['users']];
   }
   foreach ($model->data['users'] as $u) {
-    if ($cfg['to'] = $model->db->select_one('bbn_users', 'email', ['id' => $u])) {
+    if ($cfg['to'] = $model->db->selectOne('bbn_users', 'email', ['id' => $u])) {
       $num += (int)$mailings->send($cfg, $mail['sender']);
     }
   }

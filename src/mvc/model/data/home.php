@@ -5,11 +5,11 @@
  * Date: 20/03/2018
  * Time: 17:46
  *
- * @var $model \bbn\mvc\model
+ * @var $model \bbn\Mvc\Model
  */
 
 /* if ( isset($model->data['start']) && !empty($model->data['limit']) ){
-  $grid = new \bbn\appui\grid($model->db, $model->data, [
+  $grid = new \bbn\Appui\Grid($model->db, $model->data, [
     'tables' => ['bbn_emailings'],
     'fields' => [],
     'query' => "
@@ -32,9 +32,9 @@
     "
   ]);
   if ( $grid->check() &&
-    ($ret = $grid->get_datatable())
+    ($ret = $grid->getDatatable())
   ){
-    $notes = new \bbn\appui\note($model->db);
+    $notes = new \bbn\Appui\Note($model->db);
     if ( !empty($ret['data']) ){
       $ret['data'] = array_map(function($d) use($notes){
         if ( !empty($d['id_note']) ){
@@ -45,7 +45,7 @@
             $note['medias'] = array_map(function($m){
               return [
                 'name' => $m['name'],
-                'extension' => '.'.\bbn\str::file_ext($m['name'])
+                'extension' => '.'.\bbn\Str::fileExt($m['name'])
               ];
             }, $note['medias']);
           }
@@ -60,7 +60,7 @@
  */
 
 if ( isset($model->data['start']) && !empty($model->data['limit']) ){
-  $grid = new \bbn\appui\grid($model->db, $model->data, [
+  $grid = new \bbn\Appui\Grid($model->db, $model->data, [
     'tables' => ['bbn_emailings', 'bbn_notes_versions'],
     'fields' => [
       'bbn_emailings.id',
@@ -132,12 +132,12 @@ if ( isset($model->data['start']) && !empty($model->data['limit']) ){
   ]);
   
   if ( $grid->check() &&
-    ($ret = $grid->get_datatable())
+    ($ret = $grid->getDatatable())
   ){
-    $notes = new \bbn\appui\note($model->db);
+    $notes = new \bbn\Appui\Note($model->db);
     if ( !empty($ret['data']) ){
       $ret['data'] = array_map(function($d) use($notes){
-        $d['attachments'] = $notes->get_medias($d['id_note'], $d['version']);
+        $d['attachments'] = $notes->getMedias($d['id_note'], $d['version']);
         $d['creator'] = $d['id_user'];
         return $d;
       }, $ret['data']);

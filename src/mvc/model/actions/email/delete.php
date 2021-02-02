@@ -1,15 +1,15 @@
 <?php
 $success = false;
-$mailings = new \bbn\appui\mailings($model->db);
+$mailings = new \bbn\Appui\Mailings($model->db);
  
 
 /* a non admin user can delete only mail with status 'cancelled' or 'ready'.
    Admin users can delete also email with status 'success'
 */
 
-$user = new \bbn\user($model->db);
+$user = new \bbn\User($model->db);
 if (!empty($model->data['id_user']) ){
-  $is_admin = $user->is_admin($model->data['id_user']);
+  $is_admin = $user->isAdmin($model->data['id_user']);
 }
 
 
@@ -22,7 +22,7 @@ if (
     (($model->data['status'] === 'success') && $is_admin ) 
   ) 
 ){
-  $success = $mailings->delete_email($model->data['id']); 
+  $success = $mailings->deleteEmail($model->data['id']); 
 }
 else if ( !empty($model->data['selected']) ){
   $selected = $model->data['selected']; 
@@ -31,7 +31,7 @@ else if ( !empty($model->data['selected']) ){
     if ( ($s['status'] === 'ready') || ($s['status'] === 'cancelled') ||
        ( ($s['status'] === 'success') && $is_admin ) 
     ){
-      if ( $mailings->delete_email($s['id'])  ){
+      if ( $mailings->deleteEmail($s['id'])  ){
         $n++;
       }
     }
