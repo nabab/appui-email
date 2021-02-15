@@ -1,7 +1,7 @@
 <bbn-table :source="source.categories"
            editable="popup"
            ref="table"
-           :order="[{field: 'text', Dir: 'ASC'}]"
+           :order="[{field: 'text', dir: 'ASC'}]"
            :groupable="true"
            :group-by="3"
            uid="id_note"

@@ -28,7 +28,7 @@
                      ref="table"
                      :sortable="true"
                      :showable="true"
-                     :order="[{field: 'date', Dir: 'DESC'}]"
+                     :order="[{field: 'date', dir: 'DESC'}]"
                      :pageable="true">
             <bbns-column title="<i class='nf nf-eye'></i>"
                          :ftitle="_('Read')"
