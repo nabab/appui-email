@@ -3,13 +3,13 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: info@bbn.so\n"
 "last-Translator: BBN Solutions <support@bbn.solutions>\n"
-"Language-Team: DE <DE@li.org>\n"
+"Language-Team: ES <ES@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-02-16 05:17+0100\n"
-"POT-Revision-Date: 2021-02-16 05:17+0100\n"
-"Language: de\n"
+"POT-Creation-Date: 2021-02-16 15:11+0100\n"
+"POT-Revision-Date: 2021-02-16 15:11+0100\n"
+"Language: es\n"
 "X-Domain: appui-email\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
@@ -17,6 +17,8 @@ msgstr ""
 msgid "Processed"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/cli/process.php
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/home.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/home.js
 msgid "Sent"
@@ -30,10 +32,16 @@ msgstr ""
 msgid "Modified"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/form/form.js
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/types/default/default.js
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/types/form/form.js
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/home.js
 msgid "Saved"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/form/form.js
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.js
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/types/default/default.js
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/details.js
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/home.js
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/sent.js
@@ -49,10 +57,13 @@ msgstr ""
 msgid "Sender email"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/form/form.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/home.js
 msgid "Choose"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/form/form.php
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/home.php
 msgid "Recipients"
 msgstr ""
@@ -69,6 +80,8 @@ msgstr ""
 msgid "Sending time"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/form/form.php
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/home.php
 msgid "Priority"
 msgstr ""
@@ -77,6 +90,8 @@ msgstr ""
 msgid "Letter type"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/form/form.php
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/types/form/form.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/home.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/types.php
 msgid "Object"
@@ -86,15 +101,19 @@ msgstr ""
 msgid "Attachments"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/form/form.php
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/types/form/form.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/types.php
 msgid "Text"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.js
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/details.js
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/sent.js
 msgid "Success"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.js
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/details.js
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/home.js
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/sent.js
@@ -169,6 +188,7 @@ msgstr ""
 msgid "Email failed"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.js
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/home.js
 msgid "Email sent"
 msgstr ""
@@ -229,35 +249,44 @@ msgstr ""
 msgid "emails successfully deleted"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/home.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/sent.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/types.php
 msgid "ID"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/sent.php
 msgid "e-Mail address"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.php
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/home.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/sent.php
 msgid "Title"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/sent.php
 msgid "e-Mailing"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/home.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/sent.php
 msgid "Status"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.php
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/home.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/sent.php
 msgid "Date"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/table/table.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/sent.php
 msgid "Read"
 msgstr ""
@@ -270,14 +299,17 @@ msgstr ""
 msgid "Are you sure you want to test this mailing?"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/types/form/form.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/types.php
 msgid "Type"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/types/form/form.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/types.php
 msgid "Name"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/types/type/type.js
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/js/page/types.js
 msgid "New letter type"
 msgstr ""
@@ -290,6 +322,7 @@ msgstr ""
 msgid "READY"
 msgstr ""
 
+#: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
 #: /home/thomas/domains/apstapp.thomas.lan/_appui/vendor/bbn/appui-email/src/mvc/html/page/home.php
 msgid "Sender"
 msgstr ""

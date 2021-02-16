@@ -41,9 +41,55 @@
         "Select users": "Select users",
         "Send to myself": "Send to myself"
     },
-    "components\/form\/form": {
+    "components\/form": {
         "A problem occurred": "A problem occurred",
-        "Modified": "Modified"
+        "Modified": "Modified",
+        "Saved": "Saved",
+        "Error": "Error"
+    },
+    "components\/types\/default": {
+        "Saved": "Saved",
+        "Error": "Error"
+    },
+    "components\/types\/form": {
+        "Saved": "Saved"
+    },
+    "components\/table": {
+        "Error": "Error",
+        "Success": "success",
+        "Ready": "Ready",
+        "Normal priority": "Normal priority",
+        "High priority": "High priority",
+        "Low priority": "Low priority",
+        "Cancel email": "Cancel email",
+        "Change state to ready": "Change state to ready",
+        "Only admin users can delete sent emails": "Only admin users can delete sent emails",
+        "Delete the email from the database": "Delete the email from the database",
+        "Do you want to change the state of this email to \"Ready\"? ": "Do you want to change the state of this email to \"Ready\"?",
+        "Email status changed": "Email status changed",
+        "Something went wrong while changing the email status": "Something went wrong while changing the email status",
+        "Do you want to completely delete this email? ": "Do you want to completely delete this email?",
+        "Email successfully deleted": "Email successfully deleted",
+        "Something went wrong while deleting the email": "Something went wrong while deleting the email",
+        "Do you want to cancel this email? ": "Do you want to cancel this email?",
+        "Email successfully cancelled": "Email successfully cancelled",
+        "Something went wrong while cancelling the email": "Something went wrong while cancelling the email",
+        "Email failed": "Email failed",
+        "Email sent": "Email sent",
+        "Email ready": "Email ready",
+        "Email cancelled": "Email cancelled",
+        "Check\/uncheck all emails": "Check\/uncheck all emails",
+        "Cancel selected emails": "Cancel selected emails",
+        "Delete selected emails": "Delete selected emails",
+        "Delete all emails": "Delete all emails",
+        "Delete all ready or cancelled emails": "Delete all ready or cancelled emails",
+        "Are you sure you want to cancel all selected emails? ": "Are you sure you want to cancel all selected emails?",
+        "Emails successfully cancelled": "Emails successfully cancelled",
+        "Change the status or remove the email using the buttons of the row": "Change the status or remove the email using the buttons of the row",
+        "Are you sure you want to completely delete all selected emails? ": "Are you sure you want to completely delete all selected emails?",
+        "Emails successfully deleted": "Emails successfully deleted",
+        "Are you really sure you want to completely delete all ready emails? ": "Are you really sure you want to completely delete all ready emails?",
+        "emails successfully deleted": "Emails successfully deleted"
     },
     "mvc\/page\/details": {
         "Error": "Error",
@@ -66,38 +112,8 @@
         "Are you sure you want to delete this letter?": "Are you sure you want to delete this letter?",
         "Avertissement sur les lettres types": "Avertissement sur les lettres types"
     },
-    "components\/table\/table": {
-        "Normal priority": "Normal priority",
-        "High priority": "High priority",
-        "Low priority": "Low priority",
-        "Cancel email": "Cancel email",
-        "Change state to ready": "Change state to ready",
-        "Only admin users can delete sent emails": "Only admin users can delete sent emails",
-        "Delete the email from the database": "Delete the email from the database",
-        "Do you want to change the state of this email to \"Ready\"? ": "Do you want to change the state of this email to \"Ready\"?",
-        "Email status changed": "Email status changed",
-        "Something went wrong while changing the email status": "Something went wrong while changing the email status",
-        "Do you want to completely delete this email? ": "Do you want to completely delete this email?",
-        "Email successfully deleted": "Email successfully deleted",
-        "Something went wrong while deleting the email": "Something went wrong while deleting the email",
-        "Do you want to cancel this email? ": "Do you want to cancel this email?",
-        "Email successfully cancelled": "Email successfully cancelled",
-        "Something went wrong while cancelling the email": "Something went wrong while cancelling the email",
-        "Email failed": "Email failed",
-        "Email ready": "Email ready",
-        "Email cancelled": "Email cancelled",
-        "Check\/uncheck all emails": "Check\/uncheck all emails",
-        "Cancel selected emails": "Cancel selected emails",
-        "Delete selected emails": "Delete selected emails",
-        "Delete all emails": "Delete all emails",
-        "Delete all ready or cancelled emails": "Delete all ready or cancelled emails",
-        "Are you sure you want to cancel all selected emails? ": "Are you sure you want to cancel all selected emails?",
-        "Emails successfully cancelled": "Emails successfully cancelled",
-        "Change the status or remove the email using the buttons of the row": "Change the status or remove the email using the buttons of the row",
-        "Are you sure you want to completely delete all selected emails? ": "Are you sure you want to completely delete all selected emails?",
-        "Emails successfully deleted": "Emails successfully deleted",
-        "Are you really sure you want to completely delete all ready emails? ": "Are you really sure you want to completely delete all ready emails?",
-        "emails successfully deleted": "Emails successfully deleted"
+    "components\/types\/type": {
+        "New letter type": "New letter type"
     },
     "mvc\/webmail": {
         "eMail account configuration": "eMail account configuration"
