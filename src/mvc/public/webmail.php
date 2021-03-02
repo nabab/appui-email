@@ -12,6 +12,6 @@ if (isset($ctrl->post['limit'])) {
   $ctrl->action();
 }
 else {
-  $ctrl->addData(['root' => APPUI_EMAILS_ROOT])
+  $ctrl->addData(['root' => APPUI_EMAIL_ROOT])
     ->combo(_('Webmail'), true);
 }

@@ -7,7 +7,7 @@
  */
 use bbn\X;
 
-$em         = new bbn\User\Emails($ctrl->db);
+$em         = new bbn\User\Email($ctrl->db);
 $pw         = new bbn\Appui\Passwords($ctrl->db);
 $deleted    = [];
 $subscribed = [];
@@ -29,8 +29,7 @@ $accounts = $em->getAccounts();
 foreach ($accounts as $a) {
   X::adump($em->getFolders($a['id']));
   //$deleted[] = $em->deleteAccount($a['id']);
-  /*
-  //$em->syncFolders($a['id']);
+  $em->syncFolders($a['id']);
   X::map(
     function ($folder) use (&$em, &$done, &$a) {
       $check = $em->checkFolder($folder);
@@ -44,7 +43,6 @@ foreach ($accounts as $a) {
   );
   $subscribed[$a['login']] = $em->getFolders($a['id']);
   //var_dump($em->getFolders($a['id']));
-  */
 }
 
 X::adump([

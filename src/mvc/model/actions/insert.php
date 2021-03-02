@@ -10,7 +10,7 @@
 if ($model->checkAction(['content', 'title', 'sender'], true)) {
   $attachments = [];
   $medias = [];
-  $mailings = new \bbn\Appui\Mailings($model->db);
+  $mailings = new \bbn\Appui\Mailing($model->db);
   // If files are sent
   if ( \bbn\X::hasProps($model->data, ['attachments', 'ref'], true) ){
     // If duplicating id_parent is sent

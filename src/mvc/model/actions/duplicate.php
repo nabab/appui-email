@@ -10,7 +10,7 @@
 $res = ['succes' => false];
 if ( !empty($model->data['id']) ){
   $res['count'] = $model->getModel(APPUI_EMAILS_ROOT.'data/count');
-  $mailings = new \bbn\Appui\Mailings($model->db);
+  $mailings = new \bbn\Appui\Mailing($model->db);
   if ( $res['id'] = $mailings->copy($model->data['id']) ){
     $res['success'] = true;
   }

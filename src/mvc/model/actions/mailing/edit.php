@@ -16,7 +16,7 @@ if (
   if ( empty($model->data['sent']) || !\bbn\Date::validateSQL($model->data['sent']) ){
     $model->data['sent'] = null;
   }
-  $mailings = new \bbn\Appui\Mailings($model->db);
+  $mailings = new \bbn\Appui\Mailing($model->db);
   $orig = [];
   $to_insert = false;
   $to_update = false;

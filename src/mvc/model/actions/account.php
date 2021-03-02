@@ -20,8 +20,15 @@ if ($model->hasData('action')) {
           'host' => $model->data['host'] ?? null,
           'pass' => $model->data['pass'],
         ];
-        $mb = new bbn\Appui\Mailbox($cfg);
+        try {
+          $mb = new bbn\Appui\Mailbox($cfg);
+        }
+        catch (\Exception $e) {
+          return ['error' => $e->getMessage()];
+        }
+
         if ($mb->getStatus() === 'ok') {
+          
           if ($model->data['action'] === 'test') {
             $model->data['res']['success'] = true;
             $res = [];
@@ -57,13 +64,16 @@ if ($model->hasData('action')) {
               && is_array($model->data['folders'])
           ) {
             unset($mb);
-            $em = new bbn\User\Emails($model->db);
+            $em = new bbn\User\Email($model->db);
             $cfg['folders'] = $model->data['folders'];
             $cfg['email'] = $model->data['email'];
             if ($id_account = $em->addAccount($cfg)) {
               $model->data['res']['success'] = true;
             }
           }
+        }
+        else {
+          return ['error' => $mb->getStatus()];
         }
       }
       break;

@@ -1,6 +1,6 @@
 <?php
 $success = false;
-$mailings = new \bbn\Appui\Mailings($model->db);
+$mailings = new \bbn\Appui\Mailing($model->db);
 //delete all ready emails
 $emails = $model->db->rselectAll([
   'table' => 'bbn_emails',

@@ -4,7 +4,7 @@
 $success = 0;
 //case of cancelling a single row
 if ( !empty($model->data['id']) && !empty($model->data['state']) && ( $model->data['state'] === 'sending') ){
-  $mailings = new \bbn\Appui\Mailings($model->db);
+  $mailings = new \bbn\Appui\Mailing($model->db);
   //changes the state only to the emails not yet sent ('ready')
   $emails = $model->db->rselectAll('bbn_emails', [], ['id_mailing' => $model->data['id'], 'status' => 'ready']);
   

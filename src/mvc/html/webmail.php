@@ -6,7 +6,7 @@
                 :collapsible="true">
     <bbn-pane :size="250">
       <bbn-tree :source="treeData"
-                uid="uid"
+                uid="id"
                 :opened="true"
                 storage-full-name="appui-email-webmail-tree"
                 @select="selectFolder"/>
@@ -18,7 +18,7 @@
         <bbn-pane size="50%">
           <bbn-toolbar>
           </bbn-toolbar>
-          <bbn-table :source="source.sroot + 'webmail'"
+          <bbn-table :source="source.root + 'webmail'"
                      storage-full-name="appui-email-webmail-table"
                      :filterable="true"
                      :selection="true"
@@ -161,6 +161,7 @@
                         source-value="id"
                         placeholder="<?=_("Choose a type of account")?>"
                         v-model="account.type"
+                        autocomplete="off"
                         :required="true"/>
 
           <div class="bbn-label">
@@ -168,12 +169,14 @@
           </div>
           <bbn-input v-model="account.email"
                      type="email"
+                     autocomplete="off"
                      :required="true"/>
 
           <div class="bbn-label">
             <?=_("Login")?>
           </div>
           <bbn-input v-model="account.login"
+                     autocomplete="off"
                      :required="true"/>
 
           <div class="bbn-label">
@@ -191,6 +194,7 @@
           <bbn-input v-if="['imap', 'pop3'].includes(accountCode)"
                      type="hostname"
                      v-model="account.host"
+                     autocomplete="off"
                      :required="true"/>
 
           <div class="bbn-grid-full bbn-c"
@@ -207,9 +211,10 @@
           <bbn-input v-if="hasSMTP && ['imap', 'pop3'].includes(accountCode)"
                      v-model="account.smtp"
                      type="hostname"
+                     autocomplete="off"
                      :required="true"/>
 
-          <div class="bbn-grid-full bbn-c bbn-b bbn-state-error"
+          <div class="bbn-grid-full bbn-c bbn-b bbn-state-error bbn-padded"
                v-if="errorState">
             <?=_("Impossible to connect to the mail server")?>
           </div>

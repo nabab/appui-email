@@ -1,7 +1,7 @@
 <?php
 
 if ( !empty($model->data['id']) && ( $state = $model->data['state']) ){
-  $mailings = new \bbn\Appui\Mailings($model->db);
+  $mailings = new \bbn\Appui\Mailing($model->db);
   $success = $mailings->changeState($model->data['id'], $state);
   return [
     'success' => $success,

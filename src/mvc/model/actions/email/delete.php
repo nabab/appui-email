@@ -1,6 +1,6 @@
 <?php
 $success = false;
-$mailings = new \bbn\Appui\Mailings($model->db);
+$mailings = new \bbn\Appui\Mailing($model->db);
  
 
 /* a non admin user can delete only mail with status 'cancelled' or 'ready'.

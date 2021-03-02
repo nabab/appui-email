@@ -11,7 +11,7 @@
 if (
   !empty($model->data['id']) 
   && !empty($model->data['users'])
-  && ($mailings = new \bbn\Appui\Mailings($model->db))
+  && ($mailings = new \bbn\Appui\Mailing($model->db))
   && ($mail = $mailings->getMailing($model->data['id']))
 ){
  

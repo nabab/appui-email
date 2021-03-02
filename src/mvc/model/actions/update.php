@@ -16,7 +16,7 @@ if ($model->checkAction(['title', 'id', 'content', 'sender'], true)) {
     }
   }
   $model->data['attachments'] = $attachments;
-  $mailings = new \bbn\Appui\Mailings($model->db);
+  $mailings = new \bbn\Appui\Mailing($model->db);
   $data = empty($model->data['sent']) ? [] : $model->getPluginModel('data/mailist', $model->data, 'emails');
   $model->data['emails'] = $data['data'];
   if ($model->data = $mailings->edit($model->data['id'], $model->data)) {
