@@ -11,7 +11,7 @@
 
 //$recipients = $model->inc->options->fullOptions($model->inc->options->fromCode('emails_listes'));
 return [
-  'root' => APPUI_EMAILS_ROOT,
+  'root' => APPUI_EMAIL_ROOT,
   'root_usergroup' => $model->pluginUrl('appui-usergroup').'/',
   'types' => $model->db->getRows("
     SELECT bbn_notes_masks.id_note AS id, bbn_notes_masks.name AS text
@@ -25,7 +25,7 @@ return [
     GROUP BY bbn_notes_masks.id_note
     ORDER BY text
   "),
-  'count' => $model->getModel(APPUI_EMAILS_ROOT.'data/count'),
+  'count' => $model->getModel(APPUI_EMAIL_ROOT.'data/count'),
   'recipients' => $model->inc->options->textValueOptions('emails_listes'),
   'senders' => array_map(function($a){
     return [

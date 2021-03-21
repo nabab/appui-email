@@ -92,15 +92,9 @@
           });
         }
       },
-      setRecipientsNum(old){
+      setRecipientsNum(){
         let url = this.emails.source.root + 'data/mailist/num';
-        let odata = {recipients: old, sender: this.source.row.sender};
-        if (this.isNumLoading) {
-          let idURL = bbn.fn.getRequestId(url, odata);
-          if (idURL) {
-            bbn.fn.abort(idURL);
-          }
-        }
+        bbn.fn.abortURL(url);
         if (this.source.row.recipients) {
           this.isNumLoading = true;
           this.post(url, {recipients: this.source.row.recipients, sender: this.source.row.sender}, (d) => {
@@ -128,8 +122,11 @@
       this.setRecipientsNum();
     },
     watch: {
-      "source.row.recipients"(v, o){
-        this.setRecipientsNum(o);
+      "source.row.recipients"(){
+        this.setRecipientsNum();
+      },
+      "source.row.sender"(){
+        this.setRecipientsNum();
       }
     }
   }

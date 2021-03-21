@@ -13,4 +13,5 @@ if (\bbn\X::hasProp($model->data, 'recipients')) {
     unset($model->data['res']['data']);
   }
 }
+
 return $model->data['res'];

@@ -15,7 +15,7 @@ $masks = array_map(function($a){
 }, $notes->getAll());
 
 return [
-  'root' => APPUI_EMAILS_ROOT,
+  'root' => APPUI_EMAIL_ROOT,
   'is_dev' => $model->inc->user->isDev(),
   'categories' => $masks,
   'empty_categories' => $model->db->rselectAll([

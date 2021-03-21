@@ -8,7 +8,7 @@
   let mailings;
   return {
     props: ['source'],
-    data(){
+    data() {
       return {
         pageUrl: '',
         tableURL: '',
@@ -340,9 +340,7 @@
       }, 
       insert(){
         this.$refs.table.insert({}, {
-          title: bbn._("New mailing"),
-          width: this.getPopup().defaultWidth,
-          height: this.getPopup().defaultHeight
+          title: bbn._("New mailing")
         });
       },
       

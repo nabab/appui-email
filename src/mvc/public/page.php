@@ -8,8 +8,8 @@
  * @var $ctrl \bbn\Mvc\Controller
  */
 
-$ctrl->obj->url = APPUI_EMAILS_ROOT . 'page';
+$ctrl->obj->url = APPUI_EMAIL_ROOT . 'page';
 
 $ctrl->setColor('teal', 'white')
 	->setIcon('nf nf-fa-envelope')
-	->combo(_("eMails"), ['root' => APPUI_EMAILS_ROOT, 'page' => $ctrl->arguments[0]]);
+	->combo(_("eMails"), ['root' => APPUI_EMAIL_ROOT, 'page' => $ctrl->arguments[0]]);

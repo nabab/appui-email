@@ -10,7 +10,7 @@
 if ( !empty($ctrl->arguments[0]) && \bbn\Str::isUid($ctrl->arguments[0]) ){
   $ctrl->data = [
     'id' => $ctrl->arguments[0],
-    'root' => APPUI_EMAILS_ROOT,
+    'root' => APPUI_EMAIL_ROOT,
   ];
   if ( $model = $ctrl->getModel() ){
     if ( !empty($model['title']) && (strlen($model['title']) > 20) ){
@@ -18,7 +18,7 @@ if ( !empty($ctrl->arguments[0]) && \bbn\Str::isUid($ctrl->arguments[0]) ){
     }
     echo $ctrl
       ->setIcon('nf nf-fa-th_list')
-      ->setUrl(APPUI_EMAILS_ROOT.'page/details/'.$ctrl->arguments[0])
+      ->setUrl(APPUI_EMAIL_ROOT.'page/details/'.$ctrl->arguments[0])
       ->setTitle($model['title'] ?: _('Untitled'))
       ->addJs($ctrl->data)
       ->getView();
@@ -26,6 +26,6 @@ if ( !empty($ctrl->arguments[0]) && \bbn\Str::isUid($ctrl->arguments[0]) ){
 }
 else{
   return false;
-  //$ctrl->obj->url = APPUI_EMAILS_ROOT.'page/details/';
+  //$ctrl->obj->url = APPUI_EMAIL_ROOT.'page/details/';
   $ctrl->combo();
 }

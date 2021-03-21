@@ -64,7 +64,7 @@ if (
     }
     return [
       'success' => true,
-      'count' => $model->getModel(APPUI_EMAILS_ROOT.'data/count')
+      'count' => $model->getModel(APPUI_EMAIL_ROOT.'data/count')
     ];
   }
 }
