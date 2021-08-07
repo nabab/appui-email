@@ -1,6 +1,6 @@
 <bbn-form :source="source.row"
           :data="dataToSend"
-          v-if="dataToSend"
+          v-if="dataToSend && emails"
           ref="form"
           confirm-leave="<?=_("Are you sure you want to leave this form without saving your changes?")?>"
           :action="emails.source.root + 'actions/' + (source.row.id ? 'update' : 'insert')"

@@ -17,7 +17,7 @@
         priority: 0,
         isNumLoading: false,
         numRecipients: 0, 
-        root: this.closest('bbn-container').getComponent().source.root
+        root: appui.plugins['appui-email'] + '/'
       }
     },
     methods: {
