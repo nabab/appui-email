@@ -189,6 +189,15 @@
 
           <div v-if="['imap', 'pop3'].includes(accountCode)"
                class="bbn-label">
+            <?=_("Use SSL")?>
+          </div>
+          <bbn-checkbox v-if="['imap', 'pop3'].includes(accountCode)"
+                        :value="1"
+                        :novalue="0"
+                        v-model="account.ssl"/>
+
+          <div v-if="['imap', 'pop3'].includes(accountCode)"
+               class="bbn-label">
             <?=_("Incoming server")?>
           </div>
           <bbn-input v-if="['imap', 'pop3'].includes(accountCode)"

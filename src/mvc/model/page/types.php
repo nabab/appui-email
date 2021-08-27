@@ -8,18 +8,18 @@
  * @var $model \bbn\Mvc\Model
  */
 
-$notes = new \bbn\Appui\Masks($model->db);
+$mnotes = new \bbn\Appui\Masks($model->db);
 $masks = array_map(function($a){
   $a['content'] = '';
   return $a;
-}, $notes->getAll());
+}, $mnotes->getAll());
 
 return [
   'root' => APPUI_EMAIL_ROOT,
   'is_dev' => $model->inc->user->isDev(),
   'categories' => $masks,
   'empty_categories' => $model->db->rselectAll([
-    'tables' => 'bbn_options', 
+    'tables' => 'bbn_options',
       'fields' => [
         'bbn_options.id',
         'bbn_options.code',

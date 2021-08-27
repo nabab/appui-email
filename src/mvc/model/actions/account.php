@@ -19,6 +19,7 @@ if ($model->hasData('action')) {
           'login' => $model->data['login'],
           'host' => $model->data['host'] ?? null,
           'pass' => $model->data['pass'],
+          'ssl' => $model->data['ssl'] ?? null
         ];
         try {
           $mb = new bbn\Appui\Mailbox($cfg);
