@@ -74,10 +74,7 @@
                 "type": "binary",
                 "null": 0,
                 "key": "PRI",
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "maxlength": 16
             },
             "id_note": {
@@ -85,10 +82,7 @@
                 "type": "binary",
                 "null": 1,
                 "key": "MUL",
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "default": "NULL",
                 "maxlength": 16
             },
@@ -97,10 +91,6 @@
                 "type": "int",
                 "null": 1,
                 "key": null,
-                "extra": "",
-                "signed": false,
-                "virtual": false,
-                "generation": "",
                 "default": "NULL",
                 "maxlength": 10
             },
@@ -111,8 +101,6 @@
                 "key": null,
                 "extra": "'cancelled','suspended','ready','sent','sending','error'",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "default": "ready",
                 "values": [
                     "cancelled",
@@ -128,10 +116,7 @@
                 "type": "binary",
                 "null": 0,
                 "key": "MUL",
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "maxlength": 16
             },
             "recipients": {
@@ -139,10 +124,7 @@
                 "type": "binary",
                 "null": 1,
                 "key": "MUL",
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "default": "NULL",
                 "maxlength": 16
             },
@@ -151,10 +133,7 @@
                 "type": "datetime",
                 "null": 1,
                 "key": null,
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "default": "NULL"
             }
         }
@@ -232,10 +211,7 @@
                 "type": "binary",
                 "null": 0,
                 "key": "PRI",
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "maxlength": 16
             },
             "email": {
@@ -243,10 +219,7 @@
                 "type": "varchar",
                 "null": 0,
                 "key": "MUL",
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "maxlength": 100
             },
             "id_mailing": {
@@ -254,10 +227,7 @@
                 "type": "binary",
                 "null": 1,
                 "key": "MUL",
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "default": "NULL",
                 "maxlength": 16
             },
@@ -266,10 +236,7 @@
                 "type": "varchar",
                 "null": 1,
                 "key": null,
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "default": "NULL",
                 "maxlength": 250
             },
@@ -278,10 +245,7 @@
                 "type": "mediumtext",
                 "null": 1,
                 "key": null,
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "default": "NULL"
             },
             "cfg": {
@@ -289,10 +253,7 @@
                 "type": "json",
                 "null": 1,
                 "key": null,
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "default": "NULL"
             },
             "status": {
@@ -302,8 +263,6 @@
                 "key": "MUL",
                 "extra": "'failure','ready','success'",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "default": "ready",
                 "values": [
                     "failure",
@@ -316,10 +275,7 @@
                 "type": "datetime",
                 "null": 1,
                 "key": null,
-                "extra": "",
                 "signed": true,
-                "virtual": false,
-                "generation": "",
                 "default": "NULL"
             },
             "read": {
@@ -327,10 +283,6 @@
                 "type": "tinyint",
                 "null": 0,
                 "key": null,
-                "extra": "",
-                "signed": false,
-                "virtual": false,
-                "generation": "",
                 "default": 0,
                 "maxlength": 3
             },
@@ -339,10 +291,6 @@
                 "type": "tinyint",
                 "null": 0,
                 "key": null,
-                "extra": "",
-                "signed": false,
-                "virtual": false,
-                "generation": "",
                 "default": 5,
                 "maxlength": 1
             }
