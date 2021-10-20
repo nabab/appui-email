@@ -7,18 +7,20 @@
  *
  * @var $model \bbn\Mvc\Model
  */
+use bbn\Appui\Mailing;
+
 if ($model->checkAction(['title', 'id', 'content', 'sender'], true)) {
   $attachments = [];
-  if ( \bbn\X::hasProps($model->data, ['attachments', 'ref'], true) ){
+  if ($model->hasData(['attachments', 'ref'], true)) {
     $temp_path = $model->userTmpPath().$model->data['ref'].'/';
     foreach ( $model->data['attachments'] as $f ){
       $attachments[] = is_file($temp_path.$f['name']) ? $temp_path.$f['name'] : $f;
     }
   }
   $model->data['attachments'] = $attachments;
-  $mailings = new \bbn\Appui\Mailing($model->db);
+  $mailings = new Mailing($model->db);
   $data = empty($model->data['sent']) ? [] : $model->getPluginModel('data/mailist', $model->data, 'emails');
-  $model->data['emails'] = $data['data'];
+  $model->data['emails'] = $data['data'] ?? [];
   if ($model->data = $mailings->edit($model->data['id'], $model->data)) {
     if (
       !empty($data['success'])
