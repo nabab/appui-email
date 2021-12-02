@@ -1,9 +1,9 @@
 <?php
 /*
- * Describe what it does!
- *
- **/
-
+   * Describe what it does!
+   *
+   **/
+use bbn\X;
 /** @var $model \bbn\Mvc\Model*/
 if ($model->hasData('id', true)) {
   $em = new bbn\User\Email($model->db);

@@ -114,12 +114,12 @@
       },
       reply(){
         if (this.selectedMail) {
-          bbn.fn.link(this.source.root + "webmail/view/" + this.selectedMail.id);
+          bbn.fn.link(this.source.root + "webmail/reply/" + this.selectedMail.id);
         }
       },
       replyAll(){
         if (this.selectedMail) {
-
+					bbn.fn.link(this.source.root + "webmail/reply_all/" + this.selectedMail.id);
         }
       },
       forward(){
@@ -139,7 +139,7 @@
       },
       openTab(){
         if (this.selectedMail) {
-
+					bbn.fn.link(this.source.root + "webmail/view/" + this.selectedMail.id);
         }
       },
       openWindow(){
