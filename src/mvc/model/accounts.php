@@ -1,8 +1,4 @@
 <?php
-/*
- * Describe what it does!
- *
- **/
 
 /** @var $model \bbn\Mvc\Model */
 $id_accounts = $model->inc->options->fromCode('accounts', 'email', 'appui');
