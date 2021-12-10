@@ -17,23 +17,47 @@
           to: bbn._('To'),
           subject: bbn._('Subject'),
           unknown: bbn._('Unknown'),
+          editor: bbn._('Editor'),
         },
         replyTo: "",
         CC: "",
+        ccButton: false,
+        cciButton: false,
         CCI: "",
-        subject: "RE: " +  this.source.subject,
+        subject: "TR: " +  this.source.subject,
         switchValue: "rte",
-        type: "RTE",
-        emailHeader: '<br><br><hr>' + translate.from  +  " : " +  (this.source.from ? this.createEmailListString(this.source.from) : translate.unknown) + '<br>' + translate.send +  " : " + (this.source.Date ? this.source.Date :  translate.unknown) + '<br>' + translate.to + " : " + (this.source.to ? this.createEmailListString(this.source.to) : translate.unknown) + '<br>' + translate.subject + " : " + (this.source.Subject ? this.source.Subject :  translate.unknown) + '<br><br>',
+        editors: [
+          "rte",
+          "markdown"
+        ],
+        type: "rte",
       };
     },
     mounted() {
-      //bbn.fn.log("TEST", translate, this.source,  this.source.from, this.source.reply_to);
-      bbn.fn.log("test", this.source.to, this.source.from, this.from, this.to);
-
-      this.replyTo = this.createEmailListString(this.source.from);
+      this.replyTo = this.createEmailListString(this.source.from) + this.createEmailListString(this.source.to);
+      if (this.source.login.includes('@bbn.so')) {
+        let tmp = this.source.login.split('@');
+        this.replyTo = this.replyTo.replace(tmp[0] + '@bbn.so' + ' ', '');
+         this.replyTo = this.replyTo.replace(tmp[0] +  '@bbn.solutions' + ' ', '');
+      } else {
+         this.replyTo = this.replyTo.replace(this.source.login + ' ', '');
+      }
     },
     methods: {
+      ccChange() {
+        if (this.ccButton) {
+          this.ccButton = false;
+        } else {
+          this.ccButton = true;
+        }
+      },
+      cciChange() {
+        if (this.cciButton) {
+          this.cciButton = false;
+        } else {
+          this.cciButton = true;
+        }
+      },
       createEmailListString(array) {
         let res = "";
         for (let i = 0; i < array.length;i++) {

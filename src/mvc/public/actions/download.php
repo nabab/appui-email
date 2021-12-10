@@ -1,8 +1,4 @@
 <?php
-/*
- * Describe what it does!
- *
- **/
 
 /** @var $ctrl \bbn\Mvc\Controller */
 if (isset($ctrl->post['id_media'])) {

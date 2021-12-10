@@ -29,13 +29,12 @@
         editors: [
           "rte",
           "markdown"
-        ],
+                 ],
         type: "rte",
       };
     },
     mounted() {
-      bbn.fn.log("test", this.source);
-      this.replyTo = this.createEmailListString(this.source.from);
+      bbn.fn.log("test", this.source.to, this.source.from, this.from, this.to);
     },
     methods: {
       ccChange() {

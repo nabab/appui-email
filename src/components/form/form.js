@@ -11,7 +11,7 @@
       return {
         dataToSend: null,
         ref: (new Date()).getTime(),
-        today: moment().format('YYYY-MM-DD HH:mm:ss'),
+        today: dayjs().format('YYYY-MM-DD HH:mm:ss'),
         emails: null,
         prefilled: false,
         priority: 0,

@@ -1,8 +1,4 @@
 <?php
-/*
- * Describe what it does!
- *
- **/
 use bbn\X;
 
 $em = new bbn\User\Email($model->db);

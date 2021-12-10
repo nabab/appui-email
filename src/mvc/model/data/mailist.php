@@ -1,8 +1,4 @@
 <?php
-/*
- * Describe what it does!
- *
- **/
 
 /** @var $model \bbn\Mvc\Model */
 if (\bbn\X::hasProp($model->data, 'recipients')) {
