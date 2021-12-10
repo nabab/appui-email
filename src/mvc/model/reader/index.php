@@ -2,6 +2,10 @@
 
 /** @var $model \bbn\Mvc\Model*/
 if ($model->hasData('id', true)) {
-	$em = new bbn\User\Emails($model->db);
-  return $em->getEmail($model->data['id']);
+  $em = new bbn\User\Email($model->db);
+  $email =  $em->getEmail($model->data['id']);
+  $config = HTMLPurifier_Config::createDefault();
+  $purifier = new HTMLPurifier($config);
+  $email['html'] =  $purifier->purify(quoted_printable_decode($email['html']));
+  return $email;
 }

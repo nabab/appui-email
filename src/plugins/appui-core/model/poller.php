@@ -1,11 +1,11 @@
 <?php
 use bbn\X;
-/*
+
 return [[
   'id' => 'appui-email-0',
   'frequency' => 30,
   'function' => function(array $data) use($model){
-    $em = new bbn\User\Emails($model->db);
+    $em = new bbn\User\Email($model->db);
     $accounts = $em->getAccounts();
     $tot = 0;
     foreach ($accounts as $a) {
@@ -31,4 +31,3 @@ return [[
     return ['success' => true];
   }
 ]];
-*/
