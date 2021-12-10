@@ -12,6 +12,9 @@
         orientation: 'vertical',
         currentFolder: null,
         selectedMail: null,
+        treeData: [],
+        folders: [],
+        moveTo: "",
       };
     },
     computed: {
@@ -20,7 +23,10 @@
           id_folder: this.currentFolder
         }
       },
-      treeData(){
+    },
+    methods: {
+      setTreeData(){
+        bbn.fn.log("TreeData");
         let r = [];
         let fn = (ar, id_account) => {
           let res = [];
@@ -73,10 +79,28 @@
             });
           });
         }
-        return r;
-      }
-    },
-    methods: {
+        this.treeData = r;
+      },
+      getFolders() {
+        bbn.fn.log("ICI", this.selectedMail)
+        if (this.selectedMail) {
+          this.post('emails/webmail/get_folders', {
+            id: this.selectedMail.id_folder,
+          }, (d) => {
+            if (d.success) {
+              this.folders = [];
+              for (let i = 0; i < d.data.length; i++) {
+                if (d.data[i].id == this.selectedMail.id_folder) {
+                  this.moveTo = d.data[i].text;
+                }
+                this.folders.push(d.data[i].text)
+              }
+              bbn.fn.log("Selected mailAccount folders", this.folders);
+            }
+          })
+        }
+        return this.folders;
+      },
       showAttachments(row){
         if (row.attachments) {
           let attachments = bbn.fn.isString(row.attachments) ? JSON.parse(row.attachments) : row.attachments;
@@ -96,6 +120,7 @@
       },
       selectMessage(row) {
         this.selectedMail = row;
+        this.getFolders();
         bbn.fn.log(row)
       },
       createAccount() {
@@ -163,12 +188,14 @@
       currentFolder(){
         this.$forceUpdate();
         this.$nextTick(() => {
+          bbn.fn.log("currentFolderWtacher");
           this.getRef('table').updateData()
         })
       }
     },
     created(){
       cp = this;
+      this.setTreeData();
     },
     components: {
       [scpName]: {
@@ -233,6 +260,7 @@
           account: {
             deep: true,
             handler(){
+              bbn.fn.log("ACCOUNT WATCHER");
               if (this.accountChecker) {
                 clearTimeout(this.accountChecker);
               }

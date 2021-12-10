@@ -125,7 +125,11 @@
                               @click="mailToTask"/>
                   <bbn-treedown :placeholder="_('Move to')"
                                 class="bbn-wide bbn-left-xsspace"
-                                :source="treeData"/>
+                                :source="folders"
+                                v-model="moveTo"/>
+                  <bbn-button icon="nf nf-mdi-folder_move"
+                              class="bbn-left-xsspace"
+                              :text="_('Moove')"></bbn-button>
                 </bbn-toolbar>
                 <div class="bbn-flex-fill">
                   <bbn-frame :src="source.root + 'reader/' + selectedMail.id" class="bbn-100"></bbn-frame>
