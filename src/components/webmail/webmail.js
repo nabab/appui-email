@@ -178,6 +178,20 @@
           })
         })
       },
+      moveFolder() {
+        this.getPopup({
+          title: bbn._("Folder changer"),
+          component: 'appui-email-forms-moveto',
+          componentOptions: {
+						source: this.folders,
+            model: this.moveTo
+          }
+        })
+      }
+      ,
+      submitFolderChange() {
+        bbn.fn.log("FOLDER", this.moveTo);
+      },
       mailToTask(){
         if (this.selectedMail) {
 

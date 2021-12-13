@@ -129,7 +129,9 @@
                                 v-model="moveTo"/>
                   <bbn-button icon="nf nf-mdi-folder_move"
                               class="bbn-left-xsspace"
-                              :text="_('Moove')"></bbn-button>
+                              :text="_('Moove')"
+                              :notext="true"
+                              @click="moveFolder"></bbn-button>
                 </bbn-toolbar>
                 <div class="bbn-flex-fill">
                   <bbn-frame :src="source.root + 'reader/' + selectedMail.id" class="bbn-100"></bbn-frame>
