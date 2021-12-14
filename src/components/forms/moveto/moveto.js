@@ -4,26 +4,25 @@
   return {
     props : {
       source : {
-  			type: Array,
-        default: [],
-      },
-      model : {
-        type: String,
+  			type: Object,
         required: true,
-        default: "",
-      }
+      },
     },
     data() {
-      return {
-       	folderId: "",
+      return  {
+        folder: (this.source.folders.length) ? this.source.folders[0].text : "",
+        data: {
+          id: this.source.id,
+          folderId: (this.source.folders.length) ? this.source.folders[0].value : "",
+        }
       }
     },
-    methods:  {
-      getData() {
-        return {
-          id: this.id,
-          folderId: this.folderId,
-        }
+    mounted() {
+      bbn.fn.log("SOURCE MOVETO", this.source, this.root);
+    },
+    watch: {
+      folder() {
+        this.data.folderId = this.folder;
       }
     }
   }

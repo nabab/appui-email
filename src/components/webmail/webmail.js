@@ -14,6 +14,7 @@
         selectedMail: null,
         treeData: [],
         folders: [],
+        foldersData: [],
         moveTo: "",
       };
     },
@@ -89,11 +90,12 @@
           }, (d) => {
             if (d.success) {
               this.folders = [];
+              this.foldersData = d.data;
               for (let i = 0; i < d.data.length; i++) {
                 if (d.data[i].id == this.selectedMail.id_folder) {
                   this.moveTo = d.data[i].text;
                 }
-                this.folders.push(d.data[i].text)
+                this.folders.push({text: d.data[i].text, value: d.data[i].id})
               }
               bbn.fn.log("Selected mailAccount folders", this.folders);
             }
@@ -179,12 +181,16 @@
         })
       },
       moveFolder() {
+        this.getFolders();
         this.getPopup({
           title: bbn._("Folder changer"),
           component: 'appui-email-forms-moveto',
           componentOptions: {
-						source: this.folders,
-            model: this.moveTo
+						source: {
+              id : this.selectedMail.id,
+              folders: this.folders,
+              foldersData: this.foldersData,
+            }
           }
         })
       }

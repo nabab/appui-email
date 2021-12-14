@@ -123,13 +123,9 @@
                               :text="_('Transform in task')"
                               :notext="true"
                               @click="mailToTask"/>
-                  <bbn-treedown :placeholder="_('Move to')"
-                                class="bbn-wide bbn-left-xsspace"
-                                :source="folders"
-                                v-model="moveTo"/>
                   <bbn-button icon="nf nf-mdi-folder_move"
                               class="bbn-left-xsspace"
-                              :text="_('Moove')"
+                              :text="_('Move')"
                               :notext="true"
                               @click="moveFolder"></bbn-button>
                 </bbn-toolbar>
