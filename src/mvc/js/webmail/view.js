@@ -114,16 +114,14 @@
           text: a.uid
         }
       },
-      reply(){
-          bbn.fn.link(this.url + this.source.root + "webmail/reply/" + this.source.id);
+ reply(){
+        bbn.fn.link(this.source.root + "webmail/reply/" + this.selectedMail.id);
       },
       replyAll(){
-					bbn.fn.link(this.url + this.source.root + "webmail/reply_all/" + this.source.id);
+        bbn.fn.link(this.source.root + "webmail/reply_all/" + this.selectedMail.id);
       },
       forward(){
-        if (this.selectedMail) {
-
-        }
+        bbn.fn.link(this.source.root + "webmail/forward/" + this.selectedMail.id);
       },
       archive(){
         if (this.selectedMail) {
@@ -136,7 +134,7 @@
         }
       },
       openTab(){
-					bbn.fn.link(this.url + this.source.root + "webmail/view/" + this.source.id);
+        bbn.fn.link(this.source.root + "webmail/view/" + this.selectedMail.id);
       },
       openWindow(){
         if (this.selectedMail) {
@@ -144,9 +142,18 @@
         }
       },
       deleteMail(){
-        if (this.selectedMail) {
-
-        }
+        this.confirm(bbn._('Do you want to delete this email ?'), () => {
+          this.post("emails/" + 'actions/email/delete', {
+            id: this.selectedMail.id,
+            status: "ready"
+          }, d => {
+            if (d.success) {
+              appui.success(bbn._('Email deleted with success'))
+            } else {
+              appui.error(bbn._('An error occured when deleting the email'))
+            }
+          })
+        })
       },
       mailToTask(){
         if (this.selectedMail) {
