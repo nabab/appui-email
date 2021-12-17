@@ -140,13 +140,13 @@
         }
       },
       reply(){
-        bbn.fn.link(this.source.root + "webmail/reply/" + this.selectedMail.id);
+        bbn.fn.link(this.source.root + "webmail/write/reply/" + this.selectedMail.id);
       },
       replyAll(){
-        bbn.fn.link(this.source.root + "webmail/reply_all/" + this.selectedMail.id);
+        bbn.fn.link(this.source.root + "webmail/write/reply_all/" + this.selectedMail.id);
       },
       forward(){
-        bbn.fn.link(this.source.root + "webmail/forward/" + this.selectedMail.id);
+        bbn.fn.link(this.source.root + "webmail/write/forward/" + this.selectedMail.id);
       },
       archive(){
         if (this.selectedMail) {

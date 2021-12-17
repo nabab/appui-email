@@ -9,6 +9,28 @@
     unknown: bbn._('Unknown'),
   };
   return {
+    props: {
+      source: {
+        required: true,
+        type: Object,
+      },
+      subject: {
+        type: String,
+        default: "",
+      },
+      to: {
+        type: String,
+        default: "",
+      },
+      CC: {
+        type: String,
+        default: "",
+      },
+      CCI: {
+        type: String,
+        default: "",
+      }
+    },
     data() {
       return {
         trlt: {
@@ -19,25 +41,21 @@
           unknown: bbn._('Unknown'),
           editor: bbn._('Editor'),
         },
-        replyTo: "",
-        CC: "",
         ccButton: false,
         cciButton: false,
-        CCI: "",
-        subject: "TR: " +  this.source.subject,
-        switchValue: "rte",
-        editors: [
-          "rte",
-          "markdown",
-          "textarea"
-        ],
         type: "rte",
-        message: this.source.html,
+        message: (this.source.html && this.source.html != "") ? this.source.html : this.source.plain,
       };
     },
     mounted() {
       bbn.fn.log("test", this.source);
-      this.replyTo = this.createEmailListString(this.source.from);
+     	if (this.source.login.includes('@bbn.so')) {
+        let tmp = this.source.login.split('@');
+        this.to = this.to.replace(tmp[0] + '@bbn.so' + ' ', '');
+         this.to = this.to.replace(tmp[0] +  '@bbn.solutions' + ' ', '');
+      } else {
+         this.to = this.to.replace(this.source.login + ' ', '');
+      }
     },
     methods: {
       ccChange() {
@@ -62,12 +80,11 @@
         return res;
       },
       send() {
-        bbn.fn.post(appui.plugins['appui-email'] + '/actions/email/send', {
-          text: this.message,
+        bbn.fn.post(appui.plugins['appui-email'] + 'actions/email/send', {
+          message: this.message,
           to: this.replyTo,
           cc: this.CC,
-          cci: this.CCI,
-          id_account: this.source.id_account
+          cci: this.CCI
         }, )
       }
     }

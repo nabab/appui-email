@@ -1,7 +1,7 @@
 <div class="bbn-overlay bbn-flex-height email-header">
   <div class="bbn-flex-fill mail-grid-fields email-header">
     <bbn-button :text="trlt.to"></bbn-button>
-    <bbn-input v-model="replyTo"></bbn-input>
+    <bbn-input v-model="to"></bbn-input>
     <bbn-button text="CC"
                 @click="ccChange"></bbn-button>
     <bbn-button text="CCI"
