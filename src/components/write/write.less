@@ -8,10 +8,35 @@
   color: black !important;
 }
 
+.grid-menu-editor {
+  display: grid;
+  grid-auto-rows: max-content;
+  grid-template-columns: minmax(auto, max-content)  minmax(auto, max-content)  minmax(auto, max-content);
+}
+
+.main-grid-fields {
+  display: grid;
+  grid-row-gap:3%;
+  grid-auto-rows: max-content;
+  grid-column-gap: 0.2em;
+  grid-template-columns: minmax(auto, max-content) auto minmax(auto, max-content);
+}
+
 .mail-grid-fields {
   display: grid;
   grid-row-gap:10px;
   grid-auto-rows: max-content;
   grid-column-gap: 0.2em;
-  grid-template-columns: minmax(auto, max-content) auto minmax(auto, max-content) minmax(auto, max-content);
+  grid-template-columns: minmax(auto, max-content) auto;
+}
+
+.box {
+  display: flex;
+  flex-flow: column;
+  height: auto;
+}
+
+.span-text-center {
+  display: inline-flex;
+  align-items: center;
 }

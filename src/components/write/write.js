@@ -43,7 +43,7 @@
         },
         ccButton: false,
         cciButton: false,
-        type: "rte",
+        type: "bbn-rte",
         message: (this.source.html && this.source.html != "") ? this.source.html : this.source.plain,
       };
     },
@@ -58,6 +58,9 @@
       }
     },
     methods: {
+      setType(type) {
+        this.type = type;
+      },
       ccChange() {
         if (this.ccButton) {
           this.ccButton = false;
