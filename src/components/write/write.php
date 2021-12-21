@@ -2,17 +2,18 @@
   <div class="bbn-flex-fill main-grid-fields">
 
     <div class="grid-menu-editor bbn-flex-fill">
-      <bbn-button :text="type"
+      <bbn-button text="rte"
                   :notext="true"
                   icon="nf nf-mdi-format_text"
                   @click="setType('bbn-rte')"></bbn-button>
-      <bbn-button :text="type"
+      <bbn-button text="markdown"
                   :notext="true"
                   icon="nf nf-dev-markdown"
                   @click="setType('bbn-markdown')"></bbn-button>
-      <bbn-button :text="type"
+      <bbn-button text="textarea"
                   :notext="true"
-                  icon="nf nf-mdi-format_text"></bbn-button>
+                  icon="nf nf-fa-file_text"
+                  @click="setType('bbn-textarea')"></bbn-button>
     </div>
 
     <div class="bbn-flex-fill mail-grid-fields email-header">
@@ -44,10 +45,17 @@
       </div>
     </div>
   </div>
-
-  <div class="bbn-flex-height">
+<hr>
+  <div class="bbn-100">
+    <div style="width: 100%; margin-top:1%; height: 4%;background-color:grey">
+      <button :icon="messageTypeIcon"
+              :text="messageTypeText"
+              @click="setMessageType">
+        
+      </button>
+    </div>
     <component :is="type"
                v-model="message"
-               style="width: 80%; margin-left: 10%"></component>
+               style="width: 80%; margin-left:10%; height: 95%"></component>
   </div>
 </div>

@@ -29,7 +29,7 @@
       CCI: {
         type: String,
         default: "",
-      }
+      },
     },
     data() {
       return {
@@ -45,6 +45,8 @@
         cciButton: false,
         type: "bbn-rte",
         message: (this.source.html && this.source.html != "") ? this.source.html : this.source.plain,
+                  messageTypeIcon: "nf nf-seti-html",
+        messageTypeText: 'html',
       };
     },
     mounted() {
@@ -60,6 +62,9 @@
     methods: {
       setType(type) {
         this.type = type;
+        if (type == "bbn-textarea") {
+          this.message = this.source.plain;
+        }
       },
       ccChange() {
         if (this.ccButton) {
@@ -73,6 +78,15 @@
           this.cciButton = false;
         } else {
           this.cciButton = true;
+        }
+      },
+      setMessageType() {
+        if (this.messageTypeText == 'html') {
+          this.messageTypeIcon = "nf nf-mdi-format_text"
+          this.messageTypeText = "text"
+        } else {
+          this.messageTypeIcon =  "nf nf-seti-html"
+          this.messageTypeText = "html"
         }
       },
       createEmailListString(array) {
