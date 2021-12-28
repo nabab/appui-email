@@ -40,53 +40,42 @@
           subject: bbn._('Subject'),
           unknown: bbn._('Unknown'),
           editor: bbn._('Editor'),
+          cc: bbn._('CC'),
+          cci: bbn._('CCI'),
         },
+        rootUrl: appui.plugins['appui-email'],
         ccButton: false,
         cciButton: false,
+        attachments: [],
+        currentTo: "",
+        currentCC: "",
+        currentCCI: "",
         type: "bbn-rte",
         message: (this.source.html && this.source.html != "") ? this.source.html : this.source.plain,
-                  messageTypeIcon: "nf nf-seti-html",
+        messageTypeIcon: "nf nf-seti-html",
         messageTypeText: 'html',
       };
     },
     mounted() {
       bbn.fn.log("test", this.source);
-     	if (this.source.login.includes('@bbn.so')) {
+      if (this.source.login.includes('@bbn.so')) {
         let tmp = this.source.login.split('@');
         this.to = this.to.replace(tmp[0] + '@bbn.so' + ' ', '');
-         this.to = this.to.replace(tmp[0] +  '@bbn.solutions' + ' ', '');
+        this.to = this.to.replace(tmp[0] +  '@bbn.solutions' + ' ', '');
       } else {
-         this.to = this.to.replace(this.source.login + ' ', '');
+        this.to = this.to.replace(this.source.login + ' ', '');
       }
+      this.currentTo = this.to;
+      this.currentCC = this.CC;
+      this.currentCCI = this.CCI;
     },
     methods: {
       setType(type) {
         this.type = type;
         if (type == "bbn-textarea") {
           this.message = this.source.plain;
-        }
-      },
-      ccChange() {
-        if (this.ccButton) {
-          this.ccButton = false;
         } else {
-          this.ccButton = true;
-        }
-      },
-      cciChange() {
-        if (this.cciButton) {
-          this.cciButton = false;
-        } else {
-          this.cciButton = true;
-        }
-      },
-      setMessageType() {
-        if (this.messageTypeText == 'html') {
-          this.messageTypeIcon = "nf nf-mdi-format_text"
-          this.messageTypeText = "text"
-        } else {
-          this.messageTypeIcon =  "nf nf-seti-html"
-          this.messageTypeText = "html"
+          this.message = this.source.html;
         }
       },
       createEmailListString(array) {
@@ -97,12 +86,33 @@
         return res;
       },
       send() {
-        bbn.fn.post(appui.plugins['appui-email'] + 'actions/email/send', {
-          message: this.message,
-          to: this.replyTo,
-          cc: this.CC,
-          cci: this.CCI
-        }, )
+        bbn.fn.post(appui.plugins['appui-email'] + '/actions/email/send', {
+          id_account: this.source.id_account,
+          email: {
+            title: this.subject,
+            text: this.message,
+            to: this.replyTo,
+            cc: this.CC,
+            cci: this.CCI,
+            attachments: this.attachments,
+            important: 0,
+            
+          }
+        })
+      },
+      openContacts() {
+        this.getPopup({
+          component:  'appui-email-popup-contacts',
+          title: bbn._('Address book'),
+					width: '35vw',
+          height: '50vh',
+        });
+      },
+      uploadSuccess(field, fileName, responseData, response) {
+        this.attachments.push(responseData.path);
+      },
+      currentToSetter(newValue) {
+        this.currentTo = newValue;
       }
     }
   }

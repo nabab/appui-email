@@ -19,10 +19,12 @@ if ($model->hasData('id', true)) {
   $em = new bbn\User\Email($model->db);
   $email =  $em->getEmail($model->data['id']);
   $header =  _('From : ') . createEmailListString($email['from']) . PHP_EOL . _('Send : ') . $email['Date'] . PHP_EOL . _('To : ') . createEmailListString($email['to']) . PHP_EOL . _('Subject : ') . $email['Subject'] . PHP_EOL;
+    $email['plain'] = PHP_EOL. PHP_EOL . $header . $email['plain'];
   if (!empty($email['html'])) {
     $email['html'] = nl2br(PHP_EOL . PHP_EOL . '<hr>' . $header) . $email['html'];
+  } else {
+    $email['html'] = nl2br($email['plain']);
   }
-  $email['plain'] = PHP_EOL. PHP_EOL . $header . $email['plain'];
   $to = "";
   $subject = "";
   if ($model->hasData('action', true)) {
@@ -38,7 +40,7 @@ if ($model->hasData('id', true)) {
       $subject = 'TR : ' . $email['subject'];
     }
   }
-
+  
   $email['login'] = $em->getLoginByEmailId($model->data['id'])['login'];
   return [
     'success' => true,
