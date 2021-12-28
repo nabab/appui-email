@@ -6,10 +6,10 @@
 
 /** @var $model \bbn\Mvc\Model*/
 use bbn\X;
-
+X::ddump($model->data);
 $em = new bbn\User\Email($model->db);
 
 //X::ddump($model->data, $em->getMailbox($model->data['id_account']));
 return [
-  'success' => $em->send($model->data['id_account'], $model->data)
+  'success' => $em->send($model->data['id_account'], $model->data['email'])
 ];
