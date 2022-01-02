@@ -15,6 +15,11 @@
                       :notext=true
                       :text="_('Create a new mail account')"
                       icon="nf nf-mdi-account_plus"></bbn-button>
+          <bbn-button @click="writeNewEmail"
+                      class="bbn-left-xsspace"
+                      :notext="true"
+                      :text="_('Write new mail')"
+                      icon="nf nf-fa-edit"></bbn-button>
         </div>
         <div class="bbn-flex-fill">
           <bbn-tree :source="treeData"

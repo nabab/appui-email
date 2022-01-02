@@ -1,8 +1,8 @@
 <?php
 /**
-     * What is my purpose?
-     *
-     **/
+           * What is my purpose?
+           *
+           **/
 
 /** @var $model \bbn\Mvc\Model*/
 use bbn\X;
@@ -15,11 +15,20 @@ function createEmailListString(array $array): string {
   return substr($res, 0, -1);
 }
 
+$em = new bbn\User\Email($model->db);
+
+$accounts = [];
+
+$emAccounts = $em->getAccounts();
+
+for ($i = 0; $i < count($emAccounts); $i++) {
+  array_push($accounts, $emAccounts[$i]['login']);
+}
+
 if ($model->hasData('id', true)) {
-  $em = new bbn\User\Email($model->db);
   $email =  $em->getEmail($model->data['id']);
   $header =  _('From : ') . createEmailListString($email['from']) . PHP_EOL . _('Send : ') . $email['Date'] . PHP_EOL . _('To : ') . createEmailListString($email['to']) . PHP_EOL . _('Subject : ') . $email['Subject'] . PHP_EOL;
-    $email['plain'] = PHP_EOL. PHP_EOL . $header . $email['plain'];
+  $email['plain'] = PHP_EOL. PHP_EOL . $header . $email['plain'];
   if (!empty($email['html'])) {
     $email['html'] = nl2br(PHP_EOL . PHP_EOL . '<hr>' . $header) . $email['html'];
   } else {
@@ -40,16 +49,23 @@ if ($model->hasData('id', true)) {
       $subject = 'TR : ' . $email['subject'];
     }
   }
-  
+
   $email['login'] = $em->getLoginByEmailId($model->data['id'])['login'];
   return [
     'success' => true,
     'email' => $email,
     'subject' => $subject,
     'to' => $to,
+    'accounts' => $accounts,
   ];
 }
 
 return [
-  'success' => false,
+  'success' => true,
+  'email' => [
+   'email' => false,
+  ],
+  'subject' => "",
+  'to' => "",
+  'accounts' => $accounts,
 ];

@@ -148,6 +148,9 @@
       forward(){
         bbn.fn.link(this.source.root + "webmail/write/forward/" + this.selectedMail.id);
       },
+      writeNewEmail() {
+        bbn.fn.link(this.source.root + "webmail/write");
+      },
       archive(){
         if (this.selectedMail) {
 
