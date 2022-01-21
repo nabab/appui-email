@@ -20,12 +20,12 @@ if ( !empty($model->data['id_note']) ){
           'field' => 'id_note',
           'operator' => '=',
           'value' => $mask['id_note']
+        ], [
+          'field' => 'latest',
+          'operator' => '=',
+          'value' => 1
         ]]
-        ],
-        'order' => [[
-          'field' => 'version',
-          'dir' => 'DESC'
-        ]]
+      ],
     ])
     ){
       $mask['creator'] = $last_creator;
