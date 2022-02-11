@@ -81,9 +81,7 @@
                      field: 'sent',
                      dir: 'DESC'
                    }]"
-                   :tr-class="r => r.priority < 5 ? 'bbn-bg-light-red' : ''"
-
-        >
+                   :tr-class="r => r.priority < 5 ? 'bbn-bg-light-red' : ''">
           <bbns-column title="<?=_("ID")?>"
                        field="id"
                        :filterable="false"
@@ -97,7 +95,7 @@
                        :editable="false"
                        :sortable="false"
                        :hidden="true"
-                       ></bbns-column>             
+                       ></bbns-column>
           <bbns-column title="<?=_("Status")?>"
                        field="state"
                        :width="80"
