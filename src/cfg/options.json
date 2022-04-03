@@ -1,62 +1,115 @@
 {
-  "text": "Mailings",
-  "code": "mailings",
-  "id_parent": "appui",
-  "icon": "nf nf-oct-mail",
   "cfg": {
     "show_code": 1,
-    "allow_children": 1
+    "allow_children": 1,
+    "show_icon": 1,
+    "i18n": "en"
   },
-  "items": [
+  "id_parent": ["appui"],
+  "text": "eMails",
+  "code": "email",
+  "id_alias": ["plugin", "list", "templates", "option", "appui"],
+  "icon": "nf nf-fa-at",
+  "plugin": true,
+  "items": [ 
     {
-      "text": "Test eMails",
-      "code": "test",
-      "icon": "nf nf-fa-at",
+      "text": "Accounts",
+      "code": "accounts"
+    },
+    {
+      "text": "Domains",
+      "code": "domains"
+    },
+    {
       "cfg": {
         "show_code": 1,
-        "desc": "Email addresses used for sending test emails",
         "show_value": 1,
-        "sortable": 1
-      }
-    }, {
-      "text": "Sender",
-      "code": "sender",
+        "show_icon": 1
+      },
+      "text": "Folders",
+      "code": "folders",
+      "items": [
+        {
+          "text": "Drafts",
+          "code": "drafts",
+          "icon": "nf nf-mdi-file_document",
+          "names": [
+            "drafts",
+            "Drafts",
+            "Brouillons"
+          ]
+        },
+        {
+          "text": "Inbox",
+          "code": "inbox",
+          "icon": "nf nf-fa-inbox",
+          "names": [
+            "INBOX"
+          ]
+        },
+        {
+          "text": "Other folders",
+          "code": "folders",
+          "icon": "nf nf-fa-folder_o"
+        },
+        {
+          "text": "Sent",
+          "code": "sent",
+          "icon": "nf nf-mdi-inbox_arrow_up",
+          "names": [
+            "sent",
+            "Sent",
+            "&AMk-l&AOk-ments envoy&AOk-s",
+            "\u00c9l\u00e9ments envoy\u00e9s"
+          ]
+        },
+        {
+          "text": "Spam",
+          "code": "spam",
+          "icon": "nf nf-mdi-fire",
+          "names": [
+            "spam",
+            "Spam",
+            "Junk",
+            "junk",
+            "Ind\u00e9sirables"
+          ]
+        },
+        {
+          "text": "Trash",
+          "code": "trash",
+          "icon": "nf nf-fa-trash",
+          "names": [
+            "trash",
+            "Trash",
+            "Corbeille"
+          ]
+        }
+      ]
+    },
+    {
       "cfg": {
         "show_code": 1,
         "show_value": 1
-      }
-    }, {
-      "text": "Permissions",
-      "code": "permissions",
-      "cfg": {
-        "allow_children": 1
       },
+      "text": "Types",
+      "code": "types",
       "items": [
         {
-          "text": "Access",
-          "code": "access"
-        }, {
-          "text": "Options",
-          "code": "options"
-        }, {
-          "text": "Plugins",
-          "code": "plugins",
-          "items": [
-            {
-              "text": "Dashboard",
-              "code": "appui-dashboard",
-              "id_alias": ["list", "dashboard", "appui"],
-              "items": [
-                {
-                  "text": "Mailings",
-                  "code": "mailings",
-                  "observe":false,
-                  "closable":true,
-                  "component": "appui-email-widget-mailings"
-                }
-              ]
-            }
-          ]
+          "text": "GMail",
+          "code": "gmail"
+        },
+        {
+          "text": "IMAP",
+          "code": "imap"
+        },
+        {
+          "text": "Microsoft Mail (Hotmail, Live...)",
+          "code": "hotmail"
+        },
+        {
+          "text": "POP3",
+          "code": "pop3"
         }
       ]
     }
