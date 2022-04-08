@@ -70,7 +70,6 @@
         },
         "fields": {
             "id": {
-                "position": 1,
                 "type": "binary",
                 "null": 0,
                 "key": "PRI",
@@ -78,7 +77,6 @@
                 "maxlength": 16
             },
             "id_note": {
-                "position": 2,
                 "type": "binary",
                 "null": 1,
                 "key": "MUL",
@@ -87,7 +85,6 @@
                 "maxlength": 16
             },
             "version": {
-                "position": 3,
                 "type": "int",
                 "null": 1,
                 "key": null,
@@ -95,7 +92,6 @@
                 "maxlength": 10
             },
             "state": {
-                "position": 4,
                 "type": "enum",
                 "null": 0,
                 "key": null,
@@ -112,7 +108,6 @@
                 ]
             },
             "sender": {
-                "position": 5,
                 "type": "binary",
                 "null": 0,
                 "key": "MUL",
@@ -120,7 +115,6 @@
                 "maxlength": 16
             },
             "recipients": {
-                "position": 6,
                 "type": "binary",
                 "null": 1,
                 "key": "MUL",
@@ -129,7 +123,6 @@
                 "maxlength": 16
             },
             "sent": {
-                "position": 7,
                 "type": "datetime",
                 "null": 1,
                 "key": null,
@@ -207,7 +200,6 @@
         },
         "fields": {
             "id": {
-                "position": 1,
                 "type": "binary",
                 "null": 0,
                 "key": "PRI",
@@ -215,7 +207,6 @@
                 "maxlength": 16
             },
             "email": {
-                "position": 2,
                 "type": "varchar",
                 "null": 0,
                 "key": "MUL",
@@ -223,7 +214,6 @@
                 "maxlength": 100
             },
             "id_mailing": {
-                "position": 3,
                 "type": "binary",
                 "null": 1,
                 "key": "MUL",
@@ -232,7 +222,6 @@
                 "maxlength": 16
             },
             "subject": {
-                "position": 4,
                 "type": "varchar",
                 "null": 1,
                 "key": null,
@@ -241,7 +230,6 @@
                 "maxlength": 250
             },
             "text": {
-                "position": 5,
                 "type": "mediumtext",
                 "null": 1,
                 "key": null,
@@ -249,7 +237,6 @@
                 "default": "NULL"
             },
             "cfg": {
-                "position": 6,
                 "type": "json",
                 "null": 1,
                 "key": null,
@@ -257,7 +244,6 @@
                 "default": "NULL"
             },
             "status": {
-                "position": 7,
                 "type": "enum",
                 "null": 0,
                 "key": "MUL",
@@ -271,7 +257,6 @@
                 ]
             },
             "delivery": {
-                "position": 8,
                 "type": "datetime",
                 "null": 1,
                 "key": null,
@@ -279,7 +264,6 @@
                 "default": "NULL"
             },
             "read": {
-                "position": 9,
                 "type": "tinyint",
                 "null": 0,
                 "key": null,
