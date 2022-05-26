@@ -606,7 +606,7 @@
         "null": 1,
         "signed": 1,
         "default": "NULL",
-        "defaultExpression": false
+        "defaultExpression": 1
       }
     }
   },
