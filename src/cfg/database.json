@@ -64,14 +64,12 @@
         "type": "binary",
         "null": 0,
         "key": "PRI",
-        "signed": true,
         "maxlength": 16
       },
       "id_note": {
         "type": "binary",
         "null": 1,
         "key": "MUL",
-        "signed": true,
         "default": "NULL",
         "defaultExpression": 1,
         "maxlength": 16
@@ -87,7 +85,6 @@
         "type": "enum",
         "null": 0,
         "extra": "'cancelled','suspended','ready','sent','sending','error'",
-        "signed": true,
         "default": "ready",
         "values": [
           "cancelled",
@@ -102,14 +99,12 @@
         "type": "binary",
         "null": 0,
         "key": "MUL",
-        "signed": true,
         "maxlength": 16
       },
       "recipients": {
         "type": "binary",
         "null": 1,
         "key": "MUL",
-        "signed": true,
         "default": "NULL",
         "defaultExpression": 1,
         "maxlength": 16
@@ -175,21 +170,18 @@
         "type": "binary",
         "null": 0,
         "key": "PRI",
-        "signed": true,
         "maxlength": 16
       },
       "email": {
         "type": "varchar",
         "null": 0,
         "key": "MUL",
-        "signed": true,
         "maxlength": 100
       },
       "id_mailing": {
         "type": "binary",
         "null": 1,
         "key": "MUL",
-        "signed": true,
         "default": "NULL",
         "defaultExpression": 1,
         "maxlength": 16
@@ -197,7 +189,6 @@
       "subject": {
         "type": "varchar",
         "null": 1,
-        "signed": true,
         "default": "NULL",
         "defaultExpression": 1,
         "maxlength": 250
@@ -205,14 +196,12 @@
       "text": {
         "type": "mediumtext",
         "null": 1,
-        "signed": true,
         "default": "NULL",
         "defaultExpression": 1
       },
       "cfg": {
         "type": "json",
         "null": 1,
-        "signed": true,
         "default": "NULL",
         "defaultExpression": 1
       },
@@ -221,7 +210,6 @@
         "null": 0,
         "key": "MUL",
         "extra": "'failure','ready','success'",
-        "signed": true,
         "default": "ready",
         "values": [
           "failure",
@@ -232,7 +220,6 @@
       "delivery": {
         "type": "datetime",
         "null": 1,
-        "signed": true,
         "default": "NULL",
         "defaultExpression": 1
       },
@@ -243,7 +230,6 @@
         "maxlength": 3
       },
       "priority": {
-        "position": 10,
         "type": "tinyint",
         "null": 0,
         "default": 5,
@@ -370,7 +356,6 @@
         "maxlength": 16
       },
       "value": {
-        "position": 4,
         "type": "varchar",
         "null": 0,
         "maxlength": 255
