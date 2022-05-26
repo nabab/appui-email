@@ -4,8 +4,14 @@
   "icon": "nf nf-mdi-email",
   "items": [
     {
-      "text": "Messages électroniques",
+      "text": "Webmail",
       "num": 1,
+      "icon": "nf nf-fa-rocket",
+      "link": "page/home"
+    },
+    {
+      "text": "Mailings",
+      "num": 2,
       "icon": "nf nf-fa-rocket",
       "link": "page/home"
     }
