@@ -151,7 +151,7 @@
     </bbn-pane>
   </bbn-splitter>
   <div class="bbn-overlay bbn-middle" 
-       -else>
+       v-else>
     <div class="bbn-block bbn-lpadded bbn-lg">
       <p>
         <?=_("You have no account configured yet")?>
