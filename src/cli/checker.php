@@ -4,6 +4,6 @@
  *
  **/
 $user = false;
-$id_accounts = $ctrl->inc->options->fromCode('accounts', 'email', 'appui');
+//$id_accounts = $ctrl->inc->options->fromCode('accounts', 'email', 'appui');
 
-$accounts = $ctrl->inc->pref->getAll($id_accounts);
+//$accounts = $ctrl->inc->pref->getAll($id_accounts);
