@@ -1,6 +1,7 @@
 <?php
 use bbn\X;
 
+X::log("Starting email poller");
 return [[
   'id' => 'appui-email-0',
   'frequency' => 30,
@@ -8,6 +9,7 @@ return [[
     $em = new bbn\User\Email($model->db);
     $accounts = $em->getAccounts();
     $tot = 0;
+    X::log("Starting email function");
     foreach ($accounts as $a) {
       if ($tot < 500) {
         X::map(
