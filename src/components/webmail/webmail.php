@@ -24,9 +24,11 @@
         <div class="bbn-flex-fill">
           <bbn-tree :source="treeData"
                     uid="id"
+                    :menu="treeMenu"
                     :opened="true"
                     storage-full-name="appui-email-webmail-tree"
-                    @select="selectFolder"/>
+                    @select="selectFolder"
+                    ref="tree"/>
         </div>
       </div>
     </bbn-pane>

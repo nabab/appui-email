@@ -16,6 +16,7 @@
         folders: [],
         foldersData: [],
         moveTo: "",
+        root: appui.plugins['appui-email']
       };
     },
     computed: {
@@ -26,13 +27,69 @@
       },
     },
     methods: {
+      treeMenu(node) {
+        res = []
+        if (node.data.type === "account") {
+          res.push({
+            text: bbn._('Delete account'),
+            icon: "",
+            action: () => {
+            	this.deleteAccount(node.data.uid)
+        		}
+          })
+        }
+        if (node.data.type === "folder" || node.data.type === "account") {
+          res.push({
+            text: bbn._('Create folder'),
+            icon: "",
+            action: () => {
+              bbn.fn.log("clicke in", node.data);
+              this.getPopup({
+                title: bbn._("Folder name"),
+                component: "appui-email-forms-folder",
+                source: {
+                  id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
+                  id_parent: node.data.id || null
+                }
+              })
+            }
+          })
+        }
+        return res;
+      },
+      deleteAccount(uid) {
+        this.confirm(bbn._("Do you want to delete this account ?"), () => {
+          bbn.fn.post(this.root + '/actions/account', {
+            action: 'delete',
+            data: {
+              id: uid
+            }
+          }, d => {
+            if (d.success) {
+              appui.success(bbn._("Account deleted with success"));
+              let tree = this.getRef('tree');
+              let idx = bbn.fn.search(this.source.accounts, { id: uid})
+              this.source.accounts.splice(idx, 1)
+              this.setTreeData();
+              tree.updateData().then( () => {
+                tree.reload()
+              })
+            } else {
+              appui.error(bbn._(d.error ? d.error : "Impossible to delete the account"));
+            }
+          })
+        })
+      },
       setTreeData(){
         bbn.fn.log("TreeData");
         let r = [];
         let fn = (ar, id_account) => {
           let res = [];
+          bbn.fn.log("ar", ar)
+          bbn.fn.log("folder_types", this.source.folder_types);
           bbn.fn.each(this.source.folder_types, ft => {
             bbn.fn.each(ar, a => {
+              a.type = "folder";
               if (ft.names && ft.names.indexOf(a.uid) > -1) {
                 res.push(bbn.fn.extend({
                   id_account: id_account,
@@ -57,6 +114,7 @@
               if (tmp.items) {
                 tmp.items = fn(tmp.items, id_account)
               }
+              tmp.type = "folder"
               res.push(tmp);
             }
           })
@@ -68,7 +126,8 @@
             uid: a.code,
             names: a.names,
             icon: a.icon,
-            id: a.id
+            id: a.id,
+            type: "folder_types"
           });
         })
         if (this.source.accounts) {
@@ -76,7 +135,8 @@
             r.push({
               text: a.login,
               uid: a.id,
-              items: fn(a.folders, a.id)
+              items: fn(a.folders, a.id),
+              type: "account"
             });
           });
         }
@@ -189,7 +249,7 @@
           title: bbn._("Folder changer"),
           component: 'appui-email-forms-moveto',
           componentOptions: {
-						source: {
+            source: {
               id : this.selectedMail.id,
               folders: this.folders,
               foldersData: this.foldersData,
@@ -267,7 +327,14 @@
           },
           success(d){
             if (d && d.success) {
-              this.closest('bbn-container').reload();
+              let tree = cp.getRef('tree');
+              let idx = bbn.fn.search(d.data, { id: d.id_account})
+              bbn.fn.log("data", d.data[idx])
+              cp.source.accounts.push(d.data[idx]);
+              cp.setTreeData();
+              tree.updateData().then( () => {
+                tree.reload()
+              })
             }
           }
         },
