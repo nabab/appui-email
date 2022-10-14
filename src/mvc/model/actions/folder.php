@@ -14,17 +14,23 @@ if ($model->hasData(['action', 'id_account'], true)) {
   $mb = $em->getMailbox($model->data['id_account']);
   switch($model->data['action']) {
     case 'delete':
+      if ($model->hasData('id')) {
+        return [
+          'success' => $em->deleteFolder($model->data['id'], $model->data['id_account'])
+        ];
+      }
       break;
     case 'create':
       if ($model->hasData('name')) {
         return [
-          'type' => $types = $em->getFolderTypes(),
           'success' => $em->createFolder($model->data['id_account'], $model->data['name'], $model->data['id_parent'] ?? null),
-					'folder' => $mb->listAllFolders(),
-          'test' => $em->syncFolders($model->data['id_account']),
-          'fields' => X::getField($types, ['code' => 'folders'], 'id')
+          'account' => $em->getAccount($model->data['id_account'])
         ];
       }
+      return [
+        'success' => false,
+        'error' => 'Name of folder not given'
+      ];
       break;
     default:
       return [

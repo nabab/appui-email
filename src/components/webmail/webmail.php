@@ -28,7 +28,9 @@
                     :opened="true"
                     storage-full-name="appui-email-webmail-tree"
                     @select="selectFolder"
-                    ref="tree"/>
+                    ref="tree"
+                    :draggable="true"
+                    @move="onMove"/>
         </div>
       </div>
     </bbn-pane>

@@ -23,7 +23,18 @@
     },
     methods: {
       success(d) {
-        bbn.fn.log(d);
+        appui.success(bbn._("Folder created with success"));
+        let webmail = this.closest('bbn-container').getComponent();
+				let idx = bbn.fn.search(webmail.source.accounts , { id: this.source.id_account });
+        webmail.source.accounts.splice(idx, 1, d.account);
+        let tree = webmail.getRef('tree');
+        webmail.setTreeData();
+        tree.updateData().then(() => {
+          tree.reload()
+        })
+      },
+      failure(d) {
+        appui.error(bbn._(d.error || "Cannot create the folder"));
       }
     }
   }

@@ -27,6 +27,13 @@
       },
     },
     methods: {
+      onMove(source, dest, event) {
+        if (source.data.type !== "folder") {
+          	event.preventDefault();
+        }
+        bbn.fn.log(arguments);
+        return false;
+      },
       treeMenu(node) {
         res = []
         if (node.data.type === "account") {
@@ -49,13 +56,41 @@
                 component: "appui-email-forms-folder",
                 source: {
                   id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
-                  id_parent: node.data.id || null
+                  id_parent: node.data.id || null,
                 }
               })
             }
           })
         }
+        if (node.data.type == "folder") {
+          res.push({
+            text: bbn._('Remove folder'),
+            icon: "",
+            action: () => {
+              this.removeFolder(node.data.id, node.data.text, node.data.id_account);
+            }
+          })
+        }
         return res;
+      },
+      removeFolder(id, text, uid) {
+        this.confirm(bbn._(`Do you want to delete the ${text} folder ?`), () => {
+          bbn.fn.post(this.root + '/actions/folder/delete', {
+            id: id,
+            id_account: uid
+          }, d => {
+            if (d.success) {
+              appui.success(bbn._("Folder deleted with success"));
+              let tree = this.getRef('tree');
+              let idx = bbn.fn.seatch(this.source.accounts, {id : uid})
+              this.source.accounts.splice(idx, 1)
+              this.setTreeDate();
+              tree.updateData().then(() => {
+                tree.reload();
+              })
+            }
+          })
+        })
       },
       deleteAccount(uid) {
         this.confirm(bbn._("Do you want to delete this account ?"), () => {
@@ -256,8 +291,7 @@
             }
           }
         })
-      }
-      ,
+      },
       submitFolderChange() {
         bbn.fn.log("FOLDER", this.moveTo);
       },
