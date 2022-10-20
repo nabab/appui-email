@@ -29,20 +29,21 @@
     methods: {
       onMove(source, dest, event) {
         if (source.data.type !== "folder") {
-          	event.preventDefault();
+          event.preventDefault();
         }
         bbn.fn.log(arguments);
         return false;
       },
       treeMenu(node) {
         res = []
+        bbn.fn.log("SELECTED TREE ITEM", node.data);
         if (node.data.type === "account") {
           res.push({
             text: bbn._('Delete account'),
             icon: "",
             action: () => {
-            	this.deleteAccount(node.data.uid)
-        		}
+              this.deleteAccount(node.data.uid)
+            }
           })
         }
         if (node.data.type === "folder" || node.data.type === "account") {
@@ -67,30 +68,50 @@
             text: bbn._('Remove folder'),
             icon: "",
             action: () => {
-              this.removeFolder(node.data.id, node.data.text, node.data.id_account);
+              this.removeFolder(this.getAllFolderChild(node.data), node.data.text, node.data.id_account);
             }
           })
         }
         return res;
       },
-      removeFolder(id, text, uid) {
-        this.confirm(bbn._(`Do you want to delete the ${text} folder ?`), () => {
+      getAllFolderChild(folder) {
+        res = [];
+        res.push({id: folder.id, text: folder.text})
+        if (folder.items) {
+          for (let idx in folder.items) {
+            if (folder.items[idx].items) {
+              res = res.concat(this.getAllFolderChild(folder.items[idx]));
+            } else {
+              res.push({id: folder.items[idx].id, text: folder.items[idx].text})
+            }
+          }
+        }
+        return res;
+      },
+      removeFolder(idArray, text, uid) {
+        this.confirm(bbn._(`Do you want to delete the ${text} folder and all the subfolders ?`), () => {
           bbn.fn.post(this.root + '/actions/folder/delete', {
-            id: id,
+            id: idArray.reverse(),
             id_account: uid
           }, d => {
+            let tree = this.getRef('tree');
+            let idx = bbn.fn.search(this.source.accounts, { id: uid})
             if (d.success) {
-              appui.success(bbn._("Folder deleted with success"));
-              let tree = this.getRef('tree');
-              let idx = bbn.fn.search(this.source.accounts, {id : uid})
-              let fold_idx = bbn.fn.search(this.source.accounts[idx].folders, {id : id})
-              this.source.accounts[idx].folders.splice(fold_idx, 1);
-              bbn.fn.log(fold_idx, this.source.accounts[idx])
-              this.setTreeData();
-              tree.updateData().then(() => {
-                tree.reload();
-              })
+              appui.success(bbn._(`${text} folder and subfolders ar successfuly deleted`));
+              this.source.accounts.splice(idx, 1, d.account);
+            } else {
+              for (let idx in d.res) {
+                if (d.res[idx].success) {
+                  appui.success(bbn._(`${d.res[idx].text} successfuly deleted`))
+                } else {
+                  appui.success(bbn._(`${d.res[idx].text} impossible to delete`))
+                }
+              }
             }
+            this.setTreeData();
+            tree.updateData().then( () => {
+              tree.reload()
+            })
           })
         })
       },

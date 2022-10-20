@@ -14,8 +14,22 @@ if ($model->hasData(['action', 'id_account'], true)) {
   switch($model->data['action']) {
     case 'delete':
       if ($model->hasData('id')) {
+        $success = true;
+        $res = [];
+   		  foreach ($model->data['id'] as $folder) {
+          $tmp =  $em->deleteFolder($folder['id'], $model->data['id_account']);
+          if ($success && !$tmp) {
+            $success = false;
+          }
+        	array_push($res, [
+            'success' => $tmp,
+       			'text' => $folder['text']
+          ]);
+      	}
         return [
-          'success' => $em->deleteFolder($model->data['id'], $model->data['id_account'])
+          'success' => $success,
+          'res' => $res,
+          'account' => $em->getAccount($model->data['id_account'])
         ];
       }
       break;
