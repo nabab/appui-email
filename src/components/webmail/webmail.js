@@ -28,7 +28,7 @@
     },
     methods: {
       onMove(source, dest, event) {
-        if (source.data.type !== "folder") {
+        if (source.data.type !== "folders") {
           event.preventDefault();
         }
         bbn.fn.log(arguments);
@@ -46,7 +46,7 @@
             }
           })
         }
-        if (node.data.type === "folder" || node.data.type === "account") {
+        if (node.data.type !== "folder_types") {
           res.push({
             text: bbn._('Create folder'),
             icon: "",
@@ -54,7 +54,7 @@
               bbn.fn.log("clicke in", node.data);
               this.getPopup({
                 title: bbn._("Folder name"),
-                component: "appui-email-forms-folder",
+                component: "appui-email-forms-create",
                 source: {
                   id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
                   id_parent: node.data.id || null,
@@ -63,12 +63,26 @@
             }
           })
         }
-        if (node.data.type == "folder") {
+        if (node.data.type !== "account" && node.data.type !== "folder_types") {
           res.push({
             text: bbn._('Remove folder'),
             icon: "",
             action: () => {
               this.removeFolder(this.getAllFolderChild(node.data), node.data.text, node.data.id_account);
+            }
+          },
+ 					{
+						text: bbn._('Rename Folder'),
+            icon: "",
+            action: () => {
+              this.getPopup({
+                title: bbn._("Folder new name"),
+                component: "appui-email-forms-rename",
+                source: {
+                 	id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
+                  folders: this.getAllFolderChild(node.data)
+                }
+              })
             }
           })
         }
@@ -76,13 +90,13 @@
       },
       getAllFolderChild(folder) {
         res = [];
-        res.push({id: folder.id, text: folder.text})
+        res.push({id: folder.id, text: folder.text, id_parent: folder.id_parent || null})
         if (folder.items) {
           for (let idx in folder.items) {
             if (folder.items[idx].items) {
               res = res.concat(this.getAllFolderChild(folder.items[idx]));
             } else {
-              res.push({id: folder.items[idx].id, text: folder.items[idx].text})
+              res.push({id: folder.items[idx].id, text: folder.items[idx].text, id_parent: folder.items[idx].id_parent || null})
             }
           }
         }
@@ -91,6 +105,7 @@
       removeFolder(idArray, text, uid) {
         this.confirm(bbn._(`Do you want to delete the ${text} folder and all the subfolders ?`), () => {
           bbn.fn.post(this.root + '/actions/folder/delete', {
+            // reverse the array to delete the the last subfolders before
             id: idArray.reverse(),
             id_account: uid
           }, d => {
@@ -172,7 +187,7 @@
               if (tmp.items) {
                 tmp.items = fn(tmp.items, id_account)
               }
-              tmp.type = "folder"
+              tmp.type = "folders"
               res.push(tmp);
             }
           })
