@@ -11,7 +11,6 @@ use bbn\User\Email;
 
 if ($model->hasData(['action', 'id_account'], true)) {
   $em = new Email($model->db);
-  $mb = $em->getMailbox($model->data['id_account']);
   switch($model->data['action']) {
     case 'delete':
       if ($model->hasData('id')) {

@@ -82,8 +82,8 @@
             if (d.success) {
               appui.success(bbn._("Folder deleted with success"));
               let tree = this.getRef('tree');
-              let idx = bbn.fn.seatch(this.source.accounts, {id : uid})
-              this.source.accounts.splice(idx, 1)
+              let idx = bbn.fn.search(this.source.accounts, {id : uid})
+              bbn.fn.log(this.source.accounts[idx])
               this.setTreeDate();
               tree.updateData().then(() => {
                 tree.reload();
