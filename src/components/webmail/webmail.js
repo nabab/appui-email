@@ -28,11 +28,46 @@
     },
     methods: {
       onMove(source, dest, event) {
+        bbn.fn.log(source, dest);
+        if (dest.data.type !== "account" && source.data.id_account !== dest.data.id_account) {
+          event.preventDefault();
+          return false;
+        }
+        if (dest.data.type === "account" && source.data.id_account !== dest.data.uid) {
+          event.preventDefault();
+          return false;
+        }
         if (source.data.type !== "folders") {
           event.preventDefault();
+          return false;
         }
+        bbn.fn.post(this.root + '/actions/folder/move', {
+          to: dest.data,
+          id_account: source.data.id_account,
+          folders: this.getAllFolderChild(source.data)
+        }, d => {
+          let tree = this.getRef('tree');
+          let idx = bbn.fn.search(this.source.accounts, { id: source.data.id})
+          if (d.success) {
+            appui.success(bbn._(`${source.data.text} folder and subfolders ar successfuly moved to ${dest.data.text}`));
+            this.source.accounts.splice(idx, 1, d.account);
+          } else {
+            for (let idx in d.res) {
+              if (d.res[idx].success) {
+                appui.success(bbn._(`${d.res[idx].text} successfuly deleted`))
+              } else {
+                appui.success(bbn._(`${d.res[idx].text} impossible to delete`))
+              }
+            }
+          }
+          this.setTreeData();
+          tree.updateData().then( () => {
+            tree.reload()
+          })
+        })
         bbn.fn.log(arguments);
-        return false;
+        event.preventDefault();
+        return true;
       },
       treeMenu(node) {
         res = []
@@ -40,7 +75,7 @@
         if (node.data.type === "account") {
           res.push({
             text: bbn._('Delete account'),
-            icon: "",
+            icon: "nf nf-mdi-delete",
             action: () => {
               this.deleteAccount(node.data.uid)
             }
@@ -49,7 +84,7 @@
         if (node.data.type !== "folder_types") {
           res.push({
             text: bbn._('Create folder'),
-            icon: "",
+            icon: "nf nf-fa-plus",
             action: () => {
               bbn.fn.log("clicke in", node.data);
               this.getPopup({
@@ -66,20 +101,21 @@
         if (node.data.type !== "account" && node.data.type !== "folder_types") {
           res.push({
             text: bbn._('Remove folder'),
-            icon: "",
+            icon: "nf nf-mdi-folder_remove",
             action: () => {
               this.removeFolder(this.getAllFolderChild(node.data), node.data.text, node.data.id_account);
             }
           },
- 					{
-						text: bbn._('Rename Folder'),
-            icon: "",
+                   {
+            text: bbn._('Rename Folder'),
+            icon: "nf nf-mdi-rename_box",
             action: () => {
               this.getPopup({
                 title: bbn._("Folder new name"),
                 component: "appui-email-forms-rename",
                 source: {
-                 	id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
+                  name: node.data.text,
+                  id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
                   folders: this.getAllFolderChild(node.data)
                 }
               })
@@ -154,15 +190,20 @@
         })
       },
       setTreeData(){
-        bbn.fn.log("TreeData");
+        let icon = {
+          Trash: "nf nf-fa-trash",
+          INBOX: "nf nf-fa-inbox",
+          spam: "nf nf-mdi-fire",
+          Sent: "nf nf-mdi-inbox_arrow_up",
+          Drafts: "nf nf-mdi-file_document"
+        }
         let r = [];
         let fn = (ar, id_account) => {
           let res = [];
-          bbn.fn.log("ar", ar)
-          bbn.fn.log("folder_types", this.source.folder_types);
           bbn.fn.each(this.source.folder_types, ft => {
             bbn.fn.each(ar, a => {
               a.type = "folder";
+              a.icon = icon[a.text] || "";
               if (ft.names && ft.names.indexOf(a.uid) > -1) {
                 res.push(bbn.fn.extend({
                   id_account: id_account,
