@@ -1,40 +1,41 @@
-/* LESS Document */
-
-.mail-editor-header {
-  margin-bottom: 1%;
+.container {
+  display: block;
+  margin: 2% 15% 0 15%;
 }
 
-.subjectButton:disabled {
-  color: black !important;
+.h-30px {
+  height: 30px;
 }
 
-.grid-menu-editor {
+.container__top {
+  font-size: 16px;
   display: grid;
-  grid-auto-rows: max-content;
-  grid-row-gap:10px;
-  grid-template-columns: minmax(auto, max-content)  minmax(auto, max-content);
+  grid-template-columns: minmax(40px, auto) minmax(40px,1fr) auto;
+  row-gap: 10px;
+  column-gap: 7px;
+  padding: 15px 15px 20px 15px;
+  height: 100%
 }
 
-.main-grid-fields {
-  display: grid;
-  grid-row-gap:3%;
-  grid-auto-rows: max-content;
-  grid-column-gap: 0.2em;
-  grid-template-columns: minmax(auto, max-content) auto minmax(auto, max-content);
+.container__editor {
+  font-size: 14px;
+  padding: 15px 15px 20px 15px;
 }
 
-.mail-grid-fields {
-  display: grid;
-  grid-row-gap:10px;
-  grid-auto-rows: max-content;
-  grid-column-gap: 0.2em;
-  grid-template-columns: minmax(auto, max-content) auto;
-}
-
-.box {
+.container__toolbar {
+  font-size: 14px;
+  padding: 15px 15px 20px 15px;
   display: flex;
-  flex-flow: column;
-  height: auto;
+  flex-direction: row;
+  gap: 20px;
+  div span {
+    padding: 0 5px 0 5px;
+  }
+}
+
+.container__bottom {
+  font-size: 20px;
+  padding: 15px 15px 20px 15px;
 }
 
 .span-text-center {

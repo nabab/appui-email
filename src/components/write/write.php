@@ -1,60 +1,88 @@
 <div class="bbn-overlay">
-  <div class="bbn-flex-fill" style="margin-top:0.2em">
-    <div class="bbn-flex-fill main-grid-fields">
+  <div class="bbn-flex-fill container bbn-bordered bbn-radius">
+    <div class="bbn-flex-fill container__top">
+      <div>
+        <bbn-button :text="trlt.to"
+                    @click="openContacts('to')"></bbn-button>
+      </div>
+      <div>
+        <appui-email-multiinput :source="rootUrl + '/webmail/contacts'"
+                                source-text="name"
+                                source-value="id">
+        
+        </appui-email-multiinput>
+      </div>
+      <div>
+        <bbn-button v-if="!ccButton"
+                    :text="trlt.cc"
+                    @click="ccButton = !ccButton"></bbn-button>
+      </div>
+      <div v-if="ccButton">
+        <bbn-button :text="trlt.cc"
+                    @click="openContacts('cc')"></bbn-button>
+      </div>
+      <div v-if="ccButton">
+        <bbn-input class="bbn-w-90"
+                   v-model="currentCC"
+                   v-if="ccButton"></bbn-input>
+      </div>
+      <div v-if="ccButton">
+        <bbn-button v-if="!cciButton"
+                    :text="trlt.cci"
+                    @click="cciButton = !cciButton"></bbn-button>
+      </div>
+      <div v-if="cciButton">
+        <bbn-button :text="trlt.cci"
+                    @click="openContacts('cci')"></bbn-button>
+      </div>
+      <div v-if="cciButton">
+        <bbn-input class="bbn-w-90"
+                   v-model="currentCCI"></bbn-input>
+      </div>
+      <div v-if="cciButton">
 
-      <div class="grid-menu-editor bbn-flex-fill">
-        <span class="span-text-center">test</span>
-        <bbn-dropdown v-model="type"
-                      :source="types"></bbn-dropdown>
-        <span class="span-text-center">{{trlt.from}}</span>
+      </div>
+      <div class="span-text-center">
+        <span class="bbn-lg">{{trlt.subject}}</span>
+      </div>
+      <div>
+        <bbn-input v-model="subject"
+                   style="width: 100%">
+        </bbn-input>
+      </div>
+      <div>
+
+      </div>
+    </div>
+    <div class="bbn-flex-fill container__toolbar">
+
+      <bbn-upload v-model="attachmentsModel"
+                  :save-url="rootUrl + '/actions/email/upload_file'"
+                  style="width: 30%"
+                  @success="uploadSuccess"></bbn-upload>
+
+      <div class="span-text-center">
+        <span class="bbn-lg">{{trlt.from}}</span>
         <bbn-dropdown v-model="currentFrom"
                       :source="accounts"></bbn-dropdown>
       </div>
 
-      <div class="bbn-flex-fill mail-grid-fields email-header">
-        <bbn-button :text="trlt.to"
-                    @click="openContacts('to')"></bbn-button>
-        <bbn-input v-model="currentTo"></bbn-input>
-        <bbn-button :text="trlt.cc"
-                    v-if="ccButton"
-                    @click="openContacts('cc')"></bbn-button>
-        <bbn-input v-model="currentCC"
-                   v-if="ccButton"></bbn-input>
-        <bbn-button :text="trlt.cci"
-                    v-if="cciButton"
-                    @click="openContacts('cci')"></bbn-button>
-        <bbn-input v-model="currentCCI"
-                   v-if="cciButton"></bbn-input>
-        <span class="span-text-center">{{trlt.subject}}</span>
-        <bbn-input v-model="subject"></bbn-input>
+      <div class="span-text-center">
+        <span class="bbn-lg">{{trlt.editor}}</span>
+        <bbn-dropdown v-model="type"
+                      :source="types"></bbn-dropdown>
       </div>
-      <div class="bbn-flex-fill box">
-        <div class="bbn-flex-width">
-          <bbn-button :text="trlt.cc"
-                      @click="ccButton = !ccButton"></bbn-button>
-          <bbn-button :text="trlt.cci"
-                      @click="cciButton = !cciButton"></bbn-button>
-        </div>
-        <div style="flex: 1 1 auto;margin-top:0.7em">
-          <bbn-button text="Send"
-                      @click="send"
-                      icon="nf nf-fa-send"
-                      style="width:100%;height:100%"></bbn-button>
-        </div>
-      </div>
+
     </div>
-  </div>
-  <hr>
-  <div class="bbn-100">
-    <div style="width: 100%; margin-top:1%; margin-bottom:3%"
-         class="bbn-flex-fill">
-      <bbn-upload v-model="attachmentsModel"
-                  :save-url="rootUrl + '/actions/email/upload_file'"
-                  style="width: 100%"
-                  @success="uploadSuccess"></bbn-upload>
+    <div class="bbn-flex-fill container__editor">
+      <component :is="type"
+                 v-model="message"
+                 style="min-height: 40vh; width: 100%"></component>
     </div>
-    <component :is="type"
-               v-model="message"
-               style="width: 80%; margin-left:10%; height: 95%"></component>
+    <div class="bbn-flex-fill container__bottom">
+      <bbn-button text="Send"
+                  @click="send"
+                  icon="nf nf-fa-send"></bbn-button>
+    </div>
   </div>
 </div>
