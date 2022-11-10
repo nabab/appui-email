@@ -99,19 +99,19 @@
             })
             // if email found replace it by the signature and place it after the signature
             if (canAddAtEnd) {
-              this.message = this.message.replace(this.originalMessage, signature.signature + '\n') + this.originalMessage;
+              this.message = this.message.replace(this.originalMessage, '\n\n\n' + signature.signature + '\n') + this.originalMessage;
             // else put the signature at the top of the email
             } else {
-              this.message = signature.signature + '\n' + this.message
+              this.message = '\n\n\n' + signature.signature + '\n' + this.message
             }
           // if is a new email
           } else {
             // check if user have writed email and place tha signature at the end
             if (this.message) {
-            	this.message = this.message + signature.signature + '\n'
+            	this.message = this.message + '\n\n\n' + signature.signature + '\n'
             // otherwise place it directly because the email is empty
             } else {
-              this.message = signature.signature + '\n'
+              this.message = '\n\n\n' + signature.signature + '\n'
             }
           }
         }
