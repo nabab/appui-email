@@ -29,7 +29,8 @@ switch($model->data['action']) {
           'text' => "Signatures",
           'name' => $model->data['name'],
           'signature' => $model->data['signature']
-        ])
+        ]),
+        'signature' => $model->inc->pref->get($model->data['id'])
       ];
     }
   case 'create':
@@ -39,8 +40,13 @@ switch($model->data['action']) {
         'name' => $model->data['name'],
         'signature' => $model->data['signature']
       ]);
+      if (!$id) {
+        return [
+          'success' => false
+        ];
+      }
       return [
-        'id' => $id,
+        'signature' => $model->inc->pref->get($id),
         'success' => true
       ];
     }

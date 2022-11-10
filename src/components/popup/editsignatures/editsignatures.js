@@ -7,27 +7,20 @@
         required: true,
         type: Array,
       },
-      dropdownSignatures: {
+      selected: {
         required: true,
-        type: Array,
-      },
-      currentIdx: {
-        required: true,
-        type: String,
       }
     },
     data() {
       return {
-        currentSignatures: this.signatures.length ? this.signatures.slice() : [{
-          name: 'New',
-          signature: ''
-        }],
-        currentDropdownSigns: this.dropdownSignatures,
-        currentSignature: this.currentIdx === "null" ? "0" : this.currentIdx,
-        isChanged: false,
+        // index of the selected signature
+        currentSignature: null,
         currentText: "",
         currentName: "",
+        originalText: "",
+        originalName: "",
         type: "bbn-rte",
+        isSaving: false,
         types: [
           {value: "bbn-rte", text: bbn._('Rich text editor')},
           {value: "bbn-markdown", text: bbn._('Markdown')},
@@ -36,157 +29,104 @@
         root: appui.plugins['appui-email'] + '/'
       };
     },
-    mounted() {
-      bbn.fn.log(this.currentSignatures);
-      bbn.fn.log('idx', this.currentIdx, this.currentSignature, this.currentSignatures);
-      if (this.currentIdx === "null") {
-        this.currentDropdownSigns.push({text: this.currentSignatures[0].name, value: "0"})
+    beforeMount() {
+      const selectedRow = bbn.fn.getRow(this.signatures, {id: this.selected})
+      if (selectedRow) {
+        this.currentSignature = this.selected
       }
-      this.currentText = this.currentSignatures[this.currentSignature].signature
-      this.currentName = this.currentSignatures[this.currentSignature].name
     },
     computed: {
-      notSavedExist() {
-        for (let i in this.currentSignatures) {
-          if (!this.currentSignatures[i].id)
-            return true;
-        }
-        return false;
+      currentDropdownSigns() {
+        const ar = this.signatures.map(a => {
+          return {
+            value: a.id,
+            text: a.name
+          }
+        })
+        // push in front of array
+        ar.unshift({value: null, text: "New"})
+        return ar;
       },
+      isSaved() {
+        return (this.originalName === this.currentName) && (this.originalText === this.currentText)
+      },
+      selectedRow() {
+        if (this.currentSignature) {
+          return bbn.fn.getRow(this.signatures, {id: this.currentSignature})
+        }
+        return null;
+      }
     },
     methods: {
-      resetSigns() {
-        this.confirm(bbn._('All unsaved signatures will be deleted. Continue ?'), () => {
-          for (let i = 0; i < this.currentSignatures.length; i++) {
-            if (this.currentSignatures[i].id === undefined) {
-              bbn.fn.log(this.currentSignatures[i]);
-              this.currentSignature = i - 1;
-              this.currentSignatures.splice(i, 1);
-              this.currentDropdownSigns.splice(i, 1);
-              i--;
-            }
-          }
-        })
-      },
-      createSign() {
-        let a = 0;
-        for (let i in this.currentSignatures) {
-          if (this.currentSignatures[i].name === (a ? `New ${a}` : 'New')) {
-            a += 1
-          }
-        }
-        let name;
-        if (a == 0) {
-          name = "New"
-        } else {
-          name = `New ${a}`
-        }
-        this.currentSignatures.push({
-          name: name,
-          signature: ''
-        })
-        this.currentDropdownSigns.push({
-          text: name,
-          value: this.currentSignatures.length - 1
-        })
-        this.currentSignature = this.currentSignatures.length - 1
-      },
       deleteSign() {
-        if (this.currentSignatures.length) {
-          this.confirm(bbn._(`Do you really want to remove the Name signature ${this.currentSignatures[this.currentSignature]}`), () => {
-            let signature = this.currentSignatures[this.currentSignature];
-            if (!signature.id) {
-              let idx = this.currentSignature
-              if (this.currentSignature) {
-                this.currentSignature = `${idx - 1}`;
-              } else {
-                this.currentSignature = null
-                this.currentDropdownSigns = []
-
-              }
-              this.currentSignatures.splice(idx, 1);
-              this.currentDropdownSigns.splice(idx, 1);
-            } else {
-              bbn.fn.post(this.root + 'actions/signatures/delete', {
-                id: signature.id
-              }, (d) => {
-                let idx = this.currentSignature
-                if (!d.success) {
-                  appui.success(bbn._('Signature deleted'))
-                  if (this.currentSignature) {
-                    this.currentSignature = `${idx - 1}`;
-                    this.currentDropdownSigns.splice(idx, 1);
-                  } else {
-                    this.currentSignature = null;
-                    this.currentDropdownSigns = []
-                  }
-                  this.currentSignatures.splice(idx, 1);
-                  let componentWrite = appui.find('appui-email-write');
-                  componentWrite.updateSign();
-                } else {
-                  appui.error(bbn._('Impossible to delete signature'))
+        bbn.fn.log(this.currentSignature)
+        if (this.currentSignature) {
+          this.confirm(bbn._('Do you want to delete this signature ?'), () => {
+            bbn.fn.post(this.root + 'actions/signatures/delete', {
+              id: this.currentSignature
+            }, (d) => {
+              if (d.success) {
+                appui.success(bbn._('Successfully deleted'))
+                const idx = bbn.fn.search(this.signatures, {id: this.currentSignature})
+                this.signatures.splice(idx, 1);
+                if (idx == 0 && !this.signatures.length) {
+                  this.currentSignature = null;
+                } else if (idx !== 0) {
+                  this.currentSignature -= 1;
+                } else if (idx !== this.signatures.length + 1) {
+                  this.currentSignature += 1;
                 }
-              })
-            }
+              } else {
+                appui.error(bbn._('Error in signature delete'));
+              }
+            })
           })
         }
       },
       saveSign() {
-        let signature = this.currentSignatures[this.currentSignature]
-        if (signature.id) {
+        if (this.currentSignature) {
           bbn.fn.post(this.root + 'actions/signatures/update', {
-            id: signature.id,
-            name: this.currentName,
-            signature: this.currentText
+            id: this.currentSignature,
+            signature: this.currentText,
+            name: this.currentName
           }, (d) => {
-            if (!d.success) {
-              appui.success(bbn._('Signature saved'))
-              let idx = this.currentSignature
-              this.$set(this.currentSignatures, idx, {id: d.id, name: this.currentName, signature: this.currentText})
+            bbn.fn.log("UPDATE", d);
+            if (d.success) {
+              appui.success(bbn._('Successfully saved'))
+              this.isSaving = true;
+              const idx = bbn.fn.search(this.signatures, {id: this.currentSignature})
+              this.signatures.splice(idx, 1, d.signature);
+              setTimeout(() => {
+                this.isSaving = false
+              }, 50);
             } else {
-              appui.error(bbn._('Signature save error'))
+              appui.error(bbn._('Error in signature save'));
             }
           })
         } else {
           bbn.fn.post(this.root + 'actions/signatures/create', {
-            name: this.currentName,
-            signature: this.currentText
+            signature: this.currentText,
+            name: this.currentName
           }, (d) => {
+            bbn.fn.log("CREATE", d);
             if (d.success) {
-              appui.success(bbn._('Signature saved'))
-              let idx = this.currentSignature
-              this.$set(this.currentSignatures, idx, {id: d.id, name: this.currentName, signature: this.currentText})
-              let componentWrite = appui.find('appui-email-write');
-              componentWrite.updateSign();
-              bbn.fn.log(this.currentSignatures, this.currentText, this.currentName)
-
+              appui.success(bbn._('Successfully Saved'))
+              this.signatures.push(d.signature)
+              this.currentSignature = d.signature.id
             } else {
-              appui.error(bbn._('Signature save error'))
+              appui.error(bbn._('Error in signature save'));
             }
           })
         }
       },
-      close() {
-        this.closest('bbn-floater').close();
-      },
-      signToWatch() {
-        return this.currentSignatures[this.currentSignature].signature
-      }
     },
     watch: {
       currentSignature() {
-        if (this.currentSignature != "null") {
-          this.currentText = this.currentSignatures[this.currentSignature].signature
-          this.currentName = this.currentSignatures[this.currentSignature].name
-        }
+        this.currentText = this.currentSignature ? this.selectedRow.signature : ''
+        this.currentName = this.currentSignature ? this.selectedRow.name : ''
+        this.originalText = this.currentText;
+        this.originalName = this.currentName;
       },
-      currentName() {
-        if (this.currentSignature != "null") {
-          bbn.fn.log(this.currentDropdownSigns)
-          this.$set(this.currentDropdownSigns[this.currentSignature], "text", this.currentName)
-
-        }
-      }
     },
   }
 })()

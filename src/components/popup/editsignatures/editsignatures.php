@@ -8,29 +8,33 @@
     </div>
     <div/>
     <div>
-      <bbn-dropdown v-model="currentSignature"
-                    :source="dropdownSignatures"
-                    :disabled="notSavedExist || currentSignatures[currentSignature].name !== currentName || currentSignatures[currentSignature].signature !== currentText"/>
+      <bbn-dropdown v-if="!isSaving"
+                    v-model="currentSignature"
+                    :source="currentDropdownSigns"
+                    :disabled="!isSaved"
+                    ref="signDropdown"/>
     </div>
     <div/>
     <div>
+      <!-- @click set the currentSignature to null because the new item have null id -->
       <bbn-button title="<?=_('New')?>"
                   icon="nf nf-mdi-plus"
                   :notext="true"
-                  @click="createSign()"
-                  :disabled="notSavedExist"/>
+                  @click="currentSignature = null"
+                  :disabled="!isSaved"/>
     </div>
     <div>
       <bbn-button title="<?=_('Delete')?>"
                   icon="nf nf-fa-trash"
                   :notext="true"
-                  @click="deleteSign()"/>
+                  @click="deleteSign()"
+                  :disabled="!currentSignature"/>
     </div>
     <bbn-button title="<?=_('Save')?>"
                 icon="nf nf-mdi-content_save"
                 :notext="true"
                 @click="saveSign()"
-                :disabled="!(notSavedExist || currentSignatures[currentSignature].name !== currentName || currentSignatures[currentSignature].signature !== currentText)"/>
+                :disabled="isSaved"/>
   </bbn-toolbar>
   <div class="bbn-w-100 bbn-flex-width bbn-vmiddle">
     <div class="bbn-block bbn-padding"><?=_('Name')?></div>

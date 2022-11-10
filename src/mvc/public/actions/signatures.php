@@ -9,5 +9,3 @@ if ($ctrl->hasArguments()) {
     'action' => $ctrl->arguments[0]
   ])->action();
 }
-
-$ctrl->action();

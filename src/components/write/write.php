@@ -13,7 +13,9 @@
     <div/>
     <div>
       <bbn-dropdown v-model="currentSignature"
-                    :source="currentSignatures"/>
+                    :source="signatures"
+                    source-text="name"
+                    source-value="id"/>
     </div>
     <div>
       <bbn-button class="bbn-button-icon-only bbn-iblock"
@@ -21,6 +23,14 @@
                   title="<?=_('Signatures Editor')?>"
                   icon="nf nf-fa-pencil"
                   @click="openSignatureEditor()"/>
+    </div>
+    <div>
+      <bbn-button class="bbn-button-icon-only bbn-iblock"
+                  :notext="true"
+                  title="<?=_('Add signature')?>"
+                  icon="nf nf-mdi-sign_text"
+                  @click="addSignature()"
+                  :disabled="!currentSignature"/>
     </div>
   </bbn-toolbar>
   <div class="bbn-w-100 bbn-lpadded container__top">
