@@ -59,7 +59,6 @@
     },
     methods: {
       deleteSign() {
-        bbn.fn.log(this.currentSignature)
         if (this.currentSignature) {
           this.confirm(bbn._('Do you want to delete this signature ?'), () => {
             bbn.fn.post(this.root + 'actions/signatures/delete', {
@@ -90,7 +89,6 @@
             signature: this.currentText,
             name: this.currentName
           }, (d) => {
-            bbn.fn.log("UPDATE", d);
             if (d.success) {
               appui.success(bbn._('Successfully saved'))
               this.isSaving = true;
@@ -108,7 +106,6 @@
             signature: this.currentText,
             name: this.currentName
           }, (d) => {
-            bbn.fn.log("CREATE", d);
             if (d.success) {
               appui.success(bbn._('Successfully Saved'))
               this.signatures.push(d.signature)

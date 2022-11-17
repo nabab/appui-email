@@ -7,7 +7,8 @@
              :search="true"
              :search-fields="['name', 'email']"
              search-operator="contains"
-             :toolbar="() => { return [] }">
+             :toolbar="() => { return [] }"
+             :selection="true">
     <bbns-column field="name"></bbns-column>
     <bbns-column field="email"></bbns-column>
   </bbn-table>

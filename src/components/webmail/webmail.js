@@ -16,7 +16,8 @@
         folders: [],
         foldersData: [],
         moveTo: "",
-        root: appui.plugins['appui-email']
+        root: appui.plugins['appui-email'],
+        newCount: 0
       };
     },
     computed: {
@@ -71,7 +72,6 @@
       },
       treeMenu(node) {
         res = []
-        bbn.fn.log("SELECTED TREE ITEM", node.data);
         if (node.data.type === "account") {
           res.push({
             text: bbn._('Delete account'),
@@ -86,7 +86,6 @@
             text: bbn._('Create folder'),
             icon: "nf nf-fa-plus",
             action: () => {
-              bbn.fn.log("clicke in", node.data);
               this.getPopup({
                 title: bbn._("Folder name"),
                 component: "appui-email-forms-create",
@@ -257,9 +256,8 @@
         this.treeData = r;
       },
       getFolders() {
-        bbn.fn.log("ICI", this.selectedMail)
         if (this.selectedMail) {
-          this.post('emails/webmail/get_folders', {
+          this.post(this.root + '/webmail/get_folders', {
             id: this.selectedMail.id_folder,
           }, (d) => {
             if (d.success) {
@@ -271,7 +269,6 @@
                 }
                 this.folders.push({text: d.data[i].text, value: d.data[i].id})
               }
-              bbn.fn.log("Selected mailAccount folders", this.folders);
             }
           })
         }
@@ -297,7 +294,6 @@
       selectMessage(row) {
         this.selectedMail = row;
         this.getFolders();
-        bbn.fn.log(row)
       },
       createAccount() {
         this.getPopup({
@@ -308,7 +304,6 @@
         })
       },
       treeMapper(a) {
-        bbn.fn.log(a);
         return {
           text: a.uid
         }
@@ -323,7 +318,8 @@
         bbn.fn.link(this.source.root + "webmail/write/forward/" + this.selectedMail.id);
       },
       writeNewEmail() {
-        bbn.fn.link(this.source.root + "webmail/write");
+        this.newCount++;
+        bbn.fn.link(this.source.root + "webmail/write/new/" + this.newCount.toString());
       },
       archive(){
         if (this.selectedMail) {
@@ -345,7 +341,7 @@
       },
       deleteMail(){
         this.confirm(bbn._('Do you want to delete this email ?'), () => {
-          this.post("emails/" + 'actions/email/delete', {
+          this.post(this.root + 'actions/email/delete', {
             id: this.selectedMail.id,
             status: "ready"
           }, d => {
@@ -442,7 +438,6 @@
             if (d && d.success) {
               let tree = cp.getRef('tree');
               let idx = bbn.fn.search(d.data, { id: d.id_account})
-              bbn.fn.log("data", d.data[idx])
               cp.source.accounts.push(d.data[idx]);
               cp.setTreeData();
               tree.updateData().then( () => {

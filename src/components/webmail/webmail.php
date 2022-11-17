@@ -154,7 +154,7 @@
       </bbn-splitter>
     </bbn-pane>
   </bbn-splitter>
-  <div class="bbn-overlay bbn-middle" 
+  <div class="bbn-overlay bbn-middle"
        v-else>
     <div class="bbn-block bbn-lpadded bbn-lg">
       <p>

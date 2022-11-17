@@ -38,8 +38,9 @@
       <bbn-button text="<?=_('To')?>"
                   @click="openContacts('to')"></bbn-button>
       <appui-email-multiinput :source="rootUrl + '/webmail/contacts'"
-                              source-text="name"
-                              source-value="id">
+                              source-text="displayName"
+                              source-value="id"
+                              ref="toInput">
       </appui-email-multiinput>
       <bbn-button v-if="!ccButton"
                   text="<?=_('CC')?>"
@@ -50,8 +51,9 @@
                   @click="openContacts('cc')"></bbn-button>
       <appui-email-multiinput v-if="ccButton"
                               :source="rootUrl + '/webmail/contacts'"
-                              source-text="name"
-                              source-value="id">
+                              source-text="displayName"
+                              source-value="id"
+                              ref="ccInput">
       </appui-email-multiinput>
       <bbn-button v-if="ccButton && !cciButton"
                   text="<?=_('CCI')?>"
@@ -62,8 +64,9 @@
                   @click="openContacts('cci')"></bbn-button>
       <appui-email-multiinput v-if="cciButton"
                               :source="rootUrl + '/webmail/contacts'"
-                              source-text="name"
-                              source-value="id">
+                              source-text="displayName"
+                              source-value="id"
+                              ref="cciInput">
       </appui-email-multiinput>
       <div class="span-text-center"
            style="grid-column-start: 1;">

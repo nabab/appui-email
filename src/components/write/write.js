@@ -53,7 +53,7 @@
           signatures: bbn._('Signatures')
         },
         rootUrl: appui.plugins['appui-email'],
-        ccButton: false,
+        ccButton: true,
         cciButton: false,
         attachmentsModel: [],
         attachments: [],
@@ -152,7 +152,7 @@
           width: '35vw',
           height: '50vh',
           componentOptions: {
-            type: type,
+            component: this.getRef(type + 'Input')
           }
         });
       },
