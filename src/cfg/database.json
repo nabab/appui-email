@@ -369,7 +369,9 @@
       },
       "last_sent": {
         "type": "datetime",
-        "null": 0
+        "null": 1,
+        "default": "NULL",
+        "defaultExpression": 1
       }
     }
   },
