@@ -15,8 +15,9 @@
     },
     methods: {
       rowClicked(col, colIndex, dataIndex) {
+        bbn.fn.log(colIndex);
        	this.component.select(col);
-        this.closest('bbn-floater').close();
+        //this.closest('bbn-floater').close();
       }
     }
   }

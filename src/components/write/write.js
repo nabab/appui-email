@@ -68,6 +68,7 @@
           {value: "bbn-markdown", text: bbn._('Markdown')},
           {value: "bbn-textarea", text: bbn._('Text')}
         ],
+        currentSubject: this.subject,
         message: (this.source.html && this.source.html != "") ? this.source.html : this.source.plain,
         originalMessage: "",
         messageTypeIcon: "nf nf-seti-html",
@@ -132,14 +133,21 @@
         return res;
       },
       send() {
+        const toInputItem = this.getRef('toInput').items
+        const ccInputItem = this.getRef('ccInput').items
+        const cciInputItem = this.getRef('cciInput').items
+        const pluck = (objs, property) => objs.map((obj) => obj[property]);
+        const to = toInputItem && toInputItem.length ? pluck(toInputItem, 'email').join(';') : ""
+        const cc = ccInputItem && ccInputItem.length ? pluck(ccInputItem, 'email').join(';') : ""
+        const cci = cciInputItem && cciInputItem.length ? pluck(cciInputItem, 'email').join(';') : ""
         bbn.fn.post(appui.plugins['appui-email'] + '/actions/email/send', {
           id_account: this.source.id_account,
           email: {
             title: this.subject,
             text: this.message,
-            to: this.currentTo.replaceAll(' ', ';'),
-            cc: this.currentCC.replaceAll(' ', ';'),
-            bcc: this.currentCCI.replaceAll(' ', ';'),
+            to: to,
+            cc: cc,
+            bcc: cci,
             attachments: this.attachments,
             important: 0,
           }

@@ -73,7 +73,7 @@
         <span class="bbn-m">{{trlt.subject}}</span>
       </div>
       <bbn-input class="bbn-m"
-                 v-model="subject"
+                 v-model="currentSubject"
                  style="grid-column-start: 2; grid-column-end: 4;">
       </bbn-input>
       <bbn-upload v-model="attachmentsModel"

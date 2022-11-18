@@ -1,6 +1,7 @@
 <!-- HTML Document -->
 
 <div :class="[componentClass, 'bbn-textbox', 'bbn-w-100']"
+     style="overflow: hidden"
      @click="clickContainer">
   <div v-for="item in items" class="bbn-alt-background bbn-radius bbn-border bbn-block bbn-hpadding bbn-vxspadding bbn-xsmargin" :title="item.email">
     <div class="bbn-top-right"
