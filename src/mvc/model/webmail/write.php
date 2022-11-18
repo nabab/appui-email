@@ -1,11 +1,13 @@
 <?php
 /**
-           * What is my purpose?
-           *
-           **/
+               * What is my purpose?
+               *
+               **/
 
 /** @var $model \bbn\Mvc\Model*/
 use bbn\X;
+
+$id_signatures = $model->inc->options->fromCode('signatures', 'email', 'appui');
 
 function createEmailListString(array $array): string {
   $res = '';
@@ -52,6 +54,7 @@ if ($model->hasData('id', true)) {
 
   $email['login'] = $em->getLoginByEmailId($model->data['id'])['login'];
   return [
+    'signatures' => $model->inc->pref->getAll($id_signatures, true),
     'success' => true,
     'email' => $email,
     'subject' => $subject,
@@ -61,9 +64,10 @@ if ($model->hasData('id', true)) {
 }
 
 return [
+  'signatures' => $model->inc->pref->getAll($id_signatures, true),
   'success' => true,
   'email' => [
-   'email' => false,
+    'email' => false,
   ],
   'subject' => "",
   'to' => "",

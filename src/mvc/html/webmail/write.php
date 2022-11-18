@@ -4,4 +4,5 @@
                   :subject="source.subject"
                   :to="source.to"
                   :accounts="source.accounts"
+                  :signatures="source.signatures"
                   ></appui-email-write>

@@ -1,60 +1,91 @@
+<!-- HTML Document -->
 <div class="bbn-overlay">
-  <div class="bbn-flex-fill" style="margin-top:0.2em">
-    <div class="bbn-flex-fill main-grid-fields">
-
-      <div class="grid-menu-editor bbn-flex-fill">
-        <span class="span-text-center">test</span>
-        <bbn-dropdown v-model="type"
-                      :source="types"></bbn-dropdown>
-        <span class="span-text-center">{{trlt.from}}</span>
-        <bbn-dropdown v-model="currentFrom"
-                      :source="accounts"></bbn-dropdown>
-      </div>
-
-      <div class="bbn-flex-fill mail-grid-fields email-header">
-        <bbn-button :text="trlt.to"
-                    @click="openContacts('to')"></bbn-button>
-        <bbn-input v-model="currentTo"></bbn-input>
-        <bbn-button :text="trlt.cc"
-                    v-if="ccButton"
-                    @click="openContacts('cc')"></bbn-button>
-        <bbn-input v-model="currentCC"
-                   v-if="ccButton"></bbn-input>
-        <bbn-button :text="trlt.cci"
-                    v-if="cciButton"
-                    @click="openContacts('cci')"></bbn-button>
-        <bbn-input v-model="currentCCI"
-                   v-if="cciButton"></bbn-input>
-        <span class="span-text-center">{{trlt.subject}}</span>
-        <bbn-input v-model="subject"></bbn-input>
-      </div>
-      <div class="bbn-flex-fill box">
-        <div class="bbn-flex-width">
-          <bbn-button :text="trlt.cc"
-                      @click="ccButton = !ccButton"></bbn-button>
-          <bbn-button :text="trlt.cci"
-                      @click="cciButton = !cciButton"></bbn-button>
-        </div>
-        <div style="flex: 1 1 auto;margin-top:0.7em">
-          <bbn-button text="Send"
-                      @click="send"
-                      icon="nf nf-fa-send"
-                      style="width:100%;height:100%"></bbn-button>
-        </div>
-      </div>
+  <bbn-toolbar class="bbn-w-100">
+    <div>
+      <bbn-dropdown v-model="currentFrom"
+                    :source="accounts"/>
     </div>
-  </div>
-  <hr>
-  <div class="bbn-100">
-    <div style="width: 100%; margin-top:1%; margin-bottom:3%"
-         class="bbn-flex-fill">
+    <div/>
+    <div>
+      <bbn-dropdown v-model="type"
+                    :source="types"/>
+    </div>
+    <div/>
+    <div>
+      <bbn-dropdown v-model="currentSignature"
+                    :source="signatures"
+                    source-text="name"
+                    source-value="id"/>
+    </div>
+    <div>
+      <bbn-button class="bbn-button-icon-only bbn-iblock"
+                  :notext="true"
+                  title="<?=_('Signatures Editor')?>"
+                  icon="nf nf-fa-pencil"
+                  @click="openSignatureEditor()"/>
+    </div>
+    <div>
+      <bbn-button class="bbn-button-icon-only bbn-iblock"
+                  :notext="true"
+                  title="<?=_('Add signature')?>"
+                  icon="nf nf-mdi-sign_text"
+                  @click="addSignature()"
+                  :disabled="!currentSignature"/>
+    </div>
+  </bbn-toolbar>
+  <div class="bbn-w-100 bbn-lpadded container__top">
+    <div class="grid-3-top">
+      <bbn-button text="<?=_('To')?>"
+                  @click="openContacts('to')"></bbn-button>
+      <appui-email-multiinput :source="rootUrl + '/webmail/contacts'"
+                              source-text="displayName"
+                              source-value="id"
+                              ref="toInput">
+      </appui-email-multiinput>
+      <bbn-button v-if="!ccButton"
+                  text="<?=_('CC')?>"
+                  @click="ccButton = !ccButton"></bbn-button>
+      <bbn-button style="grid-column-start: 1;"
+                  v-if="ccButton"
+                  text="<?=_('CC')?>"
+                  @click="openContacts('cc')"></bbn-button>
+      <appui-email-multiinput v-if="ccButton"
+                              :source="rootUrl + '/webmail/contacts'"
+                              source-text="displayName"
+                              source-value="id"
+                              ref="ccInput">
+      </appui-email-multiinput>
+      <bbn-button v-if="ccButton && !cciButton"
+                  text="<?=_('CCI')?>"
+                  @click="cciButton = !cciButton"></bbn-button>
+      <bbn-button style="grid-column-start: 1;"
+                  v-if="cciButton"
+                  text="<?=_('CCI')?>"
+                  @click="openContacts('cci')"></bbn-button>
+      <appui-email-multiinput v-if="cciButton"
+                              :source="rootUrl + '/webmail/contacts'"
+                              source-text="displayName"
+                              source-value="id"
+                              ref="cciInput">
+      </appui-email-multiinput>
+      <div class="span-text-center"
+           style="grid-column-start: 1;">
+        <span class="bbn-m">{{trlt.subject}}</span>
+      </div>
+      <bbn-input class="bbn-m"
+                 v-model="currentSubject"
+                 style="grid-column-start: 2; grid-column-end: 4;">
+      </bbn-input>
       <bbn-upload v-model="attachmentsModel"
+                  style="grid-column-start: 1; grid-column-end: 3;"
                   :save-url="rootUrl + '/actions/email/upload_file'"
-                  style="width: 100%"
                   @success="uploadSuccess"></bbn-upload>
+      <bbn-button text="<?=_('Send')?>"
+                  @click="send"
+                  icon="nf nf-fa-send"></bbn-button>
     </div>
     <component :is="type"
                v-model="message"
-               style="width: 80%; margin-left:10%; height: 95%"></component>
+               style="width: 100%; min-height: 40vh"></component>
   </div>
 </div>

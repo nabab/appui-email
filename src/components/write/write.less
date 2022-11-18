@@ -1,43 +1,21 @@
-/* LESS Document */
-
-.mail-editor-header {
-  margin-bottom: 1%;
+.container__top {
+  flex-direction: column;
 }
 
-.subjectButton:disabled {
-  color: black !important;
-}
-
-.grid-menu-editor {
+.grid-3-top {
   display: grid;
-  grid-auto-rows: max-content;
-  grid-row-gap:10px;
-  grid-template-columns: minmax(auto, max-content)  minmax(auto, max-content);
-}
-
-.main-grid-fields {
-  display: grid;
-  grid-row-gap:3%;
-  grid-auto-rows: max-content;
-  grid-column-gap: 0.2em;
-  grid-template-columns: minmax(auto, max-content) auto minmax(auto, max-content);
-}
-
-.mail-grid-fields {
-  display: grid;
-  grid-row-gap:10px;
-  grid-auto-rows: max-content;
-  grid-column-gap: 0.2em;
-  grid-template-columns: minmax(auto, max-content) auto;
-}
-
-.box {
-  display: flex;
-  flex-flow: column;
-  height: auto;
+  grid-template-columns: minmax(1rem, auto) minmax(2rem, 1fr) minmax(1rem, auto);
+  gap: 1em;
+  margin-bottom: 1rem;
 }
 
 .span-text-center {
   display: inline-flex;
   align-items: center;
+}
+
+.containers__signatures_menu {
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }

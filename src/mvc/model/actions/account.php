@@ -65,7 +65,13 @@ if ($model->hasData('action')) {
             $cfg['folders'] = $model->data['folders'];
             $cfg['email'] = $model->data['email'];
             if ($id_account = $em->addAccount($cfg)) {
-              $model->data['res']['success'] = true;
+              unset($em);
+              $em = new bbn\User\Email($model->db, $model->inc->user, $model->inc->pref);
+              return [
+                'success' => true,
+                'data' => $em->getAccounts(),
+                'id_account' => $id_account
+              ];
             }
           }
         }
@@ -76,6 +82,23 @@ if ($model->hasData('action')) {
       break;
 
     case 'delete':
+      $em = new bbn\User\Email($model->db, $model->inc->user, $model->inc->pref);
+      if ($model->hasData(['data'], true) && $model->data["data"]["id"]) {
+        $id = $model->data["data"]['id'];
+        if ($em->getAccount($id)) {
+          return [
+            'success' => $em->deleteAccount($id)
+          ];
+        }
+        return [
+          'success' => false,
+          'error' => 'Account does not exist'
+        ];
+      }
+      return [
+        'success' => false,
+        'error' => 'id object not found in the data request'
+      ];
       break;
     case 'update':
       break;

@@ -24,9 +24,13 @@
         <div class="bbn-flex-fill">
           <bbn-tree :source="treeData"
                     uid="id"
+                    :menu="treeMenu"
                     :opened="true"
                     storage-full-name="appui-email-webmail-tree"
-                    @select="selectFolder"/>
+                    @select="selectFolder"
+                    ref="tree"
+                    :draggable="true"
+                    @move="onMove"/>
         </div>
       </div>
     </bbn-pane>
@@ -150,7 +154,7 @@
       </bbn-splitter>
     </bbn-pane>
   </bbn-splitter>
-  <div class="bbn-overlay bbn-middle" 
+  <div class="bbn-overlay bbn-middle"
        v-else>
     <div class="bbn-block bbn-lpadded bbn-lg">
       <p>

@@ -3,9 +3,9 @@
 (() => {
   return {
     props: {
-      type: {
+      component: {
         required: true,
-        type: String,
+        type: Object,
       }
     },
     data() {
@@ -15,15 +15,9 @@
     },
     methods: {
       rowClicked(col, colIndex, dataIndex) {
-        let componentWrite = appui.find('appui-email-write');
-        if (this.type === 'to') {
-          componentWrite.currentToSetter((componentWrite.currentTo == "") ?  col.email : componentWrite.currentTo + ' ' + col.email);
-        } else if (this.type === 'cc') {
-          componentWrite.currentCCSetter((componentWrite.currentCC == "") ? col.email : componentWrite.currentCC + ' ' + col.email);
-        } else if (this.type === 'cci') {
-          componentWrite.currentCCISetter((componentWrite.currentCCI == "") ? col.email : componentWrite.currentCCI + ' ' + col.email);
-        }
-        this.closest('bbn-floater').close();
+        bbn.fn.log(colIndex);
+       	this.component.select(col);
+        //this.closest('bbn-floater').close();
       }
     }
   }

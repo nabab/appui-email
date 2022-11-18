@@ -6,6 +6,8 @@
 
 /** @var $model \bbn\Mvc\Model*/
 
+
+
 $cfg = [
   'tables' => [
     'bbn_users_contacts_links'
@@ -16,7 +18,8 @@ $cfg = [
     'id_contact',
     'num_sent',
     'last_sent',
-    'name'
+    'name',
+    'displayName' => "IFNULL(name, value)"
   ],
   'join' => [
     [

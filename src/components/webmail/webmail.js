@@ -16,6 +16,8 @@
         folders: [],
         foldersData: [],
         moveTo: "",
+        root: appui.plugins['appui-email'],
+        newCount: 0
       };
     },
     computed: {
@@ -26,13 +28,181 @@
       },
     },
     methods: {
+      onMove(source, dest, event) {
+        bbn.fn.log(source, dest);
+        if (dest.data.type !== "account" && source.data.id_account !== dest.data.id_account) {
+          event.preventDefault();
+          return false;
+        }
+        if (dest.data.type === "account" && source.data.id_account !== dest.data.uid) {
+          event.preventDefault();
+          return false;
+        }
+        if (source.data.type !== "folders") {
+          event.preventDefault();
+          return false;
+        }
+        bbn.fn.post(this.root + '/actions/folder/move', {
+          to: dest.data,
+          id_account: source.data.id_account,
+          folders: this.getAllFolderChild(source.data)
+        }, d => {
+          let tree = this.getRef('tree');
+          let idx = bbn.fn.search(this.source.accounts, { id: source.data.id})
+          if (d.success) {
+            appui.success(bbn._(`${source.data.text} folder and subfolders ar successfuly moved to ${dest.data.text}`));
+            this.source.accounts.splice(idx, 1, d.account);
+          } else {
+            for (let idx in d.res) {
+              if (d.res[idx].success) {
+                appui.success(bbn._(`${d.res[idx].text} successfuly deleted`))
+              } else {
+                appui.success(bbn._(`${d.res[idx].text} impossible to delete`))
+              }
+            }
+          }
+          this.setTreeData();
+          tree.updateData().then( () => {
+            tree.reload()
+          })
+        })
+        bbn.fn.log(arguments);
+        event.preventDefault();
+        return true;
+      },
+      treeMenu(node) {
+        res = []
+        if (node.data.type === "account") {
+          res.push({
+            text: bbn._('Delete account'),
+            icon: "nf nf-mdi-delete",
+            action: () => {
+              this.deleteAccount(node.data.uid)
+            }
+          })
+        }
+        if (node.data.type !== "folder_types") {
+          res.push({
+            text: bbn._('Create folder'),
+            icon: "nf nf-fa-plus",
+            action: () => {
+              this.getPopup({
+                title: bbn._("Folder name"),
+                component: "appui-email-forms-create",
+                source: {
+                  id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
+                  id_parent: node.data.id || null,
+                }
+              })
+            }
+          })
+        }
+        if (node.data.type !== "account" && node.data.type !== "folder_types") {
+          res.push({
+            text: bbn._('Remove folder'),
+            icon: "nf nf-mdi-folder_remove",
+            action: () => {
+              this.removeFolder(this.getAllFolderChild(node.data), node.data.text, node.data.id_account);
+            }
+          },
+                   {
+            text: bbn._('Rename Folder'),
+            icon: "nf nf-mdi-rename_box",
+            action: () => {
+              this.getPopup({
+                title: bbn._("Folder new name"),
+                component: "appui-email-forms-rename",
+                source: {
+                  name: node.data.text,
+                  id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
+                  folders: this.getAllFolderChild(node.data)
+                }
+              })
+            }
+          })
+        }
+        return res;
+      },
+      getAllFolderChild(folder) {
+        res = [];
+        res.push({id: folder.id, text: folder.text, id_parent: folder.id_parent || null})
+        if (folder.items) {
+          for (let idx in folder.items) {
+            if (folder.items[idx].items) {
+              res = res.concat(this.getAllFolderChild(folder.items[idx]));
+            } else {
+              res.push({id: folder.items[idx].id, text: folder.items[idx].text, id_parent: folder.items[idx].id_parent || null})
+            }
+          }
+        }
+        return res;
+      },
+      removeFolder(idArray, text, uid) {
+        this.confirm(bbn._(`Do you want to delete the ${text} folder and all the subfolders ?`), () => {
+          bbn.fn.post(this.root + '/actions/folder/delete', {
+            // reverse the array to delete the the last subfolders before
+            id: idArray.reverse(),
+            id_account: uid
+          }, d => {
+            let tree = this.getRef('tree');
+            let idx = bbn.fn.search(this.source.accounts, { id: uid})
+            if (d.success) {
+              appui.success(bbn._(`${text} folder and subfolders ar successfuly deleted`));
+              this.source.accounts.splice(idx, 1, d.account);
+            } else {
+              for (let idx in d.res) {
+                if (d.res[idx].success) {
+                  appui.success(bbn._(`${d.res[idx].text} successfuly deleted`))
+                } else {
+                  appui.success(bbn._(`${d.res[idx].text} impossible to delete`))
+                }
+              }
+            }
+            this.setTreeData();
+            tree.updateData().then( () => {
+              tree.reload()
+            })
+          })
+        })
+      },
+      deleteAccount(uid) {
+        this.confirm(bbn._("Do you want to delete this account ?"), () => {
+          bbn.fn.post(this.root + '/actions/account', {
+            action: 'delete',
+            data: {
+              id: uid
+            }
+          }, d => {
+            if (d.success) {
+              appui.success(bbn._("Account deleted with success"));
+              let tree = this.getRef('tree');
+              let idx = bbn.fn.search(this.source.accounts, { id: uid})
+              this.source.accounts.splice(idx, 1)
+              this.setTreeData();
+              tree.updateData().then( () => {
+                tree.reload()
+              })
+            } else {
+              appui.error(bbn._(d.error ? d.error : "Impossible to delete the account"));
+            }
+          })
+        })
+      },
       setTreeData(){
-        bbn.fn.log("TreeData");
+        let icon = {
+          Trash: "nf nf-fa-trash",
+          INBOX: "nf nf-fa-inbox",
+          spam: "nf nf-mdi-fire",
+          Sent: "nf nf-mdi-inbox_arrow_up",
+          Drafts: "nf nf-mdi-file_document"
+        }
         let r = [];
         let fn = (ar, id_account) => {
           let res = [];
           bbn.fn.each(this.source.folder_types, ft => {
             bbn.fn.each(ar, a => {
+              a.type = "folder";
+              a.icon = icon[a.text] || "";
               if (ft.names && ft.names.indexOf(a.uid) > -1) {
                 res.push(bbn.fn.extend({
                   id_account: id_account,
@@ -57,6 +227,7 @@
               if (tmp.items) {
                 tmp.items = fn(tmp.items, id_account)
               }
+              tmp.type = "folders"
               res.push(tmp);
             }
           })
@@ -68,7 +239,8 @@
             uid: a.code,
             names: a.names,
             icon: a.icon,
-            id: a.id
+            id: a.id,
+            type: "folder_types"
           });
         })
         if (this.source.accounts) {
@@ -76,16 +248,16 @@
             r.push({
               text: a.login,
               uid: a.id,
-              items: fn(a.folders, a.id)
+              items: fn(a.folders, a.id),
+              type: "account"
             });
           });
         }
         this.treeData = r;
       },
       getFolders() {
-        bbn.fn.log("ICI", this.selectedMail)
         if (this.selectedMail) {
-          this.post('emails/webmail/get_folders', {
+          this.post(this.root + '/webmail/get_folders', {
             id: this.selectedMail.id_folder,
           }, (d) => {
             if (d.success) {
@@ -97,7 +269,6 @@
                 }
                 this.folders.push({text: d.data[i].text, value: d.data[i].id})
               }
-              bbn.fn.log("Selected mailAccount folders", this.folders);
             }
           })
         }
@@ -123,7 +294,6 @@
       selectMessage(row) {
         this.selectedMail = row;
         this.getFolders();
-        bbn.fn.log(row)
       },
       createAccount() {
         this.getPopup({
@@ -134,7 +304,6 @@
         })
       },
       treeMapper(a) {
-        bbn.fn.log(a);
         return {
           text: a.uid
         }
@@ -149,7 +318,8 @@
         bbn.fn.link(this.source.root + "webmail/write/forward/" + this.selectedMail.id);
       },
       writeNewEmail() {
-        bbn.fn.link(this.source.root + "webmail/write");
+        this.newCount++;
+        bbn.fn.link(this.source.root + "webmail/write/new/" + this.newCount.toString());
       },
       archive(){
         if (this.selectedMail) {
@@ -171,7 +341,7 @@
       },
       deleteMail(){
         this.confirm(bbn._('Do you want to delete this email ?'), () => {
-          this.post("emails/" + 'actions/email/delete', {
+          this.post(this.root + 'actions/email/delete', {
             id: this.selectedMail.id,
             status: "ready"
           }, d => {
@@ -189,15 +359,14 @@
           title: bbn._("Folder changer"),
           component: 'appui-email-forms-moveto',
           componentOptions: {
-						source: {
+            source: {
               id : this.selectedMail.id,
               folders: this.folders,
               foldersData: this.foldersData,
             }
           }
         })
-      }
-      ,
+      },
       submitFolderChange() {
         bbn.fn.log("FOLDER", this.moveTo);
       },
@@ -267,7 +436,13 @@
           },
           success(d){
             if (d && d.success) {
-              this.closest('bbn-container').reload();
+              let tree = cp.getRef('tree');
+              let idx = bbn.fn.search(d.data, { id: d.id_account})
+              cp.source.accounts.push(d.data[idx]);
+              cp.setTreeData();
+              tree.updateData().then( () => {
+                tree.reload()
+              })
             }
           }
         },
