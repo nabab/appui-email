@@ -17,6 +17,16 @@
       }
     },
     methods: {
+      setEvent() {
+        let element = this.getRef('autocomplete').getRef('element');
+        bbn.fn.log("EVENT", element);
+      },
+      onPressBackspace(e) {
+        bbn.fn.log("BACKSPACE", e.target);
+        if (!e.target.value && this.items.length) {
+          this.items.pop();
+        }
+      },
       select(data) {
         bbn.fn.log(data);
         if (!data.name) {
