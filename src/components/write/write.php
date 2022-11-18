@@ -42,9 +42,15 @@
                               source-value="id"
                               ref="toInput">
       </appui-email-multiinput>
-      <bbn-button v-if="!ccButton"
-                  text="<?=_('CC')?>"
-                  @click="ccButton = !ccButton"></bbn-button>
+      <div>
+        <bbn-button text="<?=_('CC')?>"
+                    @click="ccButton = !ccButton"
+                    style="height:100%"></bbn-button>
+        <bbn-button
+                    text="<?=_('CCI')?>"
+                    @click="cciButton = !cciButton"
+                    style="height:100%"></bbn-button>
+      </div>
       <bbn-button style="grid-column-start: 1;"
                   v-if="ccButton"
                   text="<?=_('CC')?>"
@@ -53,11 +59,9 @@
                               :source="rootUrl + '/webmail/contacts'"
                               source-text="displayName"
                               source-value="id"
-                              ref="ccInput">
+                              ref="ccInput"
+                              style="grid-column-start: 2; grid-column-end: 4;">
       </appui-email-multiinput>
-      <bbn-button v-if="ccButton && !cciButton"
-                  text="<?=_('CCI')?>"
-                  @click="cciButton = !cciButton"></bbn-button>
       <bbn-button style="grid-column-start: 1;"
                   v-if="cciButton"
                   text="<?=_('CCI')?>"
@@ -66,7 +70,8 @@
                               :source="rootUrl + '/webmail/contacts'"
                               source-text="displayName"
                               source-value="id"
-                              ref="cciInput">
+                              ref="cciInput"
+                              style="grid-column-start: 2; grid-column-end: 4;">
       </appui-email-multiinput>
       <div class="span-text-center"
            style="grid-column-start: 1;">
