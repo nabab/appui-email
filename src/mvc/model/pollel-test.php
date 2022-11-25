@@ -14,13 +14,13 @@ $accounts = $em->getAccounts();
 $tot = 0;
 X::log("Starting email function");
 foreach ($accounts as $a) {
-  if ($tot < 500) {
+  if ($tot < 5) {
     X::map(
       function ($folder) use (&$em, &$a, &$tot) {
-        if ($tot < 500) {
+        if ($tot < 5) {
           $check = $em->checkFolder($folder);
           if ($check) {
-            $tot += $em->syncEmails($folder, 100);
+            $tot += $em->syncEmails($folder, 5);
             X::log('hello from poller mail '.$tot);
           }
         }
