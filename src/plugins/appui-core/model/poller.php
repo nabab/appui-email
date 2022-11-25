@@ -4,7 +4,7 @@ use bbn\X;
 X::log("Starting email poller");
 return [[
   'id' => 'appui-email-0',
-  'frequency' => 15,
+  'frequency' => 30,
   'function' => function(array $data) use($model){
     $em = new bbn\User\Email($model->db);
     $accounts = $em->getAccounts();
