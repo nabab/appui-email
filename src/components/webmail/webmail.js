@@ -27,6 +27,9 @@
         }
       },
     },
+    mounted() {
+
+  	},
     methods: {
       onMove(source, dest, event) {
         bbn.fn.log(source, dest);
@@ -444,6 +447,9 @@
                 tree.reload()
               })
             }
+          },
+          receive(d) {
+            bbn.fn.log(d);
           }
         },
         watch: {
