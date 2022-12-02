@@ -171,7 +171,6 @@
   <bbn-form :source="account"
             @success="success"
             :data="{action: 'save'}"
-            :validation="() => account.folders.length > 0"
             :action="cp.source.root + 'actions/account'">
     <div class="bbn-overlay" v-show="tree.length">
       <div class="bbn-flex-height">
