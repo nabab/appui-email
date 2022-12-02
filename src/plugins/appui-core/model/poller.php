@@ -5,21 +5,48 @@ X::log("Starting email poller");
 return [[
   'id' => 'appui-email-0',
   'frequency' => 30,
-  'function' => function(array $data) use($model){
+  'function' => function(array $data) use($model) {
+
     $em = new bbn\User\Email($model->db);
-    $accounts = $em->getAccounts();
+    $error = null;
+    try {
+      $accounts = $em->getAccounts();
+    } catch (\Exception $e) {
+      $error = $e->getMessage();
+      return [
+        'success' => false,
+        'data' => [
+          'error' => $error
+        ]
+      ];
+    }
     $tot = 0;
     X::log("Starting email function");
     foreach ($accounts as $a) {
-      if ($tot < 50) {
+      if ($tot < 250) {
         X::map(
           function ($folder) use (&$em, &$a, &$tot) {
             X::log(["POLLER", $folder], "poller_email");
-            if ($tot < 50) {
-              $check = $em->checkFolder($folder);
+            if ($tot < 250) {
+              try {
+                $check = $em->checkFolder($folder);
+              } catch (\Exception $e) {
+                $check = false;
+              }
               if ($check) {
-                $tot += $em->syncEmails($folder, 50);
-                X::log('hello from poller mail '.$tot);
+                try {
+                  $tot += $em->syncEmails($folder, 50);
+                  X::log(["POLLER", $folder, $tot], "startFromUID");
+                } catch (\Exception $e) {
+                  X::log($e->getMessage(), "poller_email");
+                  $error = $e->getMessage();
+                  return [
+                    'success' => false,
+                    'data' => [
+                      'error' => $error
+                    ]
+                  ];
+                }
               }
             }
 
@@ -30,7 +57,16 @@ return [[
         );
       }
     }
+
     // Update users mail
-    return ['success' => true];
+    $hashes = $em->getHashes();
+    if ($hashes !== $data['hashes']) {
+      return [
+        'success' => true,
+        'data' => $em->getHashes()
+      ];
+    } else {
+      return ['success' => true];
+    }
   }
 ]];

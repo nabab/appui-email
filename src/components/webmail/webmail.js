@@ -17,7 +17,8 @@
         foldersData: [],
         moveTo: "",
         root: appui.plugins['appui-email'],
-        newCount: 0
+        newCount: 0,
+        hash: this.source.hash,
       };
     },
     computed: {
@@ -27,10 +28,75 @@
         }
       },
     },
-    mounted() {
-
-  	},
     methods: {
+      receive(d) {
+        if (JSON.stringify(d) !== JSON.stringify(this.hash)) {
+          // if a key it's not in this.hash but in d it's because a new account was added and if the key it's not in d but in this.hash it's because an account was deleted
+          let addedAccount = [];
+          let removedAccount = [];
+          let tree = this.getRef('tree');
+          for (const key in d) {
+            if (!this.hash[key] && bbn.fn.search(this.source.accounts, { id: key}) === -1) {
+              addedAccount.push(key);
+            }
+          }
+          for (const key in this.hash) {
+            if (!d[key] && bbn.fn.search(this.source.accounts, { id: key}) !== -1) {
+              removedAccount.push(key)
+            }
+          }
+          if (addedAccount.length) {
+            bbn.fn.log("ACCOUNT ADDED", addedAccount);
+            for (const accountId of addedAccount) {
+              if (bbn.fn.search(this.source.accounts, { id: accountId}) === -1) {
+                bbn.fn.post(this.root + '/actions/account', {
+                  action: 'get',
+                  id: accountId
+                } , d => {
+                  if (d.account) {
+                    this.source.accounts.push(d.account);
+                  }
+                });
+              }
+            }
+          }
+          if (removedAccount.length) {
+            // remove account
+            bbn.fn.log("ACCOUNT DELETED", removedAccount);
+            for (const accountId of removedAccount) {
+              let idx = bbn.fn.search(this.source.accounts, { id: accountId})
+              this.source.accounts.splice(idx, 1)
+            }
+          }
+
+          for (const key in d) {
+            // if the hash is not the same it's because a folder have changed so we perfom that changed
+            if (this.hash[key] && d[key].hash !== this.hash[key].hash) {
+              bbn.fn.log("ACCOUNT HASH CHANGED", key)
+              // iterate each hash of each folder to see what folder have changed
+              if (bbn.fn.search(this.source.accounts, { id: key}) !== -1) {
+                bbn.fn.post(this.root + '/actions/account', {
+                  action: 'get',
+                  id: key
+                } , d => {
+                  if (d.account) {
+                    this.source.accounts.push(d.account);
+                  }
+                });
+              }
+            }
+          }
+          this.setTreeData();
+          tree.updateData().then(() => {
+            tree.reload()
+          })
+          this.hash = d;
+          this.$set(appui.pollerObject, 'appui-email', {
+            hashes: this.hash
+          });
+          appui.poll();
+        }
+      },
       onMove(source, dest, event) {
         bbn.fn.log(source, dest);
         if (dest.data.type !== "account" && source.data.id_account !== dest.data.id_account) {
@@ -391,6 +457,13 @@
     created(){
       cp = this;
       this.setTreeData();
+      appui.register('appui-email', this);
+    },
+    mounted() {
+      this.$set(appui.pollerObject, 'appui-email', {
+        hashes: this.hash
+      });
+      appui.poll();
     },
     components: {
       [scpName]: {

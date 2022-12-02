@@ -15,6 +15,7 @@ else {
     'accounts' => $em->getAccounts(),
     'types' => bbn\User\Email::getAccountTypes(),
     'contacts' => $em->getContacts(),
-    'folder_types' => bbn\User\Email::getFolderTypes()
+    'folder_types' => bbn\User\Email::getFolderTypes(),
+    'hash' => $em->getHashes(),
   ];
 }

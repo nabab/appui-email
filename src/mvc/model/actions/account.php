@@ -104,6 +104,11 @@ if ($model->hasData('action')) {
       break;
     case 'insert':
       break;
+    case 'get':
+      $em = new bbn\User\Email($model->db, $model->inc->user, $model->inc->pref);
+      return [
+        'account' => $em->getAccount($model->data['id'])
+      ];
   }
 }
 return $model->data['res'];
