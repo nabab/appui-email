@@ -15,6 +15,8 @@
         treeData: [],
         folders: [],
         foldersData: [],
+        selectedMails: [],
+        alreadySendUpdateError: false,
         moveTo: "",
         root: appui.plugins['appui-email'],
         newCount: 0,
@@ -36,25 +38,28 @@
           let removedAccount = [];
           let tree = this.getRef('tree');
           for (const key in d) {
-            if (!this.hash[key] && bbn.fn.search(this.source.accounts, { id: key}) === -1) {
+            if (!this.hash[key] && bbn.fn.search(this.source.accounts, { id: key}) < 0) {
               addedAccount.push(key);
             }
           }
           for (const key in this.hash) {
-            if (!d[key] && bbn.fn.search(this.source.accounts, { id: key}) !== -1) {
+            if (!d[key] && bbn.fn.search(this.source.accounts, { id: key}) >= 0) {
               removedAccount.push(key)
             }
           }
           if (addedAccount.length) {
-            bbn.fn.log("ACCOUNT ADDED", addedAccount);
             for (const accountId of addedAccount) {
-              if (bbn.fn.search(this.source.accounts, { id: accountId}) === -1) {
+              if (bbn.fn.search(this.source.accounts, { id: accountId}) < 0) {
                 bbn.fn.post(this.root + '/actions/account', {
                   action: 'get',
                   id: accountId
                 } , d => {
                   if (d.account) {
                     this.source.accounts.push(d.account);
+                    this.setTreeData();
+                    tree.updateData().then(() => {
+                      tree.reload()
+                    })
                   }
                 });
               }
@@ -62,7 +67,6 @@
           }
           if (removedAccount.length) {
             // remove account
-            bbn.fn.log("ACCOUNT DELETED", removedAccount);
             for (const accountId of removedAccount) {
               let idx = bbn.fn.search(this.source.accounts, { id: accountId})
               this.source.accounts.splice(idx, 1)
@@ -72,7 +76,17 @@
           for (const key in d) {
             // if the hash is not the same it's because a folder have changed so we perfom that changed
             if (this.hash[key] && d[key].hash !== this.hash[key].hash) {
-              bbn.fn.log("ACCOUNT HASH CHANGED", key)
+              if (d[key].folders[this.currentFolder] && d[key].folders[this.currentFolder] !== this.hash[key].folders[this.currentFolder]) {
+                if (!this.selectedMails.length) {
+                	this.getRef('table').updateData();
+                  if (this.alreadySendUpdateError) {
+                    this.alreadySendUpdateError = false;
+                	}
+                } else if (!this.alreadySendUpdateError) {
+                  appui.error(bbn._('Due to your selections this folder cannot be updated automatically as long as you have selected emails'));
+                  this.alreadySendUpdateError = true;
+                }
+              }
               // iterate each hash of each folder to see what folder have changed
               if (bbn.fn.search(this.source.accounts, { id: key}) !== -1) {
                 bbn.fn.post(this.root + '/actions/account', {
@@ -80,7 +94,14 @@
                   id: key
                 } , d => {
                   if (d.account) {
-                    this.source.accounts.push(d.account);
+                    let idx = bbn.fn.search(this.source.accounts, {id: d.account.id});
+                    if (idx >= 0) {
+                      this.source.accounts[idx] = d.account;
+                      this.setTreeData();
+                      tree.updateData().then(() => {
+                        tree.reload()
+                      })
+                    }
                   }
                 });
               }
@@ -97,8 +118,13 @@
           appui.poll();
         }
       },
+      tableSelect(col) {
+        this.selectedMails.push(col.id);
+      },
+      tableUnselect(col) {
+        this.selectedMails.splice(col.id);
+      },
       onMove(source, dest, event) {
-        bbn.fn.log(source, dest);
         if (dest.data.type !== "account" && source.data.id_account !== dest.data.id_account) {
           event.preventDefault();
           return false;
@@ -135,7 +161,6 @@
             tree.reload()
           })
         })
-        bbn.fn.log(arguments);
         event.preventDefault();
         return true;
       },
@@ -147,6 +172,7 @@
             icon: "nf nf-mdi-delete",
             action: () => {
               this.deleteAccount(node.data.uid)
+              appui.poll();
             }
           })
         }
@@ -163,6 +189,7 @@
                   id_parent: node.data.id || null,
                 }
               })
+              appui.poll();
             }
           })
         }
@@ -172,6 +199,7 @@
             icon: "nf nf-mdi-folder_remove",
             action: () => {
               this.removeFolder(this.getAllFolderChild(node.data), node.data.text, node.data.id_account);
+              appui.poll();
             }
           },
                    {
@@ -187,6 +215,7 @@
                   folders: this.getAllFolderChild(node.data)
                 }
               })
+              appui.poll();
             }
           })
         }
@@ -371,6 +400,7 @@
           title: bbn._("eMail account configuration"),
           component: this.$options.components[scpName]
         })
+        appui.poll();
       },
       treeMapper(a) {
         return {
@@ -521,9 +551,6 @@
               })
             }
           },
-          receive(d) {
-            bbn.fn.log(d);
-          }
         },
         watch: {
           hasSMTP(v){

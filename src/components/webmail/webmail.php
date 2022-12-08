@@ -46,6 +46,8 @@
                      :filterable="true"
                      :selection="true"
                      @focus="selectMessage"
+                     @select="tableSelect"
+                     @unselect="tableUnselect"
                      :multifilter="true"
                      :data="dataObj"
                      ref="table"
