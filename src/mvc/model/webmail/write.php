@@ -49,6 +49,7 @@ if ($model->hasData('id', true)) {
     }
     if ($model->data['action'] == 'forward') {
       $subject = 'TR : ' . $email['subject'];
+      X::ddump($email);
     }
   }
 
@@ -60,6 +61,7 @@ if ($model->hasData('id', true)) {
     'subject' => $subject,
     'to' => $to,
     'accounts' => $accounts,
+    'attachment' => $model->data['action'] == 'forward' ? $email['attachment'] : []
   ];
 }
 
@@ -72,4 +74,5 @@ return [
   'subject' => "",
   'to' => "",
   'accounts' => $accounts,
+  'attachment' => []
 ];

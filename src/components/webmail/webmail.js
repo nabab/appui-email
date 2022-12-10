@@ -32,11 +32,14 @@
     },
     methods: {
       receive(d) {
+        let tree = this.getRef('tree');
+        bbn.fn.log("TREE", tree);
+        if (!tree)
+          return;
         if (JSON.stringify(d) !== JSON.stringify(this.hash)) {
           // if a key it's not in this.hash but in d it's because a new account was added and if the key it's not in d but in this.hash it's because an account was deleted
           let addedAccount = [];
           let removedAccount = [];
-          let tree = this.getRef('tree');
           for (const key in d) {
             if (!this.hash[key] && bbn.fn.search(this.source.accounts, { id: key}) < 0) {
               addedAccount.push(key);
@@ -78,10 +81,10 @@
             if (this.hash[key] && d[key].hash !== this.hash[key].hash) {
               if (d[key].folders[this.currentFolder] && d[key].folders[this.currentFolder] !== this.hash[key].folders[this.currentFolder]) {
                 if (!this.selectedMails.length) {
-                	this.getRef('table').updateData();
+                  this.getRef('table').updateData();
                   if (this.alreadySendUpdateError) {
                     this.alreadySendUpdateError = false;
-                	}
+                  }
                 } else if (!this.alreadySendUpdateError) {
                   appui.error(bbn._('Due to your selections this folder cannot be updated automatically as long as you have selected emails'));
                   this.alreadySendUpdateError = true;

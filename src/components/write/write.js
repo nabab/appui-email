@@ -37,6 +37,10 @@
       signatures: {
         type: Array,
         default: [],
+      },
+      attachment: {
+        type: Array,
+        defaut: [],
       }
     },
     data() {
@@ -56,7 +60,7 @@
         ccButton: true,
         cciButton: false,
         attachmentsModel: [],
-        attachments: [],
+        attachments: this.attachment,
         currentTo: "",
         currentCC: "",
         currentCCI: "",
@@ -187,6 +191,7 @@
         })
       },
       uploadSuccess(field, fileName, responseData, response) {
+        bbn.fn.log(responseData);
         this.attachments.push(responseData.path);
       },
       currentToSetter(newValue) {
