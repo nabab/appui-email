@@ -140,6 +140,11 @@
                               :text="_('Move')"
                               :notext="true"
                               @click="moveFolder"/>
+                 <bbn-button icon="nf nf-mdi-attachment"
+                             :text="_('attachments')"
+                             class="bbn-left-xsspace"
+                             v-if="selectedMail.attachments"
+                             @click="openAttachments"/>
                 </bbn-toolbar>
                 <div class="bbn-flex-fill">
                   <bbn-frame :src="source.root + 'reader/' + selectedMail.id" class="bbn-100"/>

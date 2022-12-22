@@ -31,6 +31,19 @@
       },
     },
     methods: {
+      openAttachments() {
+        this.getPopup({
+          width: 300,
+          height: 450,
+          title: bbn._("Attachments"),
+          component: "appui-email-popup-attachments",
+          source: {
+            id: this.selectedMail.id,
+            id_account: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account,
+            attachments: JSON.parse(this.selectedMail.attachments)
+          }
+        })
+      },
       receive(d) {
         let tree = this.getRef('tree');
         bbn.fn.log("TREE", tree);
