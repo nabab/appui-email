@@ -146,20 +146,16 @@
                                 source-value="name"
                                 v-model="selectedAttachment"
                                 class="bbn-left-xlspace"/>
+                  <bbn-dropdown v-if="attachments.length"
+                                :source="attachmentsMode"
+                                v-model="selectedMode"
+                                class="bbn-left-xsspace"/>
                   <bbn-button v-if="attachments.length"
-                              :disabled="selectedAttachment === 'Attachments'"
                               class="bbn-left-xsspace"
-                              @click="download"
-                              icon="nf nf-fa-download"
-                              :text="_('Downloads')"
-                              :notext="true"/>
-                  <bbn-button v-if="attachments.length > 1"
-                              class="bbn-left-xsspace"
-                              @click="downloadAll"
+                              @click="doMode"
                               icon="nf nf-mdi-folder_download"
-                              :text="_('Downloads all ')"
                               :notext="true"/>
-                              
+
                 </bbn-toolbar>
                 <div class="bbn-flex-fill">
                   <bbn-frame :src="source.root + 'reader/' + selectedMail.id" class="bbn-100"/>

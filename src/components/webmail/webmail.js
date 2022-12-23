@@ -22,7 +22,34 @@
         newCount: 0,
         hash: this.source.hash,
         attachments: [],
-        selectedAttachment: "Attachments"
+        selectedAttachment: "Attachments",
+        attachmentsMode: [
+          {
+            text: bbn._('Download'),
+            value: 'download'
+          },
+          {
+            text: bbn._('Download all'),
+            value: 'download_all'
+          },
+          {
+            text: bbn._('Send to shared media'),
+            value: 'shared_media'
+          },
+          {
+            text: bbn._('Send all to shared media'),
+            value: 'shared_media_all'
+          },
+          {
+            text: bbn._('Send to private media'),
+            value: 'private_media'
+          },
+          {
+            text: bbn._('Send all to private media'),
+            value: 'private_media_all'
+          }
+        ],
+        selectedMode: "download"
       };
     },
     computed: {
@@ -34,13 +61,103 @@
     },
     methods: {
       download() {
-        bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment);
+        bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/download/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment);
       },
       downloadAll() {
         for (const att of this.attachments) {
           if (att.name === 'Attachments')
             continue;
-          bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + att.name);
+          bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/download/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + att.name);
+        }
+      },
+      sendToSharedMedia() {
+        bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
+          mode: 'shared_media',
+          path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment,
+          id: this.selectedMail.id,
+          filename: this.selectedAttachment
+        }, (d) => {
+          if (d.success) {
+            appui.success(bbn._('Files was send to shared media'))
+          } else {
+            appui.error(bbn._('An error occured'))
+          }
+        })
+      },
+      sendAllToSharedMedia() {
+        let success = true;
+        for (const att of this.attachments) {
+          bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
+            mode: 'shared_media',
+            path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + att.name,
+            id: this.selectedMail.id,
+            filename: att.name
+          }, (d) => {
+            if (!d.success) {
+              success = false;
+            }
+          });
+        }
+        if (success) {
+          appui.success(bbn._('All files was send to shared media'))
+        } else {
+          appui.error(bbn._('An error occured'))
+        }
+      },
+      sendToPrivateMedia() {
+        bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
+          mode: 'private_media',
+          path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment,
+          id: this.selectedMail.id,
+          filename: this.selectedAttachment
+        }, (d) => {
+          if (d.success) {
+            appui.success(bbn._('Files was send to shared media'))
+          } else {
+            appui.error(bbn._('An error occured'))
+          }
+        })
+      },
+      sendAllToPrivateMedia() {
+        let success = true;
+        for (const att of this.attachments) {
+          bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
+            mode: 'private_media',
+            path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + att.name,
+            id: this.selectedMail.id,
+            filename: att.name
+          }, (d) => {
+            if (!d.success) {
+              success = false;
+            }
+          });
+        }
+        if (success) {
+          appui.success(bbn._('All files was send to shared media'))
+        } else {
+          appui.error(bbn._('An error occured'))
+        }
+      },
+      doMode() {
+        switch (this.selectedMode) {
+          case 'download':
+            this.download();
+            break;
+          case 'download_all':
+            this.downloadAll();
+            break;
+          case 'shared_media':
+            this.sendToSharedMedia();
+            break;
+          case 'shared_media_all':
+            this.sendAllToSharedMedia()
+            break;
+          case 'private_media':
+            this.sendToPrivateMedia();
+            break;
+          case 'private_media_all':
+            this.sendAllToPrivateMedia();
+            break;
         }
       },
       receive(d) {
