@@ -21,6 +21,8 @@
         root: appui.plugins['appui-email'],
         newCount: 0,
         hash: this.source.hash,
+        attachments: [],
+        selectedAttachment: "Attachments"
       };
     },
     computed: {
@@ -31,9 +33,18 @@
       },
     },
     methods: {
+      download() {
+        bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment);
+      },
+      downloadAll() {
+        for (const att of this.attachments) {
+          if (att.name === 'Attachments')
+            continue;
+          bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + att.name);
+        }
+      },
       receive(d) {
         let tree = this.getRef('tree');
-        bbn.fn.log("TREE", tree);
         if (!tree)
           return;
         if (JSON.stringify(d) !== JSON.stringify(this.hash)) {
@@ -394,6 +405,15 @@
       },
       selectMessage(row) {
         this.selectedMail = row;
+        this.attachments = this.selectedMail.attachments ? JSON.parse(this.selectedMail.attachments) : [];
+        if (this.attachments.length) {
+          if (this.attachments.length === 1) {
+            this.selectedAttachment = this.attachments[0].name;
+          } else {
+            this.attachments.unshift({name: 'Attachments'});
+            this.selectedAttachment = "Attachments";
+          }
+        }
         this.getFolders();
       },
       createAccount() {

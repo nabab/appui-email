@@ -140,6 +140,26 @@
                               :text="_('Move')"
                               :notext="true"
                               @click="moveFolder"/>
+                  <bbn-dropdown v-if="attachments.length"
+                                :source="attachments"
+                                source-text="name"
+                                source-value="name"
+                                v-model="selectedAttachment"
+                                class="bbn-left-xlspace"/>
+                  <bbn-button v-if="attachments.length"
+                              :disabled="selectedAttachment === 'Attachments'"
+                              class="bbn-left-xsspace"
+                              @click="download"
+                              icon="nf nf-fa-download"
+                              :text="_('Downloads')"
+                              :notext="true"/>
+                  <bbn-button v-if="attachments.length > 1"
+                              class="bbn-left-xsspace"
+                              @click="downloadAll"
+                              icon="nf nf-mdi-folder_download"
+                              :text="_('Downloads all ')"
+                              :notext="true"/>
+                              
                 </bbn-toolbar>
                 <div class="bbn-flex-fill">
                   <bbn-frame :src="source.root + 'reader/' + selectedMail.id" class="bbn-100"/>
@@ -169,108 +189,108 @@
   </div>
 
 
-<script type="text/x-template" :id="scpName + '-editor'">
-  <bbn-form :source="account"
-            @success="success"
-            :data="{action: 'save'}"
-            :action="cp.source.root + 'actions/account'">
-    <div class="bbn-overlay" v-show="tree.length">
-      <div class="bbn-flex-height">
-        <div class="bbn-w-100">
-          <div class="bbn-padded">
-            <bbn-button @click="backToConfig"><?=_("Back")?></bbn-button>
-          </div>
-          <div class="bbn-m bbn-b bbn-c">
-            <?=_("Choose the folders you want to keep synchronized")?>
-          </div>
-        </div>
-        <div class="bbn-padded bbn-flex-fill">
-          <bbn-tree :source="tree"
-                    ref="tree"
-                    :selection="true"
-                    uid="uid"
-                    :opened="true"/>
-        </div>
-      </div>
+  <script type="text/x-template" :id="scpName + '-editor'">
+<bbn-form :source="account"
+          @success="success"
+          :data="{action: 'save'}"
+          :action="cp.source.root + 'actions/account'">
+  <div class="bbn-overlay" v-show="tree.length">
+    <div class="bbn-flex-height">
+      <div class="bbn-w-100">
+        <div class="bbn-padded">
+          <bbn-button @click="backToConfig"><?=_("Back")?></bbn-button>
     </div>
-    <div class="bbn-w-100" v-show="!tree.length">
-      <div class="bbn-grid-fields bbn-padded bbn-m">
-        <div class="bbn-label">
-          <?=_("Account type")?>
-        </div>
-        <bbn-dropdown :source="types"
-                      source-value="id"
-                      placeholder="<?=_("Choose a type of account")?>"
-                      v-model="account.type"
-                      autocomplete="off"
-                      :required="true"/>
+        <div class="bbn-m bbn-b bbn-c">
+          <?=_("Choose the folders you want to keep synchronized")?>
+    </div>
+    </div>
+      <div class="bbn-padded bbn-flex-fill">
+        <bbn-tree :source="tree"
+                  ref="tree"
+                  :selection="true"
+                  uid="uid"
+                  :opened="true"/>
+    </div>
+    </div>
+    </div>
+  <div class="bbn-w-100" v-show="!tree.length">
+    <div class="bbn-grid-fields bbn-padded bbn-m">
+      <div class="bbn-label">
+        <?=_("Account type")?>
+    </div>
+      <bbn-dropdown :source="types"
+                    source-value="id"
+                    placeholder="<?=_("Choose a type of account")?>"
+                    v-model="account.type"
+                    autocomplete="off"
+                    :required="true"/>
 
-        <div class="bbn-label">
-          <?=_("Main eMail address for this account")?>
-        </div>
-        <bbn-input v-model="account.email"
-                   type="email"
-                   autocomplete="off"
-                   :required="true"/>
+      <div class="bbn-label">
+        <?=_("Main eMail address for this account")?>
+    </div>
+      <bbn-input v-model="account.email"
+                 type="email"
+                 autocomplete="off"
+                 :required="true"/>
 
-        <div class="bbn-label">
-          <?=_("Login")?>
-        </div>
-        <bbn-input v-model="account.login"
-                   autocomplete="off"
-                   :required="true"/>
+      <div class="bbn-label">
+        <?=_("Login")?>
+    </div>
+      <bbn-input v-model="account.login"
+                 autocomplete="off"
+                 :required="true"/>
 
-        <div class="bbn-label">
-          <?=_("Password")?>
-        </div>
-        <bbn-input v-model="account.pass"
-                   type="password"
-                   :no-save="true"
-                   :required="true"/>
+      <div class="bbn-label">
+        <?=_("Password")?>
+    </div>
+      <bbn-input v-model="account.pass"
+                 type="password"
+                 :no-save="true"
+                 :required="true"/>
 
-        <div v-if="['imap', 'pop3'].includes(accountCode)"
-             class="bbn-label">
-          <?=_("Use SSL")?>
-        </div>
-        <bbn-checkbox v-if="['imap', 'pop3'].includes(accountCode)"
-                      :value="1"
-                      :novalue="0"
-                      v-model="account.ssl"/>
-
-        <div v-if="['imap', 'pop3'].includes(accountCode)"
-             class="bbn-label">
-          <?=_("Incoming server")?>
-        </div>
-        <bbn-input v-if="['imap', 'pop3'].includes(accountCode)"
-                   type="hostname"
-                   v-model="account.host"
-                   autocomplete="off"
-                   :required="true"/>
-
-        <div class="bbn-grid-full bbn-c"
-             v-if="account.host && ['imap', 'pop3'].includes(accountCode)">
-          <a href="javascript:;" @click="hasSMTP = !hasSMTP">
-            <?=_("Click here to change the outgoing server configuration if it is different")?>
-          </a>
-        </div>
-
-        <div v-if="hasSMTP && ['imap', 'pop3'].includes(accountCode)"
+      <div v-if="['imap', 'pop3'].includes(accountCode)"
            class="bbn-label">
-          <?=_("Outgoing server")?>
-        </div>
-        <bbn-input v-if="hasSMTP && ['imap', 'pop3'].includes(accountCode)"
-                   v-model="account.smtp"
-                   type="hostname"
-                   autocomplete="off"
-                   :required="true"/>
-
-        <div class="bbn-grid-full bbn-c bbn-b bbn-state-error bbn-padded"
-             v-if="errorState">
-          <?=_("Impossible to connect to the mail server")?>
-        </div>
-
-      </div>
+        <?=_("Use SSL")?>
     </div>
-  </bbn-form>
-</script>
+      <bbn-checkbox v-if="['imap', 'pop3'].includes(accountCode)"
+                    :value="1"
+                    :novalue="0"
+                    v-model="account.ssl"/>
+
+      <div v-if="['imap', 'pop3'].includes(accountCode)"
+           class="bbn-label">
+        <?=_("Incoming server")?>
+    </div>
+      <bbn-input v-if="['imap', 'pop3'].includes(accountCode)"
+                 type="hostname"
+                 v-model="account.host"
+                 autocomplete="off"
+                 :required="true"/>
+
+      <div class="bbn-grid-full bbn-c"
+           v-if="account.host && ['imap', 'pop3'].includes(accountCode)">
+        <a href="javascript:;" @click="hasSMTP = !hasSMTP">
+          <?=_("Click here to change the outgoing server configuration if it is different")?>
+    </a>
+    </div>
+
+      <div v-if="hasSMTP && ['imap', 'pop3'].includes(accountCode)"
+           class="bbn-label">
+        <?=_("Outgoing server")?>
+    </div>
+      <bbn-input v-if="hasSMTP && ['imap', 'pop3'].includes(accountCode)"
+                 v-model="account.smtp"
+                 type="hostname"
+                 autocomplete="off"
+                 :required="true"/>
+
+      <div class="bbn-grid-full bbn-c bbn-b bbn-state-error bbn-padded"
+           v-if="errorState">
+        <?=_("Impossible to connect to the mail server")?>
+    </div>
+
+    </div>
+    </div>
+    </bbn-form>
+  </script>
 </div>
