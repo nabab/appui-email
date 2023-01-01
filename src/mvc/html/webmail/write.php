@@ -6,5 +6,6 @@
                   :accounts="source.accounts"
                   :signatures="source.signatures"
                   :attachment="source.attachment"
+                  :isReply="source.isReply"
                   ></appui-email-write>
 

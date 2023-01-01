@@ -23,9 +23,15 @@ $accounts = [];
 
 $emAccounts = $em->getAccounts();
 
+$isReply = false;
+
 for ($i = 0; $i < count($emAccounts); $i++) {
-  array_push($accounts, $emAccounts[$i]['login']);
+  array_push($accounts, [
+    "text" => $emAccounts[$i]['login'],
+    "value" => $emAccounts[$i]['id']
+  ]);
 }
+
 
 if ($model->hasData('id', true)) {
   $email =  $em->getEmail($model->data['id']);
@@ -42,10 +48,12 @@ if ($model->hasData('id', true)) {
     if ($model->data['action'] == 'reply') {
       $to = createEmailListString($email['from']);
       $subject = 'RE : ' . $email['subject'];
+      $isReply = true;
     }
     if ($model->data['action'] == 'reply_all') {
       $to = createEmailListString($email['from']) . " " . createEmailListString($email['to']);
       $subject = 'RE : ' . $email['subject'];
+      $isReply = true;
     }
     if ($model->data['action'] == 'forward') {
       $subject = 'TR : ' . $email['subject'];
@@ -54,9 +62,11 @@ if ($model->hasData('id', true)) {
   }
 
   $email['login'] = $em->getLoginByEmailId($model->data['id'])['login'];
+
   return [
     'signatures' => $model->inc->pref->getAll($id_signatures, true),
     'success' => true,
+    'isReply' => $isReply,
     'email' => $email,
     'subject' => $subject,
     'to' => $to,

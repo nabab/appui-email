@@ -45,6 +45,7 @@
                      storage-full-name="appui-email-webmail-table"
                      :filterable="true"
                      :selection="true"
+                     :expander="hasExpander"
                      @focus="selectMessage"
                      @select="tableSelect"
                      @unselect="tableUnselect"

@@ -13,6 +13,7 @@ return [[
       $accounts = $em->getAccounts();
     } catch (\Exception $e) {
       $error = $e->getMessage();
+      X::log($error, "poller_email_error");
       return [
         'success' => false,
         'data' => [
@@ -31,14 +32,14 @@ return [[
               try {
                 $check = $em->checkFolder($folder);
               } catch (\Exception $e) {
+                X::log($e->getMessage(), "poller_email_error");
                 $check = false;
               }
               if ($check) {
                 try {
                   $tot += $em->syncEmails($folder, 50);
-                  X::log(["POLLER", $folder, $tot], "startFromUID");
                 } catch (\Exception $e) {
-                  X::log($e->getMessage(), "poller_email");
+                  X::log($e->getMessage(), "poller_email_error");
                   $error = $e->getMessage();
                   return [
                     'success' => false,

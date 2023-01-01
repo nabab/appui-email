@@ -60,6 +60,12 @@
       },
     },
     methods: {
+      hasExpander(row){
+        return !!row.data && (!!row.data.external_uids) ? {
+          template: `<component is="appui-email-widget-table" :source="source"/>`,
+          props: ['source']
+        } : false
+      },
       download() {
         bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/download/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment);
       },
