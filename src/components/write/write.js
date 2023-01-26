@@ -10,6 +10,10 @@
   };
   return {
     props: {
+      isReply: {
+        required: true,
+        type: Boolean
+      },
       source: {
         required: true,
         type: Object,
@@ -64,7 +68,7 @@
         currentTo: "",
         currentCC: "",
         currentCCI: "",
-        currentFrom: (this.source && this.source.login) ? this.source.login : (this.accounts.length) ? this.accounts[0]: "",
+        currentFrom: (this.source && this.source.login) ? this.source.login : (this.accounts.length) ? this.accounts[0].value : "",
         currentSignature: this.signatures.length ? this.signatures[0].id : null,
         type: "bbn-rte",
         types: [
@@ -145,9 +149,9 @@
         const cc = ccInputItem && ccInputItem.length ? pluck(ccInputItem, 'email').join(';') : ""
         const cci = cciInputItem && cciInputItem.length ? pluck(cciInputItem, 'email').join(';') : ""
         bbn.fn.post(appui.plugins['appui-email'] + '/actions/email/send', {
-          id_account: this.source.id_account,
+          id_account: this.currentFrom,
           email: {
-            title: this.subject,
+            title: this.currentSubject,
             text: this.message,
             to: to,
             cc: cc,
