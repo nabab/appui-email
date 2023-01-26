@@ -60,11 +60,19 @@
       },
     },
     methods: {
+      currentFolderIsThreads() {
+        bbn.fn.log(this.currentFolder.startWiths('threads-'));
+        return this.currentFolder.startWiths('threads-')
+      },
       hasExpander(row){
-        return !!row.data && (!!row.data.external_uids) ? {
+        bbn.fn.log(!!row.data?.external_uids);
+        return !!row.data?.external_uids
+      },
+      expanderComponent(row){
+        return {
           template: `<component is="appui-email-widget-table" :source="source"/>`,
           props: ['source']
-        } : false
+        }
       },
       download() {
         bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/download/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment);
@@ -215,7 +223,7 @@
             if (this.hash[key] && d[key].hash !== this.hash[key].hash) {
               if (d[key].folders[this.currentFolder] && d[key].folders[this.currentFolder] !== this.hash[key].folders[this.currentFolder]) {
                 if (!this.selectedMails.length) {
-                  this.getRef('table').updateData();
+                  this.getRef('table')?.updateData();
                   if (this.alreadySendUpdateError) {
                     this.alreadySendUpdateError = false;
                   }
@@ -480,12 +488,21 @@
         })
         if (this.source.accounts) {
           bbn.fn.each(this.source.accounts, a => {
+            a.folders = a.folders.filter(el => el.subscribed !== false);
+            a.folders.unshift({
+              id: 'threads-' + a.id,
+              type: 'afolder',
+              text: 'Threads',
+              name: 'Threads',
+              uid: 'threads'
+            });
             r.push({
               text: a.login,
               uid: a.id,
               items: fn(a.folders, a.id),
               type: "account"
             });
+            bbn.fn.log("folders", a.folders);
           });
         }
         this.treeData = r;
@@ -751,7 +768,7 @@
                           this.$nextTick(() => {
                             this.account.folders = checked;
                             this.getRef('tree').checked = this.account.folders;
-                            this.getRef('tree').updateData();
+                            this.getRef('tree')?.updateData();
                           });
                         }
                         else {
