@@ -10,6 +10,12 @@
   };
   return {
     props: {
+      replyTo: {
+        type: String
+      },
+      references: {
+        type: String
+      },
       isReply: {
         required: true,
         type: Boolean
@@ -68,7 +74,7 @@
         currentTo: "",
         currentCC: "",
         currentCCI: "",
-        currentFrom: (this.source && this.source.login) ? this.source.login : (this.accounts.length) ? this.accounts[0].value : "",
+        currentFrom: this.accounts[0].value ?? "",
         currentSignature: this.signatures.length ? this.signatures[0].id : null,
         type: "bbn-rte",
         types: [
@@ -158,6 +164,8 @@
             bcc: cci,
             attachments: this.attachments,
             important: 0,
+            in_reply_to: `<${this.replyTo}>`,
+            references: this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`
           }
         })
       },

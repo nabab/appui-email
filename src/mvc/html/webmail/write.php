@@ -7,5 +7,7 @@
                   :signatures="source.signatures"
                   :attachment="source.attachment"
                   :isReply="source.isReply"
+                  :replyTo="source.reply_to"
+                  :references="source.references"
                   ></appui-email-write>
 

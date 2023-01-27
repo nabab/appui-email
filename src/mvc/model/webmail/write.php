@@ -64,6 +64,8 @@ if ($model->hasData('id', true)) {
   $email['login'] = $em->getLoginByEmailId($model->data['id'])['login'];
 
   return [
+    'reply_to' => $email['msg_unique_id'],
+    'references' => $email['references'],
     'signatures' => $model->inc->pref->getAll($id_signatures, true),
     'success' => true,
     'isReply' => $isReply,
