@@ -1,0 +1,48 @@
+/* LESS Document */
+
+.bbn-email-item {
+  border-radius: 0.6rem;
+  .card {
+  }
+  .text {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    box-sizing: content-box !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .subject {
+    font-weight: 600 !important;
+  }
+
+  .menu {
+    display: flex;
+    i::first-child {
+      margin-left: auto;
+    }
+  }
+
+  .footer {
+    display: flex;
+    .owner {
+      color: rgba(71, 71, 71, 1);
+    }
+    .date {
+      color: rgba(71, 71, 71, 1);
+    }
+  }
+  
+  .icons {
+    text-align: left;
+    i {
+      display: inline-block;
+      margin-left: var(--xsspace);
+    }
+  }
+
+}
+
