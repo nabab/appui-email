@@ -20,6 +20,11 @@
                       :notext="true"
                       :text="_('Write new mail')"
                       icon="nf nf-fa-edit"></bbn-button>
+          <bbn-button @click="changeOrientation"
+                      class="bbn-left-xsspace"
+                      :notext="true"
+                      :text="_('Change Webmail orientation to ' + (orientation == 'horizontal' ? 'vertical' : 'horizontal'))"
+                      :icon="orientation == 'horizontal' ? 'nf nf-cod-split_vertical' : 'nf nf-cod-split_horizontal'"/>
         </div>
         <div class="bbn-flex-fill">
           <bbn-tree :source="treeData"
@@ -39,9 +44,24 @@
                     :resizable="true"
                     :collapsible="true">
         <bbn-pane size="50%">
-          <bbn-toolbar>
-          </bbn-toolbar>
-          <bbn-table :source="source.root + 'webmail'"
+          <bbn-column-list v-if="orientation == 'horizontal'"
+                           class="bbn-bordered"
+                           :source="source.root + 'webmail'"
+                           component="appui-email-item"
+                           :pageable="true"
+                           :filterable="true"
+                           :selection="true"
+                           @select="tableSelect"
+                           @unselect="tableUnselect"
+                           :multifilter="true"
+                           :data="dataObj"
+                           ref="table"
+                           :sortable="true"
+                           :showable="true"
+                           :order="[{field: 'date', dir: 'DESC'}]">
+          </bbn-column-list>
+          <bbn-table v-else
+                     :source="source.root + 'webmail'"
                      storage-full-name="appui-email-webmail-table"
                      :filterable="true"
                      :selection="true"
@@ -91,7 +111,8 @@
                v-if="selectedMail">
             <div class="bbn-overlay">
               <div class="bbn-flex-height">
-                <bbn-toolbar class="bbn-m">
+                <bbn-toolbar class="bbn-m"
+                             style="padding-top: 5px">
                   <bbn-button icon="nf nf-fa-mail_reply"
                               class="bbn-left-xsspace"
                               :text="_('Reply')"

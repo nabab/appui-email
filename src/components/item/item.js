@@ -20,6 +20,11 @@
         } else {
           return emailDate.toLocaleDateString("en-US", {month: "short", day: "numeric"});
         }
+      },
+      select() {
+        let webmail = this.closest('appui-email-webmail');
+        webmail.selectMessage(this.source);
+        this.source.is_read = 1;
       }
     }
   }

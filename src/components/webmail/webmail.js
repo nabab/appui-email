@@ -9,7 +9,7 @@
     data(){
       return {
         scpName: scpName,
-        orientation: 'vertical',
+        orientation: 'horizontal',
         currentFolder: null,
         selectedMail: null,
         treeData: [],
@@ -54,12 +54,20 @@
     },
     computed: {
       dataObj(){
+        if (!this.currentFolder) {
+          return {
+            id_folder: this.source.folder_types[1].id
+        	};
+        }
         return {
           id_folder: this.currentFolder
         }
       },
     },
     methods: {
+      changeOrientation() {
+        this.orientation = this.orientation == 'vertical' ? 'horizontal' : 'vertical';
+      },
       currentFolderIsThreads() {
         bbn.fn.log(this.currentFolder.startWiths('threads-'));
         return this.currentFolder.startWiths('threads-')
