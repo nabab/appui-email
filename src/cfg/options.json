@@ -88,6 +88,10 @@
       ]
     },
     {
+      "text": "Signatures",
+      "code": "signatures"
+    },
+    {
       "cfg": {
         "show_code": 1,
         "show_value": 1
