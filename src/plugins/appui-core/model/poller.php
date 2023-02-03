@@ -10,7 +10,7 @@ return [[
 
     $em = new bbn\User\Email($model->db);
     $error = null;
-    
+
     try {
       $accounts = $em->getAccounts();
     } catch (\Exception $e) {
@@ -62,7 +62,6 @@ return [[
           );
         }
       } else {
-        X::log("Account ".$a['id']." is not ready", "test_stage");
         try {
           $em->syncThreads(100);
         } catch (\Exception $e) {
@@ -81,13 +80,18 @@ return [[
     // for each accounts check if each folder has all the emails in the db
     $accounts = $em->getAccounts();
     foreach ($accounts as $a) {
-      $folders = $em->getFolders($a['id']);
-      X::log($folders, "stage_folders");
       $is_same = true;
+      $folders = $em->getFolders($a['id']);
+      if (empty($folders)) {
+        continue;
+      }
       // check for each folders if the number of emails in the db is the same as the number of emails in the folder with the uid
       foreach ($folders as $f) {
         $last_uid = $em->getLastUid($f);
-
+        if ($f['db_uid_max'] == null || $last_uid == null) {
+          $is_same = false;
+          break;
+        }
         if ($f['db_uid_max'] != $last_uid) {
           $is_same = false;
           break;
@@ -95,8 +99,9 @@ return [[
       }
       // if the number of emails in the db is the same as the number of emails in the folder with the uid, set the stage to 2 so we can start the threads creation
       if ($is_same && $a['stage'] === 1) {
+        X::log($a, "test_stage");
         $em->setAccountStage($a['id'], 2);
-      // else if the number of emails in the db is not the same as the number of emails in the folder with the uid, set the stage to 1 so we can start the emails sync
+        // else if the number of emails in the db is not the same as the number of emails in the folder with the uid, set the stage to 1 so we can start the emails sync
       } else if (!$is_same && $a['stage'] === 2) {
         $em->setAccountStage($a['id'], 1);
       }
