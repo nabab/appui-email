@@ -181,7 +181,7 @@
 
                 </bbn-toolbar>
                 <div class="bbn-flex-fill">
-                  <bbn-frame :src="source.root + 'reader/' + selectedMail.id" class="bbn-100"/>
+                  <bbn-frame sandbox="allow-scripts" :src="source.root + 'reader/' + selectedMail.id" class="bbn-100"/>
                 </div>
               </div>
             </div>

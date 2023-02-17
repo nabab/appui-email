@@ -497,13 +497,7 @@
         if (this.source.accounts) {
           bbn.fn.each(this.source.accounts, a => {
             a.folders = a.folders.filter(el => el.subscribed !== false);
-            a.folders.unshift({
-              id: 'threads-' + a.id,
-              type: 'afolder',
-              text: 'Threads',
-              name: 'Threads',
-              uid: 'threads'
-            });
+
             r.push({
               text: a.login,
               uid: a.id,
@@ -563,6 +557,12 @@
           }
         }
         this.getFolders();
+      },
+      selectedMessageIDisSame(id) {
+        if (this.selectedMail === null) {
+          return false;
+        }
+        return this.selectedMail.id === id;
       },
       createAccount() {
         this.getPopup({

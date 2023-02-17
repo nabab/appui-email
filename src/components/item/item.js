@@ -14,8 +14,8 @@
     methods: {
       formatDate(date) {
         let emailDate = new Date(date);
-				let currentDate = new Date();
-				if (emailDate.getDate() === currentDate.getDate()) {
+        let currentDate = new Date();
+        if (emailDate.getDate() === currentDate.getDate()) {
           return emailDate.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
         } else {
           return emailDate.toLocaleDateString("en-US", {month: "short", day: "numeric"});
@@ -26,6 +26,12 @@
         webmail.selectMessage(this.source);
         this.source.is_read = 1;
       }
+    },
+    computed: {
+      isSelected() {
+        let webmail = this.closest('appui-email-webmail');
+        return webmail.selectedMessageIDisSame(this.source.id);
+      },
     }
   }
 })();
