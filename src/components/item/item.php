@@ -2,9 +2,10 @@
 
 
 <div class="bbn-email-item bbn-flex-height"
-     @click="select">
+     @click="select"
+     :class="isSelected ? 'bbn-alt-background' : []">
   <div class="card bbn-flex-height">
-    <span class="bbn-w-100 bbn-bottom-xspadding bbn-ellipsis subject"
+    <span class="bbn-w-100 bbn-bottom-xspadding bbn-top-xspadding bbn-ellipsis subject"
           :style="{ fontWeight: source.is_read ? 'normal' : 'bold'}">
       {{source.subject}}
     </span>
@@ -41,7 +42,7 @@
         {{ source.to }}
       </span>
     </div>
-    <div class="bbn-w-100 bbn-xspadding bbn-hr">
+    <div class="bbn-w-100 bbn-hr">
       
     </div>
   </div>
