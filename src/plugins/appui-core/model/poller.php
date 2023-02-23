@@ -1,7 +1,7 @@
 <?php
 
 use bbn\X;
-return [];
+
 X::log("Starting email poller");
 return [[
   'id' => 'appui-email-0',
