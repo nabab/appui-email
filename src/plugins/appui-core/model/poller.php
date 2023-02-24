@@ -104,10 +104,10 @@ return [[
 
     // Update users mail
     $hashes = $em->getHashes();
-    if ($hashes !== $data['hashes']) {
+    if (!isset($data['hashes']) || ($hashes !== $data['hashes'])) {
       return [
         'success' => true,
-        'data' => $em->getHashes()
+        'data' => $hashes
       ];
     } else {
       return ['success' => true];
