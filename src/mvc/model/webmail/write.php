@@ -70,7 +70,7 @@ if ($model->hasData('id', true)) {
     'success' => true,
     'isReply' => $isReply,
     'email' => $email,
-    'subject' => $subject,
+    'subject' => quoted_printable_decode($subject),
     'to' => $to,
     'accounts' => $accounts,
     'attachment' => $model->data['action'] == 'forward' ? $email['attachment'] : []

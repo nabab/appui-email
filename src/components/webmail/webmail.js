@@ -23,6 +23,8 @@
         hash: this.source.hash,
         attachments: [],
         selectedAttachment: "Attachments",
+        extractedFrom: {},
+        extractedTo: {},
         attachmentsMode: [
           {
             text: bbn._('Download'),
@@ -57,7 +59,7 @@
         if (!this.currentFolder) {
           return {
             id_folder: this.source.folder_types[1].id
-        	};
+          };
         }
         return {
           id_folder: this.currentFolder
@@ -65,6 +67,38 @@
       },
     },
     methods: {
+      formatDate(date) {
+        let emailDate = new Date(date);
+        let currentDate = new Date();
+
+        if (emailDate.getFullYear() !== currentDate.getFullYear()) {
+          // If the email date year is not the same as the current year, format with the year
+          return emailDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+        } else if (emailDate.getDate() === currentDate.getDate()) {
+          // If the email date is today, format with time only
+          return emailDate.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+        } else {
+          // Otherwise, format with month and day only
+          return emailDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        }
+      },
+      extractNameAndEmail(str) {
+        str = str.replace(/"/g, '');
+        const nameRegex = /(.+) <(.+)>/;
+        const nameMatch = str.match(nameRegex);
+        if (nameMatch) {
+          const [, name, email] = nameMatch;
+          return { name, email };
+        } else {
+          const emailRegex = /([^\s@]+@[^\s@]+\.[^\s@]+)/;
+          const emailMatch = str.match(emailRegex);
+          if (emailMatch) {
+            const email = emailMatch[0];
+            return { email };
+          }
+        }
+        return null;
+      },
       changeOrientation() {
         this.orientation = this.orientation == 'vertical' ? 'horizontal' : 'vertical';
       },
@@ -557,6 +591,9 @@
           }
         }
         this.getFolders();
+        bbn.fn.log("SELECT");
+        this.extractedFrom = this.extractNameAndEmail(this.selectedMail.from);
+        this.extractedTo = this.extractNameAndEmail(this.selectedMail.to);
       },
       selectedMessageIDisSame(id) {
         if (this.selectedMail === null) {

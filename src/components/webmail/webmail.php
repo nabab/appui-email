@@ -106,8 +106,8 @@
                          :hidden="true"/>
           </bbn-table>
         </bbn-pane>
-        <bbn-pane>
-          <div class="bbn-100"
+        <bbn-pane :scrollable="true">
+          <div class="bbn-overlay"
                v-if="selectedMail">
             <div class="bbn-overlay">
               <div class="bbn-flex-height">
@@ -180,6 +180,21 @@
                               :notext="true"/>
 
                 </bbn-toolbar>
+                <div v-if="selectedMail.id" class="bbn-flex bbn-spadding email-header">
+                  <span class="bbn-medium bbn-bottom-xsmargin">{{ selectedMail.subject }}</span>
+                  <span class="bbn-bottom-xsmargin">{{_('to: ')}}
+                    <a v-if="extractedTo && extractedTo.name && extractedTo.email && extractedTo.email !== extractedTo.name" :href="'mailto:' + extractedTo.email" :title="extractedTo.email">{{extractedTo.name}}</a>
+                    <a v-else-if="extractedTo" :href="'mailto:' + extractedTo.email" >{{extractedTo.email}}</a>
+                    <span v-else>{{selectedMail.to}}</span>
+                  </span>
+                  <span class="bbn-bottom-xsmargin">{{_('from: ')}}
+                    <a v-if="extractedFrom && extractedFrom.name && extractedFrom.email && extractedFrom.email !== extractedFrom.name" :href="'mailto:' + extractedFrom.email" :title="extractedFrom.email">{{extractedFrom.name}}</a>
+                    <a v-else-if="extractedFrom" :href="'mailto:' + extractedFrom.email">{{extractedFrom.email}}</a>
+                    <span v-else>{{selectedMail.from}}</span>
+                  </span>
+                  <span class="bbn-small">{{ formatDate(selectedMail.date) }}</span>
+                </div>
+                <hr style="margin:0">
                 <div class="bbn-flex-fill">
                   <bbn-frame sandbox="allow-scripts" :src="source.root + 'reader/' + selectedMail.id" class="bbn-100"/>
                 </div>
