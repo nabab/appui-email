@@ -26,7 +26,8 @@ return [[
     $tot = 0;
     X::log("Starting email function");
     foreach ($accounts as $a) {
-      if ($a['stage'] == 1) {
+      X::log("Account stage: ".$a['stage'], "test_stage");
+      if ($a['stage'] === 1) {
         X::log("Checking account ".$a['id'], "test_stage");
         if ($tot < 250) {
           X::map(
@@ -87,8 +88,14 @@ return [[
       // check for each folders if the number of emails in the db is the same as the number of emails in the folder with the uid
       foreach ($folders as $f) {
         $last_uid = $em->getLastUid($f);
+        $first_uid = $em->getFirstUid($f);
 
-        if ($f['db_uid_max'] != $last_uid) {
+        if ($f['db_uid_max'] === null || $f['db_uid_min'] === null && $f['last_uid'] !== null) {
+          $is_same = false;
+          break;
+        }
+
+        if ($f['db_uid_max'] != $last_uid && $f['db_uid_min'] != $first_uid) {
           $is_same = false;
           break;
         }
@@ -96,14 +103,17 @@ return [[
       // if the number of emails in the db is the same as the number of emails in the folder with the uid, set the stage to 2 so we can start the threads creation
       if ($is_same && $a['stage'] === 1) {
         $em->setAccountStage($a['id'], 2);
+        X::log("Account ".$a['id']." is ready", "test_stage");
       // else if the number of emails in the db is not the same as the number of emails in the folder with the uid, set the stage to 1 so we can start the emails sync
       } else if (!$is_same && $a['stage'] === 2) {
         $em->setAccountStage($a['id'], 1);
+        X::log("Account ".$a['id']." is not ready", "test_stage");
       }
     }
 
     // Update users mail
     $hashes = $em->getHashes();
+    X::log($data, "poller_email_data");
     if (!isset($data['hashes']) || ($hashes !== $data['hashes'])) {
       return [
         'success' => true,
