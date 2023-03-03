@@ -802,6 +802,7 @@
                       bbn.fn.extend({action: 'test'}, this.account),
                       d => {
                         if (d.data) {
+                          bbn.fn.log("DATA", d);
                           let checked = [];
                           bbn.fn.each(d.data, a => {
                             if (a.subscribed) {

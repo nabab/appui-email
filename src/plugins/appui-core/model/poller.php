@@ -3,6 +3,7 @@
 use bbn\X;
 
 X::log("Starting email poller");
+
 return [[
   'id' => 'appui-email-0',
   'frequency' => 30,
@@ -26,13 +27,13 @@ return [[
     $tot = 0;
     X::log("Starting email function");
     foreach ($accounts as $a) {
-      X::log("Account stage: ".$a['stage'], "test_stage");
+
       if ($a['stage'] === 1) {
-        X::log("Checking account ".$a['id'], "test_stage");
+
         if ($tot < 250) {
           X::map(
             function ($folder) use (&$em, &$a, &$tot) {
-              X::log(["POLLER", $folder], "poller_email");
+
               if ($tot < 250) {
                 try {
                   $check = $em->checkFolder($folder);
@@ -63,7 +64,7 @@ return [[
           );
         }
       } else {
-        X::log("Account ".$a['id']." is not ready", "test_stage");
+
         try {
           $em->syncThreads(100);
         } catch (\Exception $e) {
@@ -80,7 +81,6 @@ return [[
     }
 
     // for each accounts check if each folder has all the emails in the db
-    $accounts = $em->getAccounts();
     foreach ($accounts as $a) {
       $folders = $em->getFolders($a['id']);
       X::log($folders, "stage_folders");
