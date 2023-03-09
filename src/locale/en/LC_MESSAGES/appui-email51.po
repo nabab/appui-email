@@ -1,0 +1,991 @@
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/cli/process.php
+msgid "Processed"
+msgstr "Processed"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/cli/process.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Sent"
+msgstr "Sent"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.js
+msgid "A problem occurred"
+msgstr "A problem occurred"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.js
+msgid "Modified"
+msgstr "Modified"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/types/default/default.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/types/form/form.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Saved"
+msgstr "Saved"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/types/default/default.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/details.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/sent.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/types.js
+msgid "Error"
+msgstr "Error"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+msgid "Are you sure you want to leave this form without saving your changes?"
+msgstr "Are you sure you want to leave this form without saving your changes?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+msgid "Sender email"
+msgstr "Sender email"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Choose"
+msgstr "Choose"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Recipients"
+msgstr "Recipients"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+msgid "Retrieving list..."
+msgstr "Retrieving list..."
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+msgid "recipients"
+msgstr "Recipients"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+msgid "Sending time"
+msgstr "Sending time"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Priority"
+msgstr "Priority"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+msgid "Letter type"
+msgstr "Letter type"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/types/form/form.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/types.php
+msgid "Object"
+msgstr "Object"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/table/table.php
+msgid "Attachments"
+msgstr "Attachments"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/types/form/form.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/types.php
+msgid "Text"
+msgstr "Text"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+msgid "Normal"
+msgstr "Normal"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/form/form.php
+msgid "High"
+msgstr "High"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/forms/create/create.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/forms/rename/rename.js
+msgid "Folder created with success"
+msgstr "Folder created with success"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/forms/create/create.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/forms/rename/rename.js
+msgid "Cannot create the folder"
+msgstr "Cannot create the folder"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+msgid "Rich text editor"
+msgstr "Rich text editor"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+msgid "Markdown"
+msgstr "Markdown"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.js
+msgid "Do you want to delete this signature ?"
+msgstr "Do you want to delete this signature ?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.js
+msgid "Successfully deleted"
+msgstr "Successfully deleted"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.js
+msgid "Error in signature delete"
+msgstr "Error in signature delete"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.js
+msgid "Successfully saved"
+msgstr "Successfully saved"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.js
+msgid "Error in signature save"
+msgstr "Error in signature save"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.js
+msgid "Successfully Saved"
+msgstr "Successfully Saved"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.php
+msgid "New"
+msgstr "New"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/view.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/webmail/view.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Delete"
+msgstr "Delete"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.php
+msgid "Save"
+msgstr "Save"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/popup/editsignatures/editsignatures.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/types/form/form.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/types.php
+msgid "Name"
+msgstr "Name"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/details.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/sent.js
+msgid "Success"
+msgstr "success"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/details.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/sent.js
+msgid "Ready"
+msgstr "Ready"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Normal priority"
+msgstr "Normal priority"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "High priority"
+msgstr "High priority"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Low priority"
+msgstr "Low priority"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Cancel email"
+msgstr "Cancel email"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Change state to ready"
+msgstr "Change state to ready"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Only admin users can delete sent emails"
+msgstr "Only admin users can delete sent emails"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Delete the email from the database"
+msgstr "Delete the email from the database"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Do you want to change the state of this email to \"Ready\"? "
+msgstr "Do you want to change the state of this email to \"Ready\"?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Email status changed"
+msgstr "Email status changed"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Something went wrong while changing the email status"
+msgstr "Something went wrong while changing the email status"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Do you want to completely delete this email? "
+msgstr "Do you want to completely delete this email?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Email successfully deleted"
+msgstr "Email successfully deleted"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Something went wrong while deleting the email"
+msgstr "Something went wrong while deleting the email"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Do you want to cancel this email? "
+msgstr "Do you want to cancel this email?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Email successfully cancelled"
+msgstr "Email successfully cancelled"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Something went wrong while cancelling the email"
+msgstr "Something went wrong while cancelling the email"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Email failed"
+msgstr "Email failed"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Email sent"
+msgstr "Email sent"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Email ready"
+msgstr "Email ready"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Email cancelled"
+msgstr "Email cancelled"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Check/uncheck all emails"
+msgstr "Check/uncheck all emails"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Cancel selected emails"
+msgstr "Cancel selected emails"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Delete selected emails"
+msgstr "Delete selected emails"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Delete all emails"
+msgstr "Delete all emails"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Delete all ready or cancelled emails"
+msgstr "Delete all ready or cancelled emails"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Are you sure you want to cancel all selected emails? "
+msgstr "Are you sure you want to cancel all selected emails?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Emails successfully cancelled"
+msgstr "Emails successfully cancelled"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Change the status or remove the email using the buttons of the row"
+msgstr "Change the status or remove the email using the buttons of the row"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Are you sure you want to completely delete all selected emails? "
+msgstr "Are you sure you want to completely delete all selected emails?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Emails successfully deleted"
+msgstr "Emails successfully deleted"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "Are you really sure you want to completely delete all ready emails? "
+msgstr "Are you really sure you want to completely delete all ready emails?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.js
+msgid "emails successfully deleted"
+msgstr "Emails successfully deleted"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/sent.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/types.php
+msgid "ID"
+msgstr "ID"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/sent.php
+msgid "e-Mail address"
+msgstr "e-Mail address"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/sent.php
+msgid "Title"
+msgstr "Title"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/sent.php
+msgid "e-Mailing"
+msgstr "e-Mailing"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/sent.php
+msgid "Status"
+msgstr "Status"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/sent.php
+msgid "Date"
+msgstr "Date"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/sent.php
+msgid "Read"
+msgstr "Read"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/table/table.php
+msgid "Number of attached files"
+msgstr "Number of attached files"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/test/test.php
+msgid "Are you sure you want to test this mailing?"
+msgstr "Are you sure you want to test this mailing?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/types/form/form.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/types.php
+msgid "Type"
+msgstr "Type"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/types/type/type.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/types.js
+msgid "New letter type"
+msgstr "New letter type"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/types/type/type.php
+msgid "Add letter"
+msgstr "Add letter"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.js
+msgid "Download"
+msgstr "Download"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.js
+msgid "Download all"
+msgstr "Download all"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.js
+msgid "Send to shared media"
+msgstr "Send to shared media"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.js
+msgid "Send all to shared media"
+msgstr "Send all to shared media"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.js
+msgid "Send to private media"
+msgstr "Send to private media"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.js
+msgid "Send all to private media"
+msgstr "Send all to private media"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "You have no account configured yet"
+msgstr "You have no account configured yet"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Create a new mail account"
+msgstr "Create a new mail account"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Back"
+msgstr "Back"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Choose the folders you want to keep synchronized"
+msgstr "Choose the folders you want to keep synchronized"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/accounts.php
+msgid "Account type"
+msgstr "Account type"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Choose a type of account"
+msgstr "Choose a type of account"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Main eMail address for this account"
+msgstr "Main eMail address for this account"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/accounts.php
+msgid "Login"
+msgstr "Login"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Password"
+msgstr "Password"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Use SSL"
+msgstr "Use SSL"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Incoming server"
+msgstr "Incoming server"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Click here to change the outgoing server configuration if it is different"
+msgstr "Click here to change the outgoing server configuration if it is different"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Outgoing server"
+msgstr "Outgoing server"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Impossible to connect to the mail server"
+msgstr "Impossible to connect to the mail server"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Write new mail"
+msgstr "Write new mail"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "horizontal"
+msgstr "horizontal"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+msgid "From"
+msgstr "from"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/table/table.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+msgid "Subject"
+msgstr "Subject"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/table/table.php
+msgid "Size"
+msgstr "Size"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/view.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/webmail/view.php
+msgid "Reply"
+msgstr "Reply"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/view.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/webmail/view.php
+msgid "Reply All"
+msgstr "Reply All"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/view.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/webmail/view.php
+msgid "Forward"
+msgstr "Forward"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/view.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/webmail/view.php
+msgid "Open in a new tab"
+msgstr "Open in a new tab"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/view.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/webmail/view.php
+msgid "Open in a new window"
+msgstr "Open in a new window"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/view.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/webmail/view.php
+msgid "Archive"
+msgstr "Archive"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/view.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/webmail/view.php
+msgid "Set as junk"
+msgstr "Set as junk"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/view.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/webmail/view.php
+msgid "Transform in task"
+msgstr "Transform in task"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Move"
+msgstr "Move"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "Select an email to see its content here"
+msgstr "Select an email to see its content here"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "to: "
+msgstr "to:"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/webmail/webmail.php
+msgid "from: "
+msgstr "from:"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
+msgid "READY"
+msgstr "Ready"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Sender"
+msgstr "Sender"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
+msgid "To send"
+msgstr "To send"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
+msgid "There is no data available"
+msgstr "There is no data available"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/widget/mailings/mailings.php
+msgid "SENT"
+msgstr "Sent"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Send"
+msgstr "Send"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.php
+msgid "To"
+msgstr "To"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+msgid "Unknown"
+msgstr "Unknown"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+msgid "Editor"
+msgstr "Editor"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.php
+msgid "CC"
+msgstr "CC"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+msgid "BCC"
+msgstr "BCC"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+msgid "Signatures"
+msgstr "Signatures"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+msgid "Address book"
+msgstr "Address book"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+msgid "Signature Editor"
+msgstr "Signature Editor"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.js
+msgid "Impossible to update signatures"
+msgstr "Impossible to update signatures"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.php
+msgid "Signatures Editor"
+msgstr "Signatures Editor"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.php
+msgid "Add signature"
+msgstr "Add signature"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/components/write/write.php
+msgid "CCI"
+msgstr "CCI"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/accounts.php
+msgid "New account"
+msgstr "New account"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/accounts.php
+msgid "Host"
+msgstr "Host"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/accounts.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/types.php
+msgid "Actions"
+msgstr "Actions"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/public/page/home.php
+msgid "Mailings"
+msgstr "Mailings"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/view.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/webmail/view.php
+msgid "Move to"
+msgstr "Move to"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/webmail.php
+msgid "Home"
+msgstr "Home"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/details.php
+msgid "Recipient"
+msgstr "Recipient"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/details.php
+msgid "État"
+msgstr "État"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/details.php
+msgid "Envoi"
+msgstr "Envoi"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "LIVE INFO"
+msgstr "LIVE INFO"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "IN PROGRESS"
+msgstr "In progress"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Started"
+msgstr "Started"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "NEXT"
+msgstr "Next"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Start"
+msgstr "Start"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "New mailing"
+msgstr "New mailing"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Emails ready"
+msgstr "Emails ready"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Emails sent"
+msgstr "Emails sent"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Letters types"
+msgstr "Letters types"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "content"
+msgstr "Content"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Infos"
+msgstr "Infos"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Total emails"
+msgstr "Total emails"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Emails succeeded"
+msgstr "Emails succeeded"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Emails failed"
+msgstr "Emails failed"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/home.php
+msgid "Action"
+msgstr "Action"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/types.php
+msgid "Default"
+msgstr "Default"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/types.php
+msgid "Version"
+msgstr "Version"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/types.php
+msgid "User"
+msgstr "User"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/html/page/types.php
+msgid "Last edit"
+msgstr "Last edit"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Suspended"
+msgstr "Suspended"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Cancelled"
+msgstr "Cancelled"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "In progress"
+msgstr "In progress"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "All"
+msgstr "All"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Draft"
+msgstr "Draft"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Prioritary"
+msgstr "Prioritary"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Non prioritary"
+msgstr "Non prioritary"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Total sent"
+msgstr "Total sent"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Total failed"
+msgstr "Total failed"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "See"
+msgstr "See"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Send this email to"
+msgstr "Send this email to"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Duplicate"
+msgstr "Duplicate"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Open"
+msgstr "Open"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Edit"
+msgstr "Edit"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Reactivate mailing"
+msgstr "Reactivate mailing"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Test"
+msgstr "Test"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Suspend"
+msgstr "Suspend"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Do you really want to cancel this mailing"
+msgstr "Do you really want to cancel this mailing"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Mailing successfully cancelled"
+msgstr "Mailing successfully cancelled"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Something went wrong while cancelling the mailing"
+msgstr "Something went wrong while cancelling the mailing"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Do you really want to send this email to"
+msgstr "Do you really want to send this email to"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Mailing edit"
+msgstr "Mailing edit"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Are you sure you want suspend this mailing?"
+msgstr "Are you sure you want suspend this mailing?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Are you sure you want to reactivate this mailing?"
+msgstr "Are you sure you want to reactivate this mailing?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Mailing reactivated"
+msgstr "Mailing reactivated"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Are you sure you want to delete this mailing?"
+msgstr "Are you sure you want to delete this mailing?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/types.js
+msgid "Deleted"
+msgstr "Deleted"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Are you sure you want to send this mailing?"
+msgstr "Are you sure you want to send this mailing?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Select users"
+msgstr "Select users"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/home.js
+msgid "Send to myself"
+msgstr "Send to myself"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/types.js
+msgid "Insert new "
+msgstr "Insert new"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/types.js
+msgid "Mod."
+msgstr "Mod."
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/types.js
+msgid "Suppr."
+msgstr "Suppr."
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/types.js
+msgid "Edit letter type"
+msgstr "Edit letter type"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/types.js
+msgid "Are you sure you want to delete this letter?"
+msgstr "Are you sure you want to delete this letter?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/page/types.js
+msgid "Avertissement sur les lettres types"
+msgstr "Avertissement sur les lettres types"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/webmail/view.js
+msgid "eMail account configuration"
+msgstr "eMail account configuration"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/webmail/view.js
+msgid "Do you want to delete this email ?"
+msgstr "Do you want to delete this email ?"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/webmail/view.js
+msgid "Email deleted with success"
+msgstr "Email deleted with success"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/js/webmail/view.js
+msgid "An error occured when deleting the email"
+msgstr "An error occured when deleting the email"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/model/actions/insert.php
+msgid "The mailing has been inserted with all its recipients"
+msgstr "The mailing has been inserted with all its recipients"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/model/actions/insert.php
+msgid "The mailing has been inserted and will be sent accordingly to your settings."
+msgstr "The mailing has been inserted and will be sent accordingly to your settings."
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/model/actions/insert.php
+msgid ""
+"The mailing has been inserted but will not be sent until a delivery date is "
+"chosen"
+msgstr ""
+"The mailing has been inserted but will not be sent until a delivery date is "
+"chosen"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/model/actions/update.php
+msgid "The mailing has been modified with all its recipients"
+msgstr "The mailing has been modified with all its recipients"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/model/actions/update.php
+msgid "The mailing has been modified and will be sent accordingly to your settings."
+msgstr "The mailing has been modified and will be sent accordingly to your settings."
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/model/webmail/contacts.php
+msgid "Impossible to retrieve contacts"
+msgstr "Impossible to retrieve contacts"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/model/webmail/write.php
+msgid "From : "
+msgstr "From :"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/model/webmail/write.php
+msgid "Send : "
+msgstr "Send :"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/model/webmail/write.php
+msgid "To : "
+msgstr "To :"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/model/webmail/write.php
+msgid "Subject : "
+msgstr "Subject :"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/public/accounts.php
+msgid "eMails accounts"
+msgstr "eMails accounts"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/public/page.php
+msgid "eMails"
+msgstr "eMails"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/public/ui.php
+msgid "UI"
+msgstr "UI"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/public/webmail.php
+msgid "Webmail"
+msgstr "Webmail"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/public/actions/download.php
+msgid "Impossible to find the requested file"
+msgstr "Impossible to find the requested file"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/public/page/details.php
+msgid "Untitled"
+msgstr "Untitled"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/public/page/ready.php
+msgid "e-Mails ready"
+msgstr "e-Mails ready"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/public/page/sent.php
+msgid "e-Mails sent"
+msgstr "e-Mails sent"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/public/page/types.php
+msgid "Letters Types"
+msgstr "Letters types"
+
+#: /home/nabab/web/_COMPOSER/dev/vendor/bbn/appui-email/src/mvc/public/webmail/contacts.php
+msgid "My contacts"
+msgstr "My contacts"
