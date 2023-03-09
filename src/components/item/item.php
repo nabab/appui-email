@@ -41,9 +41,9 @@
       </span>
       <span class="bbn-xs owner"
             style="margin-left: auto">
-        <a v-if="extractedTo && extractedTo.name && extractedTo.email && extractedTo.email !== extractedTo.name" :href="'mailto:' + extractedTo.email" :title="extractedTo.email">{{extractedTo.name}}</a>
-        <a v-else-if="extractedTo" :href="'mailto:' + extractedTo.email" >{{extractedTo.email}}</a>
-        <span v-else>{{source.to}}</span>
+        <a v-if="extractedTo && extractedTo.name && extractedTo.email && extractedTo.email !== extractedTo.name" :href="'mailto:' + extractedTo.email" :title="extractedTo.email" class="to">{{extractedTo.name}}</a>
+        <a v-else-if="extractedTo" :href="'mailto:' + extractedTo.email" class="to">{{extractedTo.email}}</a>
+        <span v-else class="to">{{source.to}}</span>
       </span>
     </div>
     <div class="bbn-w-100 bbn-hr">

@@ -23,8 +23,8 @@
         hash: this.source.hash,
         attachments: [],
         selectedAttachment: "Attachments",
-        extractedFrom: {},
-        extractedTo: {},
+        extractedFrom: null,
+        extractedTo: null,
         attachmentsMode: [
           {
             text: bbn._('Download'),
@@ -83,6 +83,9 @@
         }
       },
       extractNameAndEmail(str) {
+        if (!str) {
+          return "";
+        }
         str = str.replace(/"/g, '');
         const nameRegex = /(.+) <(.+)>/;
         const nameMatch = str.match(nameRegex);
@@ -97,7 +100,7 @@
             return { email };
           }
         }
-        return null;
+        return "";
       },
       changeOrientation() {
         this.orientation = this.orientation == 'vertical' ? 'horizontal' : 'vertical';

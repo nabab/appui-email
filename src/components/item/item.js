@@ -15,7 +15,7 @@
       }
     },
     mounted() {
-      bbn.fn.log(this.source.is_read);
+      bbn.fn.log("SOURCE", this.source);
     },
     methods: {
       formatDate(date) {
@@ -39,6 +39,9 @@
         this.source.is_read = 1;
       },
       extractNameAndEmail(str) {
+        if (!str) {
+          return "";
+        }
         str = str.replace(/"/g, '');
         const nameRegex = /(.+) <(.+)>/;
         const nameMatch = str.match(nameRegex);
@@ -53,7 +56,7 @@
             return { email };
           }
         }
-        return null;
+        return "";
       }
     },
     computed: {
