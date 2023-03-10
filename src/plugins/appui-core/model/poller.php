@@ -29,12 +29,15 @@ return [[
     foreach ($accounts as $a) {
 
       if ($a['stage'] === 1) {
+        $f = $em->getFolders($a['id']);
 
-        if ($tot < 250) {
+        // set INBOX as the first folder to sync
+
+        if ($tot < 100) {
           X::map(
             function ($folder) use (&$em, &$a, &$tot) {
 
-              if ($tot < 250) {
+              if ($tot < 100) {
                 try {
                   $check = $em->checkFolder($folder);
                 } catch (\Exception $e) {
@@ -43,7 +46,7 @@ return [[
                 }
                 if ($check) {
                   try {
-                    $tot += $em->syncEmails($folder, 50);
+                    $tot += $em->syncEmails($folder, 25);
                   } catch (\Exception $e) {
                     X::log($e->getMessage(), "poller_email_error");
                     $error = $e->getMessage();
@@ -59,7 +62,7 @@ return [[
 
               return $folder;
             },
-            $em->getFolders($a['id']),
+            $f,
             'items'
           );
         }
@@ -81,12 +84,18 @@ return [[
     }
 
     // for each accounts check if each folder has all the emails in the db
+    $sync = [];
     foreach ($accounts as $a) {
       $folders = $em->getFolders($a['id']);
+      $sync[$a['id']] = [
+        'name' => $a['login'],
+      ];
+
       X::log($folders, "stage_folders");
       $is_same = true;
       // check for each folders if the number of emails in the db is the same as the number of emails in the folder with the uid
       foreach ($folders as $f) {
+
         $last_uid = $em->getLastUid($f);
         $first_uid = $em->getFirstUid($f);
 
@@ -99,6 +108,16 @@ return [[
           $is_same = false;
           break;
         }
+      }
+
+      foreach ($folders as $f) {
+        $folder = $em->getFolder($f['id']);
+        $info = $em->getInfoFolder($f['id']);
+        $sync[$a['id']]['folders'][$f['id']] = [
+          'name' => $folder['text'],
+          'db_msg' => $folder['num_msg'],
+          'msg' => $info->Nmsgs,
+        ];
       }
       // if the number of emails in the db is the same as the number of emails in the folder with the uid, set the stage to 2 so we can start the threads creation
       if ($is_same && $a['stage'] === 1) {
@@ -117,7 +136,10 @@ return [[
     if (!isset($data['hashes']) || ($hashes !== $data['hashes'])) {
       return [
         'success' => true,
-        'data' => $hashes
+        'data' => [
+          'hashes' => $hashes,
+          'sync' => $sync
+        ]
       ];
     } else {
       return ['success' => true];

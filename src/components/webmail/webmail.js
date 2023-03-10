@@ -21,6 +21,7 @@
         root: appui.plugins['appui-email'],
         newCount: 0,
         hash: this.source.hash,
+        sync: null,
         attachments: [],
         selectedAttachment: "Attachments",
         extractedFrom: null,
@@ -220,6 +221,10 @@
         }
       },
       receive(d) {
+        if (d.sync) {
+          this.sync = d.sync;
+        }
+        d = d.hashes;
         let tree = this.getRef('tree');
         if (!tree)
           return;
