@@ -4,18 +4,56 @@
   return {
     data() {
       return {
-        sync: this.parse(this.source.sync)
+        sync: this.parse(this.source.sync),
+        isMount: true,
+        checkInterval: null,
+        checkDelay: 5000,
       }
     },
     created() {
       appui.register('appui-email', this);
     },
     mounted() {
-      bbn.fn.log(this.source);
+      const ct = this.closest('bbn-container')
+      if (ct.isVisible) {
+				this.startCheck();
+      }
+      ct.$on('view', ct => {
+        this.startCheck();
+      })
+      ct.$on('unview', ct => {
+        this.stopCheck();
+      })
       this.$set(appui.pollerObject, 'appui-email-sync', null);
       appui.poll();
     },
+    beforeDestroy() {
+      this.isMount = false;
+      if (this.checkInterval) {
+        clearInterval(this.checkInterval);
+        this.checkInterval = null
+      }
+    },
     methods: {
+      startCheck() {
+        if (this.checkInterval) {
+          clearInterval(this.checkInterval);
+          this.checkInterval = null
+        }
+        this.checkInterval = setInterval(this.isFocused, this.checkDelay)
+      },
+      stopCheck() {
+        if (this.checkInterval) {
+          clearInterval(this.checkInterval);
+        }
+      },
+      isFocused() {
+        if (!this.isMount) return;
+
+        bbn.fn.post('/email/data/sync/folders', {}, (d) => {
+          this.sync = this.parse(d.sync)
+        })
+      },
       receive(d) {
         if (d && d.sync) {
           let sync = d.sync;
