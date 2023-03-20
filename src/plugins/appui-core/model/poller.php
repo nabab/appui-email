@@ -89,6 +89,7 @@ return [[
       $folders = $em->getFolders($a['id']);
       $sync[$a['id']] = [
         'name' => $a['login'],
+        'id' => $a['id']
       ];
 
       X::log($folders, "stage_folders");
@@ -114,7 +115,8 @@ return [[
         $folder = $em->getFolder($f['id']);
         $info = $em->getInfoFolder($f['id']);
         $sync[$a['id']]['folders'][$f['id']] = [
-          'name' => $folder['text'],
+          'id' => $f['id'],
+          'name' => $folder['uid'],
           'db_msg' => $folder['num_msg'],
           'msg' => $info->Nmsgs,
         ];

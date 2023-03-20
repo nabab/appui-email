@@ -10,29 +10,40 @@
     Running folder
   </h2>
   <div class="bbn-w-70 " v-for="folder in sync.running">
-    <div>
-      <span>{{folder.account_name}}</span>
-      <span>{{folder.folder_name}}</span>
-    </div>
-    <bbn-progressbar :max="folder.msg"
-                     :value="folder.db_msg"
-                     :step="1"></bbn-progressbar>
+    <ul>
+      <li v-for="account in sync.running">
+        {{account.name}}
+        <ul>
+          <li v-for="folder in account.folders">
+            {{folder.folder_name}}
+            <bbn-progressbar class="progress_bar"
+                             :showValue="false"
+                             :max="folder.msg"
+                             :value="folder.db_msg"
+                             :step="1"></bbn-progressbar>
+            {{folder.db_msg + '/' + folder.msg}}
+          </li>
+        </ul>
+      </li>
+    </ul>
   </div>
   <hr>
   <h2>
-    Finished folder
+    Sync folder
   </h2>
   <div class="bbn-w-70 " >
     <ul>
       <li v-for="account in sync.finished">
-      	{{account.name}}
+        {{account.name}}
         <ul>
           <li v-for="folder in account.folders">
-          	{{folder.folder_name}}
-            <bbn-progressbar :max="folder.msg"
-                     :value="folder.db_msg"
-                     :step="1"
-   									 height="10px"></bbn-progressbar>
+            {{folder.folder_name}}
+            <bbn-progressbar class="progress_bar"
+                             :showValue="false"
+                             :max="folder.msg"
+                             :value="folder.db_msg"
+                             :step="1"></bbn-progressbar>
+            {{folder.db_msg + '/' + folder.msg}}
           </li>
         </ul>
       </li>
@@ -43,12 +54,21 @@
     Not started folder
   </h2>
   <div class="bbn-w-70 " v-for="folder in sync['not started']">
-    <div>
-      <span>{{folder.account_name}}</span>
-      <span>{{folder.folder_name}}</span>
-    </div>
-    <bbn-progressbar :max="folder.msg"
-                     :value="folder.db_msg"
-                     :step="1"></bbn-progressbar>
+    <ul>
+      <li v-for="account in sync['not started']">
+        {{account.name}}
+        <ul>
+          <li v-for="folder in account.folders">
+            {{folder.folder_name}}
+            <bbn-progressbar class="progress_bar"
+                             :showValue="false"
+                             :max="folder.msg"
+                             :value="folder.db_msg"
+                             :step="1"></bbn-progressbar>
+            {{folder.db_msg + '/' + folder.msg}}
+          </li>
+        </ul>
+      </li>
+    </ul>
   </div>
 </div>
