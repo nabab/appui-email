@@ -1,5 +1,6 @@
 <?php
-
+/** @todo You have an infinte loop of the poller here */
+return [];
 use bbn\X;
 
 X::log("Starting email poller");
