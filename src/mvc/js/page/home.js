@@ -304,9 +304,8 @@
             notext: true,
             icon: "nf nf-fa-stop_circle_o",
             action: this.stop
-          })  
+          })
         }
-        
         return res;
       },
       cancelMailing(row, obj, idx){
@@ -337,19 +336,18 @@
             }
           });
         })
-      }, 
+      },
       insert(){
         this.$refs.table.insert({}, {
-          title: bbn._("New mailing")
+          title: bbn._("New mailing"),
+          width: '80%'
         });
       },
-      
       edit(row, col, idx){
         return this.$refs.table.edit(
           bbn.fn.extend(row, {hasVersions: row.version > 1} ), {
           title: bbn._("Mailing edit"),
-          width: this.getPopup().defaultWidth,
-          height: this.getPopup().defaultHeight
+          width: '80%'
         }, idx);
       },
       see(row){

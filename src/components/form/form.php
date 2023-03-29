@@ -103,11 +103,11 @@
     ></bbn-upload>
 
     <label><?=_("Text")?></label>
-    <div style="height: 400px">
-      <div class="bbn-100">
-        <bbn-rte v-model="source.row.content" :required="true" ref="editor"></bbn-rte>
-      </div>
-    </div>
+    <bbn-rte v-model="source.row.content"
+             :required="true"
+             ref="editor"
+             :height="400"/>
+    
 
   </div>
 </bbn-form>
