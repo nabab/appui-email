@@ -8,10 +8,13 @@ if (empty($ctrl->post)) {
 else {
   try {
     $search = $ctrl->post['filters']['conditions'][0]['value'];
-  } catch (\Exception $e) {
-    
+  }
+  catch (\Exception $e) {
+    $search = false;
   }
   if ($search) {
+    $search = trim($search);
+    $search = trim($search, ';');
     $ctrl->post['filters'] = [
       'logic' => "OR",
       'conditions' => [
@@ -28,5 +31,6 @@ else {
       ]
     ];
   }
+
   $ctrl->action();
 }

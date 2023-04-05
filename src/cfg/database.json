@@ -545,6 +545,9 @@
         "key": "MUL",
         "maxlength": 1000
       },
+      "excerpt": {
+        "type": "text"
+      },
       "size": {
         "type": "bigint",
         "null": 0,
