@@ -6,14 +6,12 @@
           :action="emails.source.root + 'actions/' + (source.row.id ? 'update' : 'insert')"
           :prefilled="prefilled"
           @success="success"
-          @failure="failure"          
->
+          @failure="failure">
   <appui-note-toolbar-version :source="source.row" 
                                :data="{id: source.row.id_note}" 
                                @version="getVersion" 
                                v-if="source.row.hasVersions" 
-                               :actionUrl="root + 'data/mailing_version'"                              
-  ></appui-note-toolbar-version>
+                               :actionUrl="root + 'data/mailing_version'"/>
   <div class="bbn-padded bbn-grid-fields">
 
     <div v-if="emails.source.senders.length === 2" class="bbn-grid-full bbn-middle">
@@ -105,9 +103,9 @@
     <label><?=_("Text")?></label>
     <bbn-rte v-model="source.row.content"
              :required="true"
+             :clean-paste="true"
              ref="editor"
              :height="400"/>
-    
 
   </div>
 </bbn-form>

@@ -2,13 +2,11 @@
   <bbn-router class="appui_email_nav"
               :scrollable="true"
               :autoload="true"
-              :nav="true"
-  >
+              :nav="true">
     <bbns-container url="home"
                     :load="true"
                     title="<?=_('Mailings')?>"
                     icon="nf nf-fa-newspaper"
-                    :static="true"
-    ></bbns-container>
+                    :static="true"/>
   </bbn-router>
 </div>

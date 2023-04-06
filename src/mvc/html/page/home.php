@@ -113,8 +113,8 @@
                        :hidden="true"
                        ></bbns-column>
           <bbns-column field="attachments"
-                       type="number"
                        :hidden="true"
+                       :default="[]"
                        ></bbns-column>
           <bbns-column title="<?=_("Date")?>"
                        field="sent"
@@ -126,6 +126,7 @@
           <bbns-column title="<?=_("Recipients")?>"
                        field="recipients"
                        :width="160"
+                       :source="source.recipients"
                        :render="renderRecipients"
                        :required="true"
                        ></bbns-column>
