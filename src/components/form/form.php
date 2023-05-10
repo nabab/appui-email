@@ -6,7 +6,8 @@
           :action="emails.source.root + 'actions/' + (source.row.id ? 'update' : 'insert')"
           :prefilled="prefilled"
           @success="success"
-          @failure="failure">
+          @failure="failure"
+          :disabled="isNumLoading">
   <appui-note-toolbar-version :source="source.row" 
                                :data="{id: source.row.id_note}" 
                                @version="getVersion" 
