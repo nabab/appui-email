@@ -19,6 +19,6 @@
   ],
   "require": {
     "php": ">=7.1",
-    "bbn/bbn": "1.0.*"
+    "bbn/bbn": "dev-master"
   }
 }
