@@ -4,7 +4,7 @@
   let scpName = bbn.fn.randomString().toLowerCase();
   return {
     mixins: [
-      bbn.vue.basicComponent
+      bbn.cp.mixins.basic
     ],
     data(){
       return {

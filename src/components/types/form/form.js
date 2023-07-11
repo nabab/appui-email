@@ -42,8 +42,8 @@
           bbn.fn.happy('here')
           bbn.fn.log(d)
         
-					let t = bbn.vue.closest(this, 'bbn-container').getComponent(),
-							table = bbn.vue.find(t, 'bbn-table');
+					let t = this.closest('bbn-container').getComponent(),
+							table = t.find('bbn-table');
           if ( this.source.id_note ){
             let idx = bbn.fn.search(t.source.categories, 'id_note', d.data.id_note);           
             if ( idx > -1 ){

@@ -8,7 +8,7 @@
   return {
     props: ['source'],
     data(){
-      let emails = bbn.vue.closest(this, 'bbn-container').getComponent()
+      let emails = this.closest('bbn-container').getComponent()
       return {
         link: emails.source.root + 'view/' + this.source.id_note,
         emails: emails

@@ -3,9 +3,9 @@
 (() => {
   return {
     mixins: [
-      bbn.vue.basicComponent,
-      bbn.vue.listComponent,
-      bbn.vue.dropdownComponent
+      bbn.cp.mixins.basic,
+      bbn.cp.mixins.list,
+      bbn.cp.mixins.dropdown
     ],
     props: {
 
