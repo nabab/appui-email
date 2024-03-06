@@ -102,7 +102,7 @@
                        :source="status"
                        ></bbns-column>
           <bbns-column title="<?=_("Infos")?>"
-                       field="sender"
+                       :filterable="false"
                        :render="renderOfficiel"
                        cls="bbn-m"
                        :width="200"
