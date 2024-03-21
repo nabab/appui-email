@@ -16,28 +16,28 @@
 			<bbn-pane size="50%">
 				<div class="bbn-100 bbn-block info">
           <div class="bbn-header bbn-vmiddle title">
-            <span><strong><?=_('LIVE INFO')?></strong></span>
+            <span><strong><?= _('LIVE INFO') ?></strong></span>
             <bbn-switch @change="toggleGetInfo" :checked="!!info.getInfo"></bbn-switch>
           </div>
 					<div v-if="info.current.id"
 							 class="bbn-block bbn-w-100"
 					>
-            <div class="bbn-header bbn-c"><?=_('IN PROGRESS')?></div>
+            <div class="bbn-header bbn-c"><?= _('IN PROGRESS') ?></div>
 						<div class="bbn-spadded">
-              <div><strong><?=_('Title')?>:</strong> {{info.current.title}}</div>
-              <div><strong><?=_('Recipients')?>:</strong> {{info.current.recipients}}</div>
-              <div><strong><?=_('Started')?>:</strong> {{fixDate(info.current.moment)}}</div>
-              <div><strong><?=_('Sent')?>:</strong> {{info.current.sent}}</div>
+              <div><strong><?= _('Title') ?>:</strong> {{info.current.title}}</div>
+              <div><strong><?= _('Recipients') ?>:</strong> {{info.current.recipients}}</div>
+              <div><strong><?= _('Started') ?>:</strong> {{fixDate(info.current.moment)}}</div>
+              <div><strong><?= _('Sent') ?>:</strong> {{info.current.sent}}</div>
             </div>
 					</div>
 					<div v-if="info.next.id"
 							 class="bbn-block bbn-w-100"
 					>
-						<div class="bbn-header bbn-c"><?=_('NEXT')?></div>
+						<div class="bbn-header bbn-c"><?= _('NEXT') ?></div>
             <div class=" bbn-spadded">
-              <div><strong><?=_('Title')?>:</strong> {{info.next.title}}</div>
-              <div><strong><?=_('Recipients')?>:</strong> {{info.next.recipients}}</div>
-              <div><strong><?=_('Start')?>:</strong> {{fixDate(info.next.moment)}}</div>
+              <div><strong><?= _('Title') ?>:</strong> {{info.next.title}}</div>
+              <div><strong><?= _('Recipients') ?>:</strong> {{info.next.recipients}}</div>
+              <div><strong><?= _('Start') ?>:</strong> {{fixDate(info.next.moment)}}</div>
             </div>
 					</div>
 				</div>
@@ -60,19 +60,19 @@
                    :editable="true"
                    :popup="getPopup()"
                    :toolbar="[{
-                     text: '<?=_('New mailing')?>',
+                     text: '<?= _('New mailing') ?>',
                      icon: 'nf nf-fa-plus',
                      action: insert,
                    }, {
-                     text: '<?=_('Emails ready')?>',
+                     text: '<?= _('Emails ready') ?>',
                      icon: 'nf nf-fa-envelope_o',
                      action: openEmailsTab,
                    },{
-                     text: '<?=_('Emails sent')?>',
+                     text: '<?= _('Emails sent') ?>',
                      icon: 'nf nf-fa-envelope',
                      action: openEmailsSentTab,
                    },{
-                     text: '<?=_('Letters types')?>',
+                     text: '<?= _('Letters types') ?>',
                      icon: 'nf nf-fa-list',
                      action: openLettersTypesTab, 
                    }]"
@@ -82,33 +82,33 @@
                      dir: 'DESC'
                    }]"
                    :tr-class="r => r.priority < 5 ? 'bbn-bg-light-red' : ''">
-          <bbns-column title="<?=_("ID")?>"
+          <bbns-column title="<?= _("ID") ?>"
                        field="id"
                        :filterable="false"
                        :editable="false"
                        :sortable="false"
                        :hidden="true"
                        ></bbns-column>
-          <bbns-column title="<?=_("content")?>"
+          <bbns-column title="<?= _("content") ?>"
                        field="content"
                        :filterable="false"
                        :editable="false"
                        :sortable="false"
                        :hidden="true"
                        ></bbns-column>
-          <bbns-column title="<?=_("Status")?>"
+          <bbns-column title="<?= _("Status") ?>"
                        field="state"
                        :width="80"
                        :source="status"
                        ></bbns-column>
-          <bbns-column title="<?=_("Infos")?>"
+          <bbns-column title="<?= _("Infos") ?>"
                        field="sender"
                        :render="renderOfficiel"
                        cls="bbn-m"
                        :width="200"
                        ></bbns-column>
           <bbns-column field="priority"
-                       title="<?=_("Priority")?>"
+                       title="<?= _("Priority") ?>"
                        type="number"
                        :hidden="true"
                        ></bbns-column>
@@ -116,25 +116,25 @@
                        :hidden="true"
                        :default="[]"
                        ></bbns-column>
-          <bbns-column title="<?=_("Date")?>"
+          <bbns-column title="<?= _("Date") ?>"
                        field="sent"
                        :width="140"
                        type="datetime"
                        :required="true"
                        :nullable="true"
                        ></bbns-column>
-          <bbns-column title="<?=_("Recipients")?>"
+          <bbns-column title="<?= _("Recipients") ?>"
                        field="recipients"
                        :width="160"
                        :source="source.recipients"
                        :render="renderRecipients"
                        :required="true"
                        ></bbns-column>
-          <bbns-column title="<?=_("Object")?>"
+          <bbns-column title="<?= _("Object") ?>"
                        field="title"
                        :required="true"
                        ></bbns-column>
-          <bbns-column title="<?=_("Sender")?>"
+          <bbns-column title="<?= _("Sender") ?>"
                        field="sender"
                        :width="160"
                        :sortable="false"
@@ -143,7 +143,7 @@
                        :required="true"
                        :hidden="true"
                        ></bbns-column>
-          <bbns-column title="<?=_("Total emails")?>"
+          <bbns-column title="<?= _("Total emails") ?>"
                        field="total"
                        :width="60"
                        :hidden="true"
@@ -152,7 +152,7 @@
                        :filterable="false"
                        :sortable="false"
                        ></bbns-column>
-          <bbns-column title="<?=_("Emails succeeded")?>"
+          <bbns-column title="<?= _("Emails succeeded") ?>"
                        field="success"
                        :hidden="true"
                        type="number"
@@ -160,7 +160,7 @@
                        :filterable="false"
                        :sortable="false"
                        ></bbns-column>
-          <bbns-column title="<?=_("Emails failed")?>"
+          <bbns-column title="<?= _("Emails failed") ?>"
                        field="failure"
                        :hidden="true"
                        type="number"
@@ -168,7 +168,7 @@
                        :editable="false"
                        :sortable="false"
                        ></bbns-column>
-          <bbns-column title="<?=_("Emails ready")?>"
+          <bbns-column title="<?= _("Emails ready") ?>"
                        field="ready"
                        :hidden="true"
                        type="number"
@@ -176,7 +176,7 @@
                        :sortable="false"
                        ></bbns-column>
           <bbns-column width="100"
-                       title="<?=_("Action")?>"
+                       title="<?= _("Action") ?>"
                        :component="$options.components.menu"
                        :source="sourceMenu"
                        >

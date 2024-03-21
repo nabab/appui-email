@@ -17,27 +17,27 @@
     <div/>
     <div>
       <!-- @click set the currentSignature to null because the new item have null id -->
-      <bbn-button title="<?=_('New')?>"
+      <bbn-button title="<?= _('New') ?>"
                   icon="nf nf-mdi-plus"
                   :notext="true"
                   @click="currentSignature = null"
                   :disabled="!isSaved"/>
     </div>
     <div>
-      <bbn-button title="<?=_('Delete')?>"
+      <bbn-button title="<?= _('Delete') ?>"
                   icon="nf nf-fa-trash"
                   :notext="true"
                   @click="deleteSign()"
                   :disabled="!currentSignature"/>
     </div>
-    <bbn-button title="<?=_('Save')?>"
+    <bbn-button title="<?= _('Save') ?>"
                 icon="nf nf-mdi-content_save"
                 :notext="true"
                 @click="saveSign()"
                 :disabled="isSaved"/>
   </bbn-toolbar>
   <div class="bbn-w-100 bbn-flex-width bbn-vmiddle">
-    <div class="bbn-block bbn-padding"><?=_('Name')?></div>
+    <div class="bbn-block bbn-padding"><?= _('Name') ?></div>
     <div class="bbn-padding bbn-flex-fill">
       <bbn-input v-model="currentName"
                  class="bbn-w-100">

@@ -214,10 +214,10 @@
        v-else>
     <div class="bbn-block bbn-lpadded bbn-lg">
       <p>
-        <?=_("You have no account configured yet")?>
+        <?= _("You have no account configured yet") ?>
       </p>
       <p>
-        <bbn-button @click="createAccount"><?=_("Create a new mail account")?></bbn-button>
+        <bbn-button @click="createAccount"><?= _("Create a new mail account") ?></bbn-button>
       </p>
     </div>
   </div>
@@ -232,10 +232,10 @@
     <div class="bbn-flex-height">
       <div class="bbn-w-100">
         <div class="bbn-padded">
-          <bbn-button @click="backToConfig"><?=_("Back")?></bbn-button>
+          <bbn-button @click="backToConfig"><?= _("Back") ?></bbn-button>
     </div>
         <div class="bbn-m bbn-b bbn-c">
-          <?=_("Choose the folders you want to keep synchronized")?>
+          <?= _("Choose the folders you want to keep synchronized") ?>
     </div>
     </div>
       <div class="bbn-padded bbn-flex-fill">
@@ -250,17 +250,17 @@
   <div class="bbn-w-100" v-show="!tree.length">
     <div class="bbn-grid-fields bbn-padded bbn-m">
       <div class="bbn-label">
-        <?=_("Account type")?>
+        <?= _("Account type") ?>
     </div>
       <bbn-dropdown :source="types"
                     source-value="id"
-                    placeholder="<?=_("Choose a type of account")?>"
+                    placeholder="<?= _("Choose a type of account") ?>"
                     v-model="account.type"
                     autocomplete="off"
                     :required="true"/>
 
       <div class="bbn-label">
-        <?=_("Main eMail address for this account")?>
+        <?= _("Main eMail address for this account") ?>
     </div>
       <bbn-input v-model="account.email"
                  type="email"
@@ -268,14 +268,14 @@
                  :required="true"/>
 
       <div class="bbn-label">
-        <?=_("Login")?>
+        <?= _("Login") ?>
     </div>
       <bbn-input v-model="account.login"
                  autocomplete="off"
                  :required="true"/>
 
       <div class="bbn-label">
-        <?=_("Password")?>
+        <?= _("Password") ?>
     </div>
       <bbn-input v-model="account.pass"
                  type="password"
@@ -284,7 +284,7 @@
 
       <div v-if="['imap', 'pop3'].includes(accountCode)"
            class="bbn-label">
-        <?=_("Use SSL")?>
+        <?= _("Use SSL") ?>
     </div>
       <bbn-checkbox v-if="['imap', 'pop3'].includes(accountCode)"
                     :value="1"
@@ -293,7 +293,7 @@
 
       <div v-if="['imap', 'pop3'].includes(accountCode)"
            class="bbn-label">
-        <?=_("Incoming server")?>
+        <?= _("Incoming server") ?>
     </div>
       <bbn-input v-if="['imap', 'pop3'].includes(accountCode)"
                  type="hostname"
@@ -304,13 +304,13 @@
       <div class="bbn-grid-full bbn-c"
            v-if="account.host && ['imap', 'pop3'].includes(accountCode)">
         <a href="javascript:;" @click="hasSMTP = !hasSMTP">
-          <?=_("Click here to change the outgoing server configuration if it is different")?>
+          <?= _("Click here to change the outgoing server configuration if it is different") ?>
     </a>
     </div>
 
       <div v-if="hasSMTP && ['imap', 'pop3'].includes(accountCode)"
            class="bbn-label">
-        <?=_("Outgoing server")?>
+        <?= _("Outgoing server") ?>
     </div>
       <bbn-input v-if="hasSMTP && ['imap', 'pop3'].includes(accountCode)"
                  v-model="account.smtp"
@@ -320,7 +320,7 @@
 
       <div class="bbn-grid-full bbn-c bbn-b bbn-state-error bbn-padded"
            v-if="errorState">
-        <?=_("Impossible to connect to the mail server")?>
+        <?= _("Impossible to connect to the mail server") ?>
     </div>
 
     </div>

@@ -20,14 +20,14 @@
     <div>
       <bbn-button class="bbn-button-icon-only bbn-iblock"
                   :notext="true"
-                  title="<?=_('Signatures Editor')?>"
+                  title="<?= _('Signatures Editor') ?>"
                   icon="nf nf-fa-pencil"
                   @click="openSignatureEditor()"/>
     </div>
     <div>
       <bbn-button class="bbn-button-icon-only bbn-iblock"
                   :notext="true"
-                  title="<?=_('Add signature')?>"
+                  title="<?= _('Add signature') ?>"
                   icon="nf nf-mdi-sign_text"
                   @click="addSignature()"
                   :disabled="!currentSignature"/>
@@ -35,7 +35,7 @@
   </bbn-toolbar>
   <div class="bbn-w-100 bbn-lpadded container__top">
     <div class="grid-3-top">
-      <bbn-button text="<?=_('To')?>"
+      <bbn-button text="<?= _('To') ?>"
                   @click="openContacts('to')"></bbn-button>
       <appui-email-multiinput :source="rootUrl + '/webmail/contacts'"
                               source-text="displayName"
@@ -43,17 +43,17 @@
                               ref="toInput">
       </appui-email-multiinput>
       <div>
-        <bbn-button text="<?=_('CC')?>"
+        <bbn-button text="<?= _('CC') ?>"
                     @click="ccButton = !ccButton"
                     style="height:100%"></bbn-button>
         <bbn-button
-                    text="<?=_('CCI')?>"
+                    text="<?= _('CCI') ?>"
                     @click="cciButton = !cciButton"
                     style="height:100%"></bbn-button>
       </div>
       <bbn-button style="grid-column-start: 1;"
                   v-if="ccButton"
-                  text="<?=_('CC')?>"
+                  text="<?= _('CC') ?>"
                   @click="openContacts('cc')"></bbn-button>
       <appui-email-multiinput v-if="ccButton"
                               :source="rootUrl + '/webmail/contacts'"
@@ -64,7 +64,7 @@
       </appui-email-multiinput>
       <bbn-button style="grid-column-start: 1;"
                   v-if="cciButton"
-                  text="<?=_('CCI')?>"
+                  text="<?= _('CCI') ?>"
                   @click="openContacts('cci')"></bbn-button>
       <appui-email-multiinput v-if="cciButton"
                               :source="rootUrl + '/webmail/contacts'"
@@ -85,7 +85,7 @@
                   style="grid-column-start: 1; grid-column-end: 3;"
                   :save-url="rootUrl + '/actions/email/upload_file'"
                   @success="uploadSuccess"></bbn-upload>
-      <bbn-button text="<?=_('Send')?>"
+      <bbn-button text="<?= _('Send') ?>"
                   @click="send"
                   icon="nf nf-fa-send"></bbn-button>
     </div>

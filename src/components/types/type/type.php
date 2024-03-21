@@ -6,7 +6,7 @@
   <div>
     <bbn-button @click="insert"
                 icon="nf nf-fa-plus"
-                text="<?=_('Add letter')?>"
+                text="<?= _('Add letter') ?>"
     ></bbn-button>
   </div>
 </div>

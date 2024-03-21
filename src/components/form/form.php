@@ -2,7 +2,7 @@
           :data="dataToSend"
           v-if="dataToSend && emails"
           ref="form"
-          confirm-leave="<?=_("Are you sure you want to leave this form without saving your changes?")?>"
+          confirm-leave="<?= _("Are you sure you want to leave this form without saving your changes?") ?>"
           :action="emails.source.root + 'actions/' + (source.row.id ? 'update' : 'insert')"
           :prefilled="prefilled"
           @success="success"
@@ -30,17 +30,17 @@
       </span>
     </div>
 
-    <label v-if="emails.source.senders.length > 2"><?=_("Sender email")?></label>
+    <label v-if="emails.source.senders.length > 2"><?= _("Sender email") ?></label>
     <bbn-dropdown v-if="emails.source.senders.length > 2"
-                  placeholder="<?=_("Choose")?>"
+                  placeholder="<?= _("Choose") ?>"
                   v-model="source.row.sender"
                   :source="emails.source.senders"
                   :required="true"
     ></bbn-dropdown>
 
-    <label><?=_("Recipients")?></label>
+    <label><?= _("Recipients") ?></label>
     <div class="bbn-vmiddle">
-      <bbn-dropdown placeholder="<?=_("Choose")?>"
+      <bbn-dropdown placeholder="<?= _("Choose") ?>"
                     v-model="source.row.recipients"
                     :source="emails.source.recipients"
                     :required="true"
@@ -48,15 +48,15 @@
       ></bbn-dropdown>
       <div class="bbn-iblock bbn-m bbn-left-space" v-if="source.row.recipients">
         <span class="bbn-anim-blink" v-if="isNumLoading">
-          <?=_("Retrieving list...")?>
+          <?= _("Retrieving list...") ?>
         </span>
         <span class="bbn-i" v-else>
-          <span v-text="numRecipients"></span> <?=_('recipients')?>
+          <span v-text="numRecipients"></span> <?= _('recipients') ?>
         </span>
       </div>
     </div>
 
-    <label><?=_("Sending time")?></label>
+    <label><?= _("Sending time") ?></label>
     <div>
       <bbn-datetimepicker v-model="source.row.sent"
                           :min="today"
@@ -66,7 +66,7 @@
       ></bbn-datetimepicker>
     </div>
 
-    <label v-if="source.row.sent"><?=_("Priority")?></label>
+    <label v-if="source.row.sent"><?= _("Priority") ?></label>
     <div v-if="source.row.sent" class="bbn-vmiddle">
       <span v-text="_('Normal')"
             class="bbn-iblock bbn-hmargin">
@@ -80,28 +80,28 @@
       </span>
     </div>
 
-    <!--label><?=_("Letter type")?></label>
-    <bbn-dropdown placeholder="<?=_("Choose")?>"
+    <!--label><?= _("Letter type") ?></label>
+    <bbn-dropdown placeholder="<?= _("Choose") ?>"
                   v-model="source.row.lettre_type"
                   :source="emails.source.types"
                   source-value="id"
                   @change="loadLettre"
     ></bbn-dropdown-->
 
-    <label><?=_("Object")?></label>
+    <label><?= _("Object") ?></label>
     <bbn-input required="required"
                v-model="source.row.title"
                maxlength="128"
     ></bbn-input>
 
-    <label><?=_("Attachments")?></label>
+    <label><?= _("Attachments") ?></label>
     <bbn-upload :save-url="'file/save/' + ref"
                 :multiple="true"
                 v-model="source.row.attachments"
                 :paste="true"
     ></bbn-upload>
 
-    <label><?=_("Text")?></label>
+    <label><?= _("Text") ?></label>
     <bbn-rte v-model="source.row.content"
              :required="true"
              :clean-paste="true"

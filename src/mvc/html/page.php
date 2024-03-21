@@ -5,7 +5,7 @@
               :nav="true">
     <bbns-container url="home"
                     :load="true"
-                    title="<?=_('Mailings')?>"
+                    title="<?= _('Mailings') ?>"
                     icon="nf nf-fa-newspaper"
                     :static="true"/>
   </bbn-router>

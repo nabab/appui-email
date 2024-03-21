@@ -12,38 +12,38 @@
            }"
 >
   <bbns-column field="id"
-               title="<?=_('ID')?>"
+               title="<?= _('ID') ?>"
                :hidden=true
   ></bbns-column>
   <bbns-column field="email"
-               title="<?=_('e-Mail address')?>"
+               title="<?= _('e-Mail address') ?>"
                type="email"
   ></bbns-column>
   <bbns-column field="subject"
-               title="<?=_('Title')?>"
+               title="<?= _('Title') ?>"
                :render="renderTitre"
   ></bbns-column>
   <bbns-column field="id_mailing"
-               title="<?=_('e-Mailing')?>"
+               title="<?= _('e-Mailing') ?>"
                :render="renderMailing"
                :width="100"
                cls="bbn-c"
   ></bbns-column>
   <bbns-column field="status"
-               title="<?=_('Status')?>"
+               title="<?= _('Status') ?>"
                :source="status"
                :render="renderEtat"
                cls="bbn-c"
                :width="80"
   ></bbns-column>
   <bbns-column field="delivery"
-               title="<?=_('Date')?>"
+               title="<?= _('Date') ?>"
                cls="bbn-c"
                type="datetime"
                :width="120"
   ></bbns-column>
   <bbns-column field="read"
-               title="<?=_('Read')?>"
+               title="<?= _('Read') ?>"
                :width="80"
                :hidden="true"
   ></bbns-column>
