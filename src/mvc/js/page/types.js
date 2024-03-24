@@ -45,7 +45,7 @@
         }];
       },
       renderUser(row){
-        return appui.app.getUserName(row.id_user)
+        return appui.getUserName(row.id_user)
       },
       edit(row){
         this.post(this.source.root + 'actions/types/get', {

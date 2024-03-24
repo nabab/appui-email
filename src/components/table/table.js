@@ -2,7 +2,7 @@
   return {
     data(){
       return {
-        isAutorizedUser: appui.app.user.isAdmin && appui.app.user.isDev,
+        isAutorizedUser: appui.user.isAdmin && appui.user.isDev,
         root: appui.plugins['appui-email'] + '/',
         status: [{
           text: bbn._('Error'),
@@ -86,13 +86,13 @@
             notext:true
           });
         }
-        if ( appui.app.user.isAdmin && appui.app.user.isDev && ( (row.status === 'cancelled') || (row.status === 'ready') || (row.status === 'success') )){
+        if ( appui.user.isAdmin && appui.user.isDev && ( (row.status === 'cancelled') || (row.status === 'ready') || (row.status === 'success') )){
           res.push({
-            title: ((row.status === 'success') && !appui.app.user.isAdmin) ? bbn._('Only admin users can delete sent emails') : bbn._("Delete the email from the database"),
+            title: ((row.status === 'success') && !appui.user.isAdmin) ? bbn._('Only admin users can delete sent emails') : bbn._("Delete the email from the database"),
             notext: true,
             icon: "nf nf-oct-trashcan",
             action: this.remove, 
-            disabled: ((row.status === 'success') && !appui.app.user.isAdmin)
+            disabled: ((row.status === 'success') && !appui.user.isAdmin)
           })
         }
         /*if ( (row.status === 'success') && (this.context !== 'sent' ) ){
@@ -123,7 +123,7 @@
       remove(row, obj, idx){
         this.confirm(bbn._('Do you want to completely delete this email? '), () => {
           //if the context is 'sent' send the id_user to the controller, there will be checked again if the user is an admin (only admin users can delete mails with status 'success')
-          ((this.context === 'sent') || (this.context === 'details')) ? bbn.fn.extend(row, {id_user: appui.app.user.id}) : '';
+          ((this.context === 'sent') || (this.context === 'details')) ? bbn.fn.extend(row, {id_user: appui.user.id}) : '';
           this.post(this.root + 'actions/email/delete', row, (d) => {
             if ( d.success ){
               this.getRef('table').currentData.splice(idx,1)
@@ -194,7 +194,7 @@
             table: false, 
             root: '', 
             context: '',
-            isAutorizedUser: appui.app.user.isAdmin && appui.app.user.isDev
+            isAutorizedUser: appui.user.isAdmin && appui.user.isDev
           }
         },
         template: `
@@ -322,7 +322,7 @@
                
                 this.post(this.root + 'actions/email/delete', {
                   selected: res,
-                  id_user: this.isAutorizedUser ? appui.app.user.id : false
+                  id_user: this.isAutorizedUser ? appui.user.id : false
                   }, (d) => {
                   if (d.success){
                     this.table.currentSelected = [];
@@ -340,7 +340,7 @@
             this.confirm(bbn._('Are you really sure you want to completely delete all ready emails? '), () => {
               let table = this.closest('appui-email-table'),
                   id = table.source ? table.source.id : null;
-              this.post(this.root + 'actions/email/delete_all', {id_user: appui.app.user.id}, (d) => {
+              this.post(this.root + 'actions/email/delete_all', {id_user: appui.user.id}, (d) => {
                 if (d.success){
                   appui.success(d.num + ' ' + bbn._('emails successfully deleted'));
                   this.table.updateData()

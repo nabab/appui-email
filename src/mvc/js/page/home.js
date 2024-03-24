@@ -227,7 +227,7 @@
           icon: "nf nf-fa-eye",
           action: this.see
         },{
-          text: bbn._('Send this email to') + ' ' + appui.app.user.name,
+          text: bbn._('Send this email to') + ' ' + appui.user.name,
           notext: true,
           icon: "nf nf-fa-envelope",
           action: this.selfSend
@@ -326,10 +326,10 @@
         })
       },
       selfSend(row){
-        this.confirm(bbn._('Do you really want to send this email to') + ' ' + appui.app.user.name, () => {
+        this.confirm(bbn._('Do you really want to send this email to') + ' ' + appui.user.name, () => {
           this.post('emails/actions/test', {
             id: row.id,
-            users: appui.app.user.id
+            users: appui.user.id
           }, (d) => {
             if ( d.success ){
               appui.success(bbn._('Email sent'));
@@ -697,7 +697,7 @@
             }*/);
           }
           //only mailings without emails sent can be deleted
-          if ( ((row.state === 'ready') || (row.state === 'cancelled')) && ( row.total === 0 ) && appui.app.user.isAdmin ){
+          if ( ((row.state === 'ready') || (row.state === 'cancelled')) && ( row.total === 0 ) && appui.user.isAdmin ){
             res.push({
               text: bbn._("Delete"),
               icon: "nf nf-oct-trashcan",
