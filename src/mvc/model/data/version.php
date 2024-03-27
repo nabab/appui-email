@@ -5,8 +5,8 @@ if (
   !empty($model->data['version']) &&
   ($notes = new \bbn\Appui\Note($model->db)) &&
   ($version = $notes->getFull($model->data['id_note'], $model->data['version'])) &&
-  ($ftype = $model->inc->options->fromRootCode('file', 'media', 'note', 'appui')) &&
-  ($ltype = $model->inc->options->fromRootCode('link', 'media', 'note', 'appui'))
+  ($ftype = $model->inc->options->fromCode('file', 'media', 'note', 'appui')) &&
+  ($ltype = $model->inc->options->fromCode('link', 'media', 'note', 'appui'))
 ){
   $version['name'] = $model->db->selectOne([
     'table' => 'bbn_notes_masks',
