@@ -6,7 +6,7 @@
  */
 (() => {
   return {
-    props: ['source'],
+    mixins: [bbn.cp.mixins.basic],
     methods: {
       insert(){
         this.getPopup().open({
@@ -35,12 +35,12 @@
           text: bbn._("Mod."),
           icon: "nf nf-fa-edit",
           notext: true,
-          action: this.edit,
+          action: r => this.edit(r),
         }, {
           text: bbn._("Suppr."),
           icon: "nf nf-fa-trash",
           notext: true,
-          action: this.remove,
+          action: r => this.remove(r),
           disabled: !!row.default
         }];
       },
@@ -51,16 +51,14 @@
         this.post(this.source.root + 'actions/types/get', {
           id_note: row.id_note,
           version: row.version
-        } , (d) => {
-          if ( d.success && d.data ){
+        }, d => {
+          if (d.success && d.data) {
+            d.data.hasVersions = d.data.version > 1;
             this.getPopup().open({
               width: 800,
               height: '90%',
               component: 'appui-email-types-form',
-              source: bbn.fn.extend(d.data, {
-                  hasVersions: d.data.version > 1,
-                }
-              ), 
+              source: d.data,
               title: bbn._("Edit letter type")
             })
           }

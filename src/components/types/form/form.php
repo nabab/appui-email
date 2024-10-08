@@ -1,30 +1,28 @@
 <bbn-form :source="source"
           ref="form"
           @success="success"
-          :action="action"
->
-  <appui-note-toolbar-version :source="source" 
-                               :data="{id: source.id_note}" 
-                               @version="getVersion" 
-                               v-if="source.hasVersions" 
-                               :actionUrl="root + '/data/version'"                              
-  ></appui-note-toolbar-version>
+          :action="action">
+  <appui-note-toolbar-version bbn-if="source.hasVersions"
+                              :source="source"
+                              :data="{id: source.id_note}"
+                              @version="getVersion"
+                              :actionUrl="root + '/data/version'"/>
   <div class="bbn-padded bbn-grid-fields">
-    <label v-if="emptyCategories && emptyCategories.length"><?= _('Type') ?></label>
-    <bbn-dropdown v-if="emptyCategories && emptyCategories.length" 
-                  v-model="source.id_type" 
+    <label bbn-if="emptyCategories && emptyCategories.length"><?= _('Type') ?></label>
+    <bbn-dropdown bbn-if="emptyCategories && emptyCategories.length"
+                  bbn-model="source.id_type"
                   :source="emptyCategories"
                   source-value="id"
-                  :nullable="false"
-    ></bbn-dropdown>
+                  :nullable="false"/>
     <label><?= _('Name') ?></label>
-    <bbn-input v-model="source.name"></bbn-input>
+    <bbn-input bbn-model="source.name"/>
     <label><?= _('Object') ?></label>
-    <bbn-input v-model="source.title"></bbn-input>
+    <bbn-input bbn-model="source.title"/>
     <label><?= _('Text') ?></label>
     <div style="height: 400px;">
       <div class="bbn-h-100">
-        <bbn-rte v-model="source.content" ref="editor"></bbn-rte>
+        <bbn-rte bbn-model="source.content"
+                 ref="editor"/>
       </div>
     </div>
   </div>
