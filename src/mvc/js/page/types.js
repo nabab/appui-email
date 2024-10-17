@@ -26,7 +26,9 @@
       toolbar(){
         return [{
           text: bbn._('Insert new '),
-          action: this.insert,
+          action: () => {
+            this.insert();
+          },
           icon: 'nf nf-fa-plus'
         }]
       },

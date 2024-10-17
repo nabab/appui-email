@@ -5,7 +5,6 @@
  * Date: 23/03/2018
  * Time: 14:39
  *
- * @var $model \bbn\Mvc\Model
  */
 
 $mnotes = new \bbn\Appui\Masks($model->db);
@@ -41,7 +40,7 @@ return [
           'operator' => 'isnull'
         ],[
           'field' => 'bbn_options.id_parent',
-          'value' => $model->inc->options->fromCode('masks', 'appui')
+          'value' => $model->inc->options->fromCode('options', 'masks', 'appui')
         ]]
       ]
 
