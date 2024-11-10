@@ -2,7 +2,7 @@
 
 use bbn\X;
 use bbn\Str;
-/** @var $ctrl \bbn\Mvc\Controller */
+/** @var bbn\Mvc\Controller $ctrl */
 
 if ($ctrl->hasArguments()) {
   $file_path = $ctrl->arguments[1] . '/' . $ctrl->arguments[2] . '/' . $ctrl->arguments[3];

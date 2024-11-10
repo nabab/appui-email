@@ -1,6 +1,6 @@
 <?php
 
-/** @var $ctrl \bbn\Mvc\Controller */
+/** @var bbn\Mvc\Controller $ctrl */
 
 if (empty($ctrl->post)) {
 	$ctrl->combo(_('My contacts'));

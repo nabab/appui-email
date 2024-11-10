@@ -1,6 +1,6 @@
 <?php
 
-/** @var $ctrl \bbn\Mvc\Controller */
+/** @var bbn\Mvc\Controller $ctrl */
 use bbn\X;
 if ($ctrl->hasArguments()) {
   if ($ctrl->arguments[0] == 'new') {

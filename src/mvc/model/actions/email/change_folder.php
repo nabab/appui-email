@@ -4,7 +4,7 @@
        *
        **/
 
-/** @var $model \bbn\Mvc\Model*/
+/** @var bbn\Mvc\Model $model */
 if ($model->hasData('id', true) && $model->hasData('folderId', true)) {
   return [
     'success' =>  $model->db->update('bbn_users_emails', [

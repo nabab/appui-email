@@ -1,6 +1,6 @@
 <?php
 
-/** @var $model \bbn\Mvc\Model*/
+/** @var bbn\Mvc\Model $model */
 if (!$model->hasData('id_folder', true)) {
   $model->data['id_folder'] = 'inbox';
 }

@@ -1,7 +1,7 @@
 <?php
 use bbn\X;
 
-/** @var $model \bbn\Mvc\Model */
+/** @var bbn\Mvc\Model $model */
 if ($model->hasData('action')) {
   switch ($model->data['action'])
   {

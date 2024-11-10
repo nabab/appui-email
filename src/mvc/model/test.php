@@ -1,7 +1,7 @@
 <?php
 use bbn\X;
 
-/** @var $model \bbn\Mvc\Model*/
+/** @var bbn\Mvc\Model $model */
 $em         = new bbn\User\Emails($model->db);
 $pw         = new bbn\Appui\Passwords($model->db);
 $deleted    = [];

@@ -1,6 +1,6 @@
 <?php
 
-/** @var $model \bbn\Mvc\Model */
+/** @var bbn\Mvc\Model $model */
 if (\bbn\X::hasProp($model->data, 'recipients')) {
   $mailings = new \bbn\Appui\Mailing($model->db);
   $model->data['res'] = $model->getPluginModel('data/mailist', $model->data, 'emails');

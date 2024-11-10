@@ -1,6 +1,6 @@
 <?php
 
-/** @var $ctrl \bbn\Mvc\Controller */
+/** @var bbn\Mvc\Controller $ctrl */
 if (isset($ctrl->post['id_media'])) {
   $model = $ctrl->getModel($ctrl->post);
   if (!empty($model['file'])) {

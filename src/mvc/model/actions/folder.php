@@ -7,7 +7,7 @@
 use bbn\X;
 use bbn\Str;
 use bbn\User\Email;
-/** @var $model \bbn\Mvc\Model*/
+/** @var bbn\Mvc\Model $model */
 
 if ($model->hasData(['action', 'id_account'], true)) {
   $em = new Email($model->db);

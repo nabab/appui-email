@@ -4,7 +4,7 @@
                *
                **/
 
-/** @var $model \bbn\Mvc\Model*/
+/** @var bbn\Mvc\Model $model */
 use bbn\X;
 
 $id_signatures = $model->inc->options->fromCode('signatures', 'email', 'appui');

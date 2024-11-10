@@ -1,6 +1,6 @@
 <?php
 
-/** @var $model \bbn\Mvc\Model */
+/** @var bbn\Mvc\Model $model */
 $id_accounts = $model->inc->options->fromCode('accounts', 'email', 'appui');
 $id_types = $model->inc->options->fromCode('types', 'email', 'appui');
 

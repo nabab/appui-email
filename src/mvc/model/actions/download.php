@@ -1,6 +1,6 @@
 <?php
 
-/** @var $model \bbn\Mvc\Model*/
+/** @var bbn\Mvc\Model $model */
 $file = false;
 if (\bbn\X::hasProps($model->data, ['id_media', 'id'])) {
   $mailing = new \bbn\Appui\Mailing($model->db);
