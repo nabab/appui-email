@@ -7,7 +7,7 @@
                               :data="{id: source.id_note}"
                               @version="getVersion"
                               :actionUrl="root + '/data/version'"/>
-  <div class="bbn-padded bbn-grid-fields">
+  <div class="bbn-padding bbn-grid-fields">
     <label bbn-if="emptyCategories && emptyCategories.length"><?= _('Type') ?></label>
     <bbn-dropdown bbn-if="emptyCategories && emptyCategories.length"
                   bbn-model="source.id_type"

@@ -6,7 +6,7 @@
       tools
     </div>
     <div class="bbn-flex-fill">
-      <bbn-column-list class="bbn-bordered"
+      <bbn-column-list class="bbn-border"
                        :source="items"
                        component="appui-email-item"
                        :pageable="true">

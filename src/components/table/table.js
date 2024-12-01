@@ -198,7 +198,7 @@
           }
         },
         template: `
-          <div class="bbn-xspadded bbn-l bbn-header bbn-vmiddle bbn-h-100" ref="toolbar">
+          <div class="bbn-xspadding bbn-l bbn-header bbn-vmiddle bbn-h-100" ref="toolbar">
             <bbn-button text="`+ bbn._('Check/uncheck all emails')+`" 
                         icon="nf nf-fa-check"
                         @click="checkAll"

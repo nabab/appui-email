@@ -1,7 +1,7 @@
 <bbn-splitter orientation="horizontal"
               class="appui-email-mailings"
 >
-  <bbn-pane :size="250" class="bbn-bordered-right">
+  <bbn-pane :size="250" class="bbn-border-right">
 		<bbn-splitter orientation="vertical">
 			<bbn-pane class="bbn-large">
         <bbn-tree :source="menu"
@@ -23,7 +23,7 @@
 							 class="bbn-block bbn-w-100"
 					>
             <div class="bbn-header bbn-c"><?= _('IN PROGRESS') ?></div>
-						<div class="bbn-spadded">
+						<div class="bbn-spadding">
               <div><strong><?= _('Title') ?>:</strong> {{info.current.title}}</div>
               <div><strong><?= _('Recipients') ?>:</strong> {{info.current.recipients}}</div>
               <div><strong><?= _('Started') ?>:</strong> {{fixDate(info.current.moment)}}</div>
@@ -34,7 +34,7 @@
 							 class="bbn-block bbn-w-100"
 					>
 						<div class="bbn-header bbn-c"><?= _('NEXT') ?></div>
-            <div class=" bbn-spadded">
+            <div class=" bbn-spadding">
               <div><strong><?= _('Title') ?>:</strong> {{info.next.title}}</div>
               <div><strong><?= _('Recipients') ?>:</strong> {{info.next.recipients}}</div>
               <div><strong><?= _('Start') ?>:</strong> {{fixDate(info.next.moment)}}</div>

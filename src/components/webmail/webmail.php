@@ -45,7 +45,7 @@
                     :collapsible="true">
         <bbn-pane size="50%">
           <bbn-column-list v-if="orientation == 'horizontal'"
-                           class="bbn-bordered"
+                           class="bbn-border"
                            :source="source.root + 'webmail'"
                            component="appui-email-item"
                            :pageable="true"
@@ -212,7 +212,7 @@
   </bbn-splitter>
   <div class="bbn-overlay bbn-middle"
        v-else>
-    <div class="bbn-block bbn-lpadded bbn-lg">
+    <div class="bbn-block bbn-lpadding bbn-lg">
       <p>
         <?= _("You have no account configured yet") ?>
       </p>
@@ -231,14 +231,14 @@
   <div class="bbn-overlay" v-show="tree.length">
     <div class="bbn-flex-height">
       <div class="bbn-w-100">
-        <div class="bbn-padded">
+        <div class="bbn-padding">
           <bbn-button @click="backToConfig"><?= _("Back") ?></bbn-button>
     </div>
         <div class="bbn-m bbn-b bbn-c">
           <?= _("Choose the folders you want to keep synchronized") ?>
     </div>
     </div>
-      <div class="bbn-padded bbn-flex-fill">
+      <div class="bbn-padding bbn-flex-fill">
         <bbn-tree :source="tree"
                   ref="tree"
                   :selection="true"
@@ -248,7 +248,7 @@
     </div>
     </div>
   <div class="bbn-w-100" v-show="!tree.length">
-    <div class="bbn-grid-fields bbn-padded bbn-m">
+    <div class="bbn-grid-fields bbn-padding bbn-m">
       <div class="bbn-label">
         <?= _("Account type") ?>
     </div>
@@ -318,7 +318,7 @@
                  autocomplete="off"
                  :required="true"/>
 
-      <div class="bbn-grid-full bbn-c bbn-b bbn-state-error bbn-padded"
+      <div class="bbn-grid-full bbn-c bbn-b bbn-state-error bbn-padding"
            v-if="errorState">
         <?= _("Impossible to connect to the mail server") ?>
     </div>

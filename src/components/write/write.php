@@ -33,7 +33,7 @@
                   :disabled="!currentSignature"/>
     </div>
   </bbn-toolbar>
-  <div class="bbn-w-100 bbn-lpadded container__top">
+  <div class="bbn-w-100 bbn-lpadding container__top">
     <div class="grid-3-top">
       <bbn-button text="<?= _('To') ?>"
                   @click="openContacts('to')"></bbn-button>

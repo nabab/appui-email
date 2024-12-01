@@ -13,12 +13,12 @@
                                @version="getVersion" 
                                v-if="source.row.hasVersions" 
                                :actionUrl="root + 'data/mailing_version'"/>
-  <div class="bbn-padded bbn-grid-fields">
+  <div class="bbn-padding bbn-grid-fields">
 
     <div v-if="emails.source.senders.length === 2" class="bbn-grid-full bbn-middle">
       <span v-text="emails.source.senders[0].text"
             :title="emails.source.senders[0].desc"
-            class="bbn-iblock bbn-h-100 bbn-spadded bbn-m bbn-b">
+            class="bbn-iblock bbn-h-100 bbn-spadding bbn-m bbn-b">
       </span>
       <bbn-switch :value="emails.source.senders[1].value"
                   :novalue="emails.source.senders[0].value"
@@ -26,7 +26,7 @@
       </bbn-switch>
       <span v-text="emails.source.senders[1].text"
             :title="emails.source.senders[1].desc"
-            class="bbn-iblock bbn-h-100 bbn-spadded bbn-m bbn-b">
+            class="bbn-iblock bbn-h-100 bbn-spadding bbn-m bbn-b">
       </span>
     </div>
 

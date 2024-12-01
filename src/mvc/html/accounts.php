@@ -26,7 +26,7 @@
 <script type="text/x-template" id="appui-email-accounts-form-template">
 	<bbn-form :source="source.row"
             action="emails/accounts/update">
-    <div class="bbn-grid-fields bbn-padded bbn-m">
+    <div class="bbn-grid-fields bbn-padding bbn-m">
       <div v-text="_('Type')"/>
       <bbn-dropdown name="type"
                     :source="source.data.types"

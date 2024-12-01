@@ -739,7 +739,7 @@
           }
           return {
             menu: res,
-            tpl: `<div class="bbn-w-100 bbn-vxspadded bbn-hspadded"><i :class="'bbn-m bbn-right-space ' + source.icon"></i><div class="bbn-iblock" v-text="source.text"></div></div>` 
+            tpl: `<div class="bbn-w-100 bbn-vxspadding bbn-hspadding"><i :class="'bbn-m bbn-right-space ' + source.icon"></i><div class="bbn-iblock" v-text="source.text"></div></div>` 
           };
   
         },
