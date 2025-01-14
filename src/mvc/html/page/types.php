@@ -40,7 +40,7 @@
               field="content"
               :hidden="true"/>
   <bbns-column field="id_type"
-              :hidden="true"
+              :invisible="true"
               :editable="false"/>
   <bbns-column width='100'
               flabel="<?= _('Actions') ?>"

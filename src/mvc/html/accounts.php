@@ -7,7 +7,7 @@
            :source="source.data"
            :toolbar="[{text: _('New account'), action: 'insert'}]">
   <bbns-column field="id"
-               :hidden="true"
+               :invisible="true"
                :editable="false"/>
   <bbns-column field="type"
                :width="120"

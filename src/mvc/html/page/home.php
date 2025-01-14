@@ -113,7 +113,7 @@
                        :hidden="true"
                        ></bbns-column>
           <bbns-column field="attachments"
-                       :hidden="true"
+                       :invisible="true"
                        :default="[]"
                        ></bbns-column>
           <bbns-column label="<?= _("Date") ?>"

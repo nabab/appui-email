@@ -103,7 +103,7 @@
             <bbns-column :label="_('Size')"
                          :width="100"
                          field="size"
-                         :hidden="true"/>
+                         :invisible="true"/>
           </bbn-table>
         </bbn-pane>
         <bbn-pane :scrollable="true">
