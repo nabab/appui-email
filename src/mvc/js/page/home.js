@@ -300,7 +300,7 @@
             action: this.cancelMailing,
             notext: true
           },{
-            text: bbn._("Suspend"),
+            title: bbn._("Suspend"),
             notext: true,
             icon: "nf nf-fa-stop_circle_o",
             action: this.stop
@@ -339,23 +339,23 @@
       },
       insert(){
         this.$refs.table.insert({}, {
-          title: bbn._("New mailing"),
+          label: bbn._("New mailing"),
           width: '80%'
         });
       },
       edit(row, col, idx){
         return this.$refs.table.edit(
           bbn.fn.extend(row, {hasVersions: row.version > 1} ), {
-          title: bbn._("Mailing edit"),
+          label: bbn._("Mailing edit"),
           width: '80%'
         }, idx);
       },
       see(row){
         if ( row.id_note ){
-          this.getPopup().open({
+          this.getPopup({
             width: 1050,
             height: "90%",
-            title: row.title,
+            label: row.title,
             component: 'appui-email-view',
             source: row,
             scrollable: false
@@ -381,7 +381,7 @@
           bbn.fn.happy('tmp')
           bbn.fn.log(tmp, row)
           this.getRef('table').copy(tmp, {
-            title: bbn._("Mailing edit"),
+            label: bbn._("Mailing edit"),
             width: this.getPopup().defaultWidth,
             height: this.getPopup().defaultHeight,
             data: {id_parent: row.id}
@@ -470,8 +470,8 @@
       },
       test(row){
         if ( row.id ){
-          this.getPopup().open({
-            title: bbn._('Select users'),
+          this.getPopup({
+            label: bbn._('Select users'),
             scrolable: false,
             width: 400,
             height: 600,
@@ -729,7 +729,7 @@
           else {
             res.push({
               icon: 'nf nf-mdi-close',
-              title: 'Cancel mailing',
+              label: 'Cancel mailing',
               value: 'cancelMailing'
             },{
               text: bbn._("Suspend"),

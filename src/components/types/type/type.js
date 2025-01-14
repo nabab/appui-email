@@ -14,17 +14,17 @@
     },
     methods: {
       insert(){
-        this.getPopup().open({
+        this.getPopup({
           width: 800,
           height: '90%',
           component: 'appui-email-types-form',
           source: {
             id_type: this.source.id_type,
-            title: '',
+            label: '',
             content: '',
             name: ''
           },
-          title: bbn._("New letter type")
+          label: bbn._("New letter type")
         });
       }
     }

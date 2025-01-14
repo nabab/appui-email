@@ -6,44 +6,44 @@
            :group-by="3"
            uid="id_note"
            :toolbar="source.empty_categories.length ? toolbar : []">
-  <bbns-column title="<?= _("ID") ?>"
+  <bbns-column label="<?= _("ID") ?>"
               field="id_note"
               :width="100"
               :hidden="true"/>
-  <bbns-column title="<i class='nf nf-fa-check bbn-c bbn-xl'></i>"
-              ftitle="<?= _("Default") ?>"
+  <bbns-column label="<i class='nf nf-fa-check bbn-c bbn-xl'></i>"
+              flabel="<?= _("Default") ?>"
               field="default"
               :width="50"
               component="appui-email-types-default"
               cls="bbn-c"/>
-  <bbns-column title="<?= _("Version") ?>"
+  <bbns-column label="<?= _("Version") ?>"
               field="version"
               type="number"
               :width="50"
               cls="bbn-c"/>
-  <bbns-column title="<?= _("Type") ?>"
+  <bbns-column label="<?= _("Type") ?>"
               field="type"
               component="appui-email-types-type"/>
-  <bbns-column title="<?= _("Name") ?>"
+  <bbns-column label="<?= _("Name") ?>"
                field="name"/>
-  <bbns-column title="<?= _("Object") ?>"
+  <bbns-column label="<?= _("Object") ?>"
               field="title"/>
-  <bbns-column title="<?= _("User") ?>"
+  <bbns-column label="<?= _("User") ?>"
               field="id_user"
               :render="renderUser"/>
-  <bbns-column title="<?= _("Last edit") ?>"
+  <bbns-column label="<?= _("Last edit") ?>"
               field="creation"
               type="date"
               :width="120"
               cls="bbn-c"/>
-  <bbns-column title="<?= _("Text") ?>"
+  <bbns-column label="<?= _("Text") ?>"
               field="content"
               :hidden="true"/>
   <bbns-column field="id_type"
               :hidden="true"
               :editable="false"/>
   <bbns-column width='100'
-              ftitle="<?= _('Actions') ?>"
+              flabel="<?= _('Actions') ?>"
               :buttons="renderButtons"
               cls="bbn-c"/>
 </bbn-table>

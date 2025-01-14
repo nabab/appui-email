@@ -172,7 +172,7 @@
       openContacts(type) {
         this.getPopup({
           component:  'appui-email-popup-contacts',
-          title: bbn._('Address book'),
+          label: bbn._('Address book'),
           width: '35vw',
           height: '50vh',
           componentOptions: {
@@ -184,7 +184,7 @@
         bbn.fn.log('idx', this.currentSignature);
         this.getPopup({
           component: 'appui-email-popup-editsignatures',
-          title: bbn._('Signature Editor'),
+          label: bbn._('Signature Editor'),
           width: '60vw',
           height: '60vh',
           componentOptions: {

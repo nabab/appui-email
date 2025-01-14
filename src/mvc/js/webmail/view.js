@@ -104,7 +104,7 @@
         this.getPopup({
           width: 500,
           height: 450,
-          title: bbn._("eMail account configuration"),
+          label: bbn._("eMail account configuration"),
           component: this.$options.components[scpName]
         })
       },

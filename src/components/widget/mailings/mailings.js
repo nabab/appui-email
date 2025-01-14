@@ -7,7 +7,7 @@
       sent: {
         template: `
           <bbn-progressbar :value="value"
-                           :text="text"
+                           :label="text"
                            type="percent"
                            class="bbn-c"
           ></bbn-progressbar>`,

@@ -9,18 +9,18 @@
     mixins: [bbn.cp.mixins.basic],
     methods: {
       insert(){
-        this.getPopup().open({
+        this.getPopup({
           width: 800,
           height: '90%',
           component: 'appui-email-types-form',
           source: {
             empty_categories: this.source.empty_categories,
             id_type: '',
-            title: '',
+            label: '',
             content: '',
             name: ''
           },
-          title: bbn._("New letter type")
+          label: bbn._("New letter type")
         });
       },
       toolbar(){
@@ -56,12 +56,12 @@
         }, d => {
           if (d.success && d.data) {
             d.data.hasVersions = d.data.version > 1;
-            this.getPopup().open({
+            this.getPopup({
               width: 800,
               height: '90%',
               component: 'appui-email-types-form',
               source: d.data,
-              title: bbn._("Edit letter type")
+              label: bbn._("Edit letter type")
             })
           }
         })
@@ -96,11 +96,11 @@
     },
     mounted(){
       this.$nextTick(() => {
-        this.getPopup().open({
+        this.getPopup({
           width: 850,
           scrollable: false,
           height: 200,
-          title: bbn._("Avertissement sur les lettres types"),
+          label: bbn._("Avertissement sur les lettres types"),
           content: '<div class="bbn-overlay bbn-padding"><div class="bbn-b">Attention!</div><br>Ici vous pouvez modifier les lettres types mais elles utilisent un système de "templates" avec lequel il vous faut être très précautionneu. Le mieux est de dupliquer une lettre-type existante et de la modifier. Une fois terminée, mettez-là en défaut si elle est utilisée sur une fonctionnalité sans choix (ex: attestations), et allez la tester dans son contexte. Alors vous pourrez effacer l\'ancienne ou bien la refaire passer en défaut si votre modification renvoie une erreur.</div>'
         });
       });

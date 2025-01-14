@@ -11,15 +11,15 @@
                :editable="false"/>
   <bbns-column field="type"
                :width="120"
-               :title="_('Account type')"
+               :label="_('Account type')"
                :source="source.types"
                source-value="code"
                />
   <bbns-column field="host"
-               :title="_('Host')"/>
+               :label="_('Host')"/>
   <bbns-column field="login"
-               :title="_('Login')"/>
-  <bbns-column :title="_('Actions')"
+               :label="_('Login')"/>
+  <bbns-column :label="_('Actions')"
                :width="250"
                :buttons="['edit', 'delete']"/>
 </bbn-table>

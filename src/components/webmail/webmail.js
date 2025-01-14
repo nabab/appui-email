@@ -377,7 +377,7 @@
             icon: "nf nf-fa-plus",
             action: () => {
               this.getPopup({
-                title: bbn._("Folder name"),
+                label: bbn._("Folder name"),
                 component: "appui-email-forms-create",
                 source: {
                   id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
@@ -402,7 +402,7 @@
             icon: "nf nf-mdi-rename_box",
             action: () => {
               this.getPopup({
-                title: bbn._("Folder new name"),
+                label: bbn._("Folder new name"),
                 component: "appui-email-forms-rename",
                 source: {
                   name: node.data.text,
@@ -613,7 +613,7 @@
         this.getPopup({
           width: 500,
           height: 450,
-          title: bbn._("eMail account configuration"),
+          label: bbn._("eMail account configuration"),
           component: this.$options.components[scpName]
         })
         appui.poll();
@@ -671,7 +671,7 @@
       moveFolder() {
         this.getFolders();
         this.getPopup({
-          title: bbn._("Folder changer"),
+          label: bbn._("Folder changer"),
           component: 'appui-email-forms-moveto',
           componentOptions: {
             source: {

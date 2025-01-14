@@ -9,20 +9,20 @@
            ref="table"
 >
   <bbns-column field="id"
-               title="<?= _('ID') ?>"
+               label="<?= _('ID') ?>"
                :hidden=true
   ></bbns-column>
   <bbns-column field="email"
-               title="<?= _('e-Mail address') ?>"
+               label="<?= _('e-Mail address') ?>"
                type="email"
   ></bbns-column>
   <bbns-column field="subject"
-               title="<?= _('Title') ?>"
+               label="<?= _('Title') ?>"
                :render="renderTitre"
                v-if="context !== 'details'"
   ></bbns-column>
   <bbns-column field="id_mailing"
-               title="<?= _('e-Mailing') ?>"
+               label="<?= _('e-Mailing') ?>"
                :render="renderMailing"
                :width="100"
                cls="bbn-c"
@@ -30,7 +30,7 @@
                :filterable="false"
   ></bbns-column>
   <bbns-column field="status"
-               title="<?= _('Status') ?>"
+               label="<?= _('Status') ?>"
                :source="status"
                :render="renderEtat"
                cls="bbn-c"
@@ -38,13 +38,13 @@
                :filterable="false"
   ></bbns-column>
   <bbns-column field="delivery"
-               title="<?= _('Date') ?>"
+               label="<?= _('Date') ?>"
                cls="bbn-c"
                type="date"
                :width="120"
   ></bbns-column>
   <bbns-column field="read"
-               title="<?= _('Read') ?>"
+               label="<?= _('Read') ?>"
                :width="80"
                :hidden="true"
   ></bbns-column>
@@ -52,14 +52,14 @@
                field="attachments" 
                cls="bbn-c"
                :width="50"
-               title="<i class='nf nf-fa-paperclip bbn-xl'></i>"
-               ftitle="<?= _("Number of attached files") ?>"
+               label="<i class='nf nf-fa-paperclip bbn-xl'></i>"
+               flabel="<?= _("Number of attached files") ?>"
                :sortable="false"
                :filterable="false"
   ></bbns-column>
   <bbns-column field="priority"
-               ftitle="<?= _('Priority') ?>"
-               title="<i class='nf nf-mdi-truck_fast'></i>"
+               flabel="<?= _('Priority') ?>"
+               label="<i class='nf nf-mdi-truck_fast'></i>"
                :width="30"
                cls="bbn-c"
                :render="renderPriority"

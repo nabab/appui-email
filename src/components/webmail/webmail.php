@@ -13,17 +13,17 @@
           <bbn-button @click="createAccount"
                       class="bbn-left-xsspace"
                       :notext=true
-                      :text="_('Create a new mail account')"
+                      :label="_('Create a new mail account')"
                       icon="nf nf-mdi-account_plus"></bbn-button>
           <bbn-button @click="writeNewEmail"
                       class="bbn-left-xsspace"
                       :notext="true"
-                      :text="_('Write new mail')"
+                      :label="_('Write new mail')"
                       icon="nf nf-fa-edit"></bbn-button>
           <bbn-button @click="changeOrientation"
                       class="bbn-left-xsspace"
                       :notext="true"
-                      :text="_('Change Webmail orientation to ' + (orientation == 'horizontal' ? 'vertical' : 'horizontal'))"
+                      :label="_('Change Webmail orientation to ' + (orientation == 'horizontal' ? 'vertical' : 'horizontal'))"
                       :icon="orientation == 'horizontal' ? 'nf nf-cod-split_vertical' : 'nf nf-cod-split_horizontal'"/>
         </div>
         <div class="bbn-flex-fill">
@@ -77,30 +77,30 @@
                      :showable="true"
                      :order="[{field: 'date', dir: 'DESC'}]"
                      :pageable="true">
-            <bbns-column title="<i class='nf nf-eye'></i>"
-                         :ftitle="_('Read')"
+            <bbns-column label="<i class='nf nf-eye'></i>"
+                         :flabel="_('Read')"
                          type="boolean"
                          :width="30"
                          field="read"/>
-            <bbns-column title="<i class='nf nf-mdi-paperclip'></i>"
-                         :ftitle="_('Attachments')"
+            <bbns-column label="<i class='nf nf-mdi-paperclip'></i>"
+                         :flabel="_('Attachments')"
                          :width="30"
                          type="number"
                          field="attachments"
                          :render="showAttachments"/>
-            <bbns-column :title="_('Date')"
+            <bbns-column :label="_('Date')"
                          type="datetime"
                          :width="120"
                          field="date"/>
-            <bbns-column :title="_('From')"
+            <bbns-column :label="_('From')"
                          editor="bbn-autocomplete"
                          :width="200"
                          :source="source.contacts"
                          field="id_sender"/>
-            <bbns-column :title="_('Subject')"
+            <bbns-column :label="_('Subject')"
                          :render="showSubject"
                          field="subject"/>
-            <bbns-column :title="_('Size')"
+            <bbns-column :label="_('Size')"
                          :width="100"
                          field="size"
                          :hidden="true"/>
@@ -115,52 +115,52 @@
                              style="padding-top: 5px">
                   <bbn-button icon="nf nf-fa-mail_reply"
                               class="bbn-left-xsspace"
-                              :text="_('Reply')"
+                              :label="_('Reply')"
                               :notext="true"
                               @click="reply"/>
                   <bbn-button icon="nf nf-fa-mail_reply_all"
                               class="bbn-left-xsspace"
-                              :text="_('Reply All')"
+                              :label="_('Reply All')"
                               :notext="true"
                               @click="replyAll"/>
                   <bbn-button icon="nf nf-fa-mail_forward"
                               class="bbn-left-xsspace"
-                              :text="_('Forward')"
+                              :label="_('Forward')"
                               :notext="true"
                               @click="forward"/>
                   <bbn-button icon="nf nf-mdi-tab_plus"
                               class="bbn-left-xsspace"
-                              :text="_('Open in a new tab')"
+                              :label="_('Open in a new tab')"
                               :notext="true"
                               @click="openTab"/>
                   <bbn-button icon="nf nf-mdi-window_restore"
                               class="bbn-left-xsspace"
-                              :text="_('Open in a new window')"
+                              :label="_('Open in a new window')"
                               :notext="true"
                               @click="openWindow"/>
                   <bbn-button icon="nf nf-fa-archive"
                               class="bbn-left-xsspace"
-                              :text="_('Archive')"
+                              :label="_('Archive')"
                               :notext="true"
                               @click="archive"/>
                   <bbn-button icon="nf nf-weather-fire"
                               class="bbn-left-xsspace"
-                              :text="_('Set as junk')"
+                              :label="_('Set as junk')"
                               :notext="true"
                               @click="setAsJunk"/>
                   <bbn-button icon="nf nf-mdi-delete"
                               class="bbn-left-xsspace"
-                              :text="_('Delete')"
+                              :label="_('Delete')"
                               :notext="true"
                               @click="deleteMail"/>
                   <bbn-button icon="nf nf-fa-bug"
                               class="bbn-left-xsspace"
-                              :text="_('Transform in task')"
+                              :label="_('Transform in task')"
                               :notext="true"
                               @click="mailToTask"/>
                   <bbn-button icon="nf nf-mdi-folder_move"
                               class="bbn-left-xsspace"
-                              :text="_('Move')"
+                              :label="_('Move')"
                               :notext="true"
                               @click="moveFolder"/>
                   <bbn-dropdown v-if="attachments.length"
@@ -183,12 +183,12 @@
                 <div v-if="selectedMail.id" class="bbn-flex bbn-spadding email-header">
                   <span class="bbn-medium bbn-bottom-xsmargin">{{ selectedMail.subject }}</span>
                   <span class="bbn-bottom-xsmargin">{{_('to: ')}}
-                    <a v-if="extractedTo && extractedTo.name && extractedTo.email && extractedTo.email !== extractedTo.name" :href="'mailto:' + extractedTo.email" :title="extractedTo.email">{{extractedTo.name}}</a>
+                    <a v-if="extractedTo && extractedTo.name && extractedTo.email && extractedTo.email !== extractedTo.name" :href="'mailto:' + extractedTo.email" :label="extractedTo.email">{{extractedTo.name}}</a>
                     <a v-else-if="extractedTo" :href="'mailto:' + extractedTo.email" >{{extractedTo.email}}</a>
                     <span v-else>{{selectedMail.to}}</span>
                   </span>
                   <span class="bbn-bottom-xsmargin">{{_('from: ')}}
-                    <a v-if="extractedFrom && extractedFrom.name && extractedFrom.email && extractedFrom.email !== extractedFrom.name" :href="'mailto:' + extractedFrom.email" :title="extractedFrom.email">{{extractedFrom.name}}</a>
+                    <a v-if="extractedFrom && extractedFrom.name && extractedFrom.email && extractedFrom.email !== extractedFrom.name" :href="'mailto:' + extractedFrom.email" :label="extractedFrom.email">{{extractedFrom.name}}</a>
                     <a v-else-if="extractedFrom" :href="'mailto:' + extractedFrom.email">{{extractedFrom.email}}</a>
                     <span v-else>{{selectedMail.from}}</span>
                   </span>

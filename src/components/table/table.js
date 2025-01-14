@@ -199,20 +199,20 @@
         },
         template: `
           <div class="bbn-xspadding bbn-l bbn-header bbn-vmiddle bbn-h-100" ref="toolbar">
-            <bbn-button text="`+ bbn._('Check/uncheck all emails')+`" 
+            <bbn-button label="`+ bbn._('Check/uncheck all emails')+`" 
                         icon="nf nf-fa-check"
                         @click="checkAll"
                         class="bbn-bg-teal bbn-white"
                         
             ></bbn-button>
-            <bbn-button text="`+bbn._('Cancel selected emails')+`"
+            <bbn-button label="`+bbn._('Cancel selected emails')+`"
                         icon="nf nf-fae-thin_close"
                         @click="cancelSelected"
                         class="bbn-bg-teal bbn-white"
                         :disabled="disableButtonCancel"
                         :title="(disableButtonCancel && !disableButtons) ? _('Only emails with READY status can be cancelled') : _('Cancel selected emails')"
             ></bbn-button>
-            <bbn-button text="`+ bbn._('Delete selected emails') +`"
+            <bbn-button label="`+ bbn._('Delete selected emails') +`"
                         icon="nf nf-oct-trashcan"
                         @click="deleteSelected"
                         :disabled="( context === 'ready' ) ? disableButtons : (disableButtons || !isAutorizedUser) "
@@ -220,7 +220,7 @@
                         :title="(!isAutorizedUser) ? _('Only admin and dev users can remove sent emails') :  _('Remove selected emails') " 
 
             ></bbn-button>
-            <bbn-button text="`+ bbn._('Delete all emails') +`"
+            <bbn-button label="`+ bbn._('Delete all emails') +`"
                         icon="nf nf-oct-trashcan"
                         @click="deleteAll"
                         class="bbn-bg-teal bbn-white"

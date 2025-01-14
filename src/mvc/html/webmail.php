@@ -1,6 +1,6 @@
 <bbn-router :nav="true">
 	<bbns-container component="appui-email-webmail"
-                 :title="_('Home')"
+                 :label="_('Home')"
                  :source="source"
                  url="home"
                  :closable="false"

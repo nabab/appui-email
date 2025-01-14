@@ -82,33 +82,33 @@
                      dir: 'DESC'
                    }]"
                    :tr-class="r => r.priority < 5 ? 'bbn-bg-light-red' : ''">
-          <bbns-column title="<?= _("ID") ?>"
+          <bbns-column label="<?= _("ID") ?>"
                        field="id"
                        :filterable="false"
                        :editable="false"
                        :sortable="false"
                        :hidden="true"
                        ></bbns-column>
-          <bbns-column title="<?= _("content") ?>"
+          <bbns-column label="<?= _("content") ?>"
                        field="content"
                        :filterable="false"
                        :editable="false"
                        :sortable="false"
                        :hidden="true"
                        ></bbns-column>
-          <bbns-column title="<?= _("Status") ?>"
+          <bbns-column label="<?= _("Status") ?>"
                        field="state"
                        :width="80"
                        :source="status"
                        ></bbns-column>
-          <bbns-column title="<?= _("Infos") ?>"
+          <bbns-column label="<?= _("Infos") ?>"
                        field="sender"
                        :render="renderOfficiel"
                        cls="bbn-m"
                        :width="200"
                        ></bbns-column>
           <bbns-column field="priority"
-                       title="<?= _("Priority") ?>"
+                       label="<?= _("Priority") ?>"
                        type="number"
                        :hidden="true"
                        ></bbns-column>
@@ -116,25 +116,25 @@
                        :hidden="true"
                        :default="[]"
                        ></bbns-column>
-          <bbns-column title="<?= _("Date") ?>"
+          <bbns-column label="<?= _("Date") ?>"
                        field="sent"
                        :width="140"
                        type="datetime"
                        :required="true"
                        :nullable="true"
                        ></bbns-column>
-          <bbns-column title="<?= _("Recipients") ?>"
+          <bbns-column label="<?= _("Recipients") ?>"
                        field="recipients"
                        :width="160"
                        :source="source.recipients"
                        :render="renderRecipients"
                        :required="true"
                        ></bbns-column>
-          <bbns-column title="<?= _("Object") ?>"
+          <bbns-column label="<?= _("Object") ?>"
                        field="title"
                        :required="true"
                        ></bbns-column>
-          <bbns-column title="<?= _("Sender") ?>"
+          <bbns-column label="<?= _("Sender") ?>"
                        field="sender"
                        :width="160"
                        :sortable="false"
@@ -143,7 +143,7 @@
                        :required="true"
                        :hidden="true"
                        ></bbns-column>
-          <bbns-column title="<?= _("Total emails") ?>"
+          <bbns-column label="<?= _("Total emails") ?>"
                        field="total"
                        :width="60"
                        :hidden="true"
@@ -152,7 +152,7 @@
                        :filterable="false"
                        :sortable="false"
                        ></bbns-column>
-          <bbns-column title="<?= _("Emails succeeded") ?>"
+          <bbns-column label="<?= _("Emails succeeded") ?>"
                        field="success"
                        :hidden="true"
                        type="number"
@@ -160,7 +160,7 @@
                        :filterable="false"
                        :sortable="false"
                        ></bbns-column>
-          <bbns-column title="<?= _("Emails failed") ?>"
+          <bbns-column label="<?= _("Emails failed") ?>"
                        field="failure"
                        :hidden="true"
                        type="number"
@@ -168,7 +168,7 @@
                        :editable="false"
                        :sortable="false"
                        ></bbns-column>
-          <bbns-column title="<?= _("Emails ready") ?>"
+          <bbns-column label="<?= _("Emails ready") ?>"
                        field="ready"
                        :hidden="true"
                        type="number"
@@ -176,7 +176,7 @@
                        :sortable="false"
                        ></bbns-column>
           <bbns-column width="100"
-                       title="<?= _("Action") ?>"
+                       label="<?= _("Action") ?>"
                        :component="$options.components.menu"
                        :source="sourceMenu"
                        >
