@@ -70,7 +70,7 @@
           
         if ( row.status === 'ready' ){
           res.push({
-            icon: 'nf nf-mdi-close',
+            icon: 'nf nf-md-close',
             title: bbn._('Cancel email'),
             action: this.cancelEmail,
             cls: 'bbn-button-icon-only', 

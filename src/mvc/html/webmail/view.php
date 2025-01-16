@@ -16,12 +16,12 @@
                 :label="_('Forward')"
                 :notext="true"
                 @click="forward"/>
-    <bbn-button icon="nf nf-mdi-tab_plus"
+    <bbn-button icon="nf nf-md-tab_plus"
                 class="bbn-left-xsspace"
                 :label="_('Open in a new tab')"
                 :notext="true"
                 @click="openTab"/>
-    <bbn-button icon="nf nf-mdi-window_restore"
+    <bbn-button icon="nf nf-md-window_restore"
                 class="bbn-left-xsspace"
                 :label="_('Open in a new window')"
                 :notext="true"
@@ -36,7 +36,7 @@
                 :label="_('Set as junk')"
                 :notext="true"
                 @click="setAsJunk"/>
-    <bbn-button icon="nf nf-mdi-delete"
+    <bbn-button icon="nf nf-md-delete"
                 class="bbn-left-xsspace"
                 :label="_('Delete')"
                 :notext="true"

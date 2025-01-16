@@ -15,7 +15,7 @@
                type="boolean"
                :width="30"
                field="read"/>
-  <bbns-column label="<i class='nf nf-mdi-paperclip'></i>"
+  <bbns-column label="<i class='nf nf-md-paperclip'></i>"
                :flabel="_('Attachments')"
                :width="30"
                type="number"

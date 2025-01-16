@@ -18,7 +18,7 @@
     <div>
       <!-- @click set the currentSignature to null because the new item have null id -->
       <bbn-button title="<?= _('New') ?>"
-                  icon="nf nf-mdi-plus"
+                  icon="nf nf-md-plus"
                   :notext="true"
                   @click="currentSignature = null"
                   :disabled="!isSaved"/>
@@ -31,7 +31,7 @@
                   :disabled="!currentSignature"/>
     </div>
     <bbn-button title="<?= _('Save') ?>"
-                icon="nf nf-mdi-content_save"
+                icon="nf nf-md-content_save"
                 :notext="true"
                 @click="saveSign()"
                 :disabled="isSaved"/>

@@ -28,7 +28,7 @@
       <bbn-button class="bbn-button-icon-only bbn-iblock"
                   :notext="true"
                   title="<?= _('Add signature') ?>"
-                  icon="nf nf-mdi-sign_text"
+                  icon="nf nf-md-sign_text"
                   @click="addSignature()"
                   :disabled="!currentSignature"/>
     </div>

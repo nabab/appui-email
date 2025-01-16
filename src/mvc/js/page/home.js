@@ -295,7 +295,7 @@
         }
         else {
           res.push({
-            icon: 'nf nf-mdi-close',
+            icon: 'nf nf-md-close',
             title: 'Cancel mailing',
             action: this.cancelMailing,
             notext: true
@@ -728,7 +728,7 @@
           }
           else {
             res.push({
-              icon: 'nf nf-mdi-close',
+              icon: 'nf nf-md-close',
               label: 'Cancel mailing',
               value: 'cancelMailing'
             },{

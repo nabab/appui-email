@@ -364,7 +364,7 @@
         if (node.data.type === "account") {
           res.push({
             text: bbn._('Delete account'),
-            icon: "nf nf-mdi-delete",
+            icon: "nf nf-md-delete",
             action: () => {
               this.deleteAccount(node.data.uid)
               appui.poll();
@@ -391,7 +391,7 @@
         if (node.data.type !== "account" && node.data.type !== "folder_types") {
           res.push({
             text: bbn._('Remove folder'),
-            icon: "nf nf-mdi-folder_remove",
+            icon: "nf nf-md-folder_remove",
             action: () => {
               this.removeFolder(this.getAllFolderChild(node.data), node.data.text, node.data.id_account);
               appui.poll();
@@ -399,7 +399,7 @@
           },
                    {
             text: bbn._('Rename Folder'),
-            icon: "nf nf-mdi-rename_box",
+            icon: "nf nf-md-rename_box",
             action: () => {
               this.getPopup({
                 label: bbn._("Folder new name"),
@@ -485,9 +485,9 @@
         let icon = {
           Trash: "nf nf-fa-trash",
           INBOX: "nf nf-fa-inbox",
-          spam: "nf nf-mdi-fire",
-          Sent: "nf nf-mdi-inbox_arrow_up",
-          Drafts: "nf nf-mdi-file_document"
+          spam: "nf nf-md-fire",
+          Sent: "nf nf-md-inbox_arrow_up",
+          Drafts: "nf nf-md-file_document"
         }
         let r = [];
         let fn = (ar, id_account) => {

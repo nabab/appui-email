@@ -59,7 +59,7 @@
   ></bbns-column>
   <bbns-column field="priority"
                flabel="<?= _('Priority') ?>"
-               label="<i class='nf nf-mdi-truck_fast'></i>"
+               label="<i class='nf nf-md-truck_fast'></i>"
                :width="30"
                cls="bbn-c"
                :render="renderPriority"

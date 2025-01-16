@@ -14,7 +14,7 @@
                       class="bbn-left-xsspace"
                       :notext=true
                       :label="_('Create a new mail account')"
-                      icon="nf nf-mdi-account_plus"></bbn-button>
+                      icon="nf nf-md-account_plus"></bbn-button>
           <bbn-button @click="writeNewEmail"
                       class="bbn-left-xsspace"
                       :notext="true"
@@ -82,7 +82,7 @@
                          type="boolean"
                          :width="30"
                          field="read"/>
-            <bbns-column label="<i class='nf nf-mdi-paperclip'></i>"
+            <bbns-column label="<i class='nf nf-md-paperclip'></i>"
                          :flabel="_('Attachments')"
                          :width="30"
                          type="number"
@@ -128,12 +128,12 @@
                               :label="_('Forward')"
                               :notext="true"
                               @click="forward"/>
-                  <bbn-button icon="nf nf-mdi-tab_plus"
+                  <bbn-button icon="nf nf-md-tab_plus"
                               class="bbn-left-xsspace"
                               :label="_('Open in a new tab')"
                               :notext="true"
                               @click="openTab"/>
-                  <bbn-button icon="nf nf-mdi-window_restore"
+                  <bbn-button icon="nf nf-md-window_restore"
                               class="bbn-left-xsspace"
                               :label="_('Open in a new window')"
                               :notext="true"
@@ -148,7 +148,7 @@
                               :label="_('Set as junk')"
                               :notext="true"
                               @click="setAsJunk"/>
-                  <bbn-button icon="nf nf-mdi-delete"
+                  <bbn-button icon="nf nf-md-delete"
                               class="bbn-left-xsspace"
                               :label="_('Delete')"
                               :notext="true"
@@ -158,7 +158,7 @@
                               :label="_('Transform in task')"
                               :notext="true"
                               @click="mailToTask"/>
-                  <bbn-button icon="nf nf-mdi-folder_move"
+                  <bbn-button icon="nf nf-md-folder_move"
                               class="bbn-left-xsspace"
                               :label="_('Move')"
                               :notext="true"
@@ -176,7 +176,7 @@
                   <bbn-button v-if="attachments.length"
                               class="bbn-left-xsspace"
                               @click="doMode"
-                              icon="nf nf-mdi-folder_download"
+                              icon="nf nf-md-folder_download"
                               :notext="true"/>
 
                 </bbn-toolbar>
