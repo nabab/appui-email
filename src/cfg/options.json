@@ -1,121 +1,107 @@
-{
-  "cfg": {
-    "show_code": 1,
-    "allow_children": 1,
-    "show_icon": 1,
-    "i18n": "en"
-  },
-  "id_parent": ["appui"],
-  "text": "eMails",
-  "code": "email",
-  "id_alias": ["plugin", "list", "templates", "option", "appui"],
-  "icon": "nf nf-fa-at",
-  "plugin": true,
-  "items": [ 
+[
     {
-      "text": "Accounts",
-      "code": "accounts"
+        "text": "Accounts",
+        "code": "accounts"
     },
     {
-      "text": "Domains",
-      "code": "domains"
+        "text": "Domains",
+        "code": "domains"
     },
     {
-      "cfg": {
-        "show_code": 1,
-        "show_value": 1,
-        "show_icon": 1
-      },
-      "text": "Folders",
-      "code": "folders",
-      "items": [
-        {
-          "text": "Drafts",
-          "code": "drafts",
-          "icon": "nf nf-mdi-file_document",
-          "names": [
-            "drafts",
-            "Drafts",
-            "Brouillons"
-          ]
+        "cfg": {
+            "show_code": 1,
+            "show_value": 1,
+            "show_icon": 1
         },
-        {
-          "text": "Inbox",
-          "code": "inbox",
-          "icon": "nf nf-fa-inbox",
-          "names": [
-            "INBOX"
-          ]
-        },
-        {
-          "text": "Other folders",
-          "code": "folders",
-          "icon": "nf nf-fa-folder_o"
-        },
-        {
-          "text": "Sent",
-          "code": "sent",
-          "icon": "nf nf-mdi-inbox_arrow_up",
-          "names": [
-            "sent",
-            "Sent",
-            "&AMk-l&AOk-ments envoy&AOk-s",
-            "\u00c9l\u00e9ments envoy\u00e9s"
-          ]
-        },
-        {
-          "text": "Spam",
-          "code": "spam",
-          "icon": "nf nf-mdi-fire",
-          "names": [
-            "spam",
-            "Spam",
-            "Junk",
-            "junk",
-            "Ind\u00e9sirables"
-          ]
-        },
-        {
-          "text": "Trash",
-          "code": "trash",
-          "icon": "nf nf-fa-trash",
-          "names": [
-            "trash",
-            "Trash",
-            "Corbeille"
-          ]
-        }
-      ]
+        "text": "Folders",
+        "code": "folders",
+        "items": [
+            {
+                "text": "Drafts",
+                "code": "drafts",
+                "icon": "nf nf-mdi-file_document",
+                "names": [
+                    "drafts",
+                    "Drafts",
+                    "Brouillons"
+                ]
+            },
+            {
+                "text": "Inbox",
+                "code": "inbox",
+                "icon": "nf nf-fa-inbox",
+                "names": [
+                    "INBOX"
+                ]
+            },
+            {
+                "text": "Other folders",
+                "code": "folders",
+                "icon": "nf nf-fa-folder_o"
+            },
+            {
+                "text": "Sent",
+                "code": "sent",
+                "icon": "nf nf-mdi-inbox_arrow_up",
+                "names": [
+                    "sent",
+                    "Sent",
+                    "&AMk-l&AOk-ments envoy&AOk-s",
+                    "\u00c9l\u00e9ments envoy\u00e9s"
+                ]
+            },
+            {
+                "text": "Spam",
+                "code": "spam",
+                "icon": "nf nf-mdi-fire",
+                "names": [
+                    "spam",
+                    "Spam",
+                    "Junk",
+                    "junk",
+                    "Ind\u00e9sirables"
+                ]
+            },
+            {
+                "text": "Trash",
+                "code": "trash",
+                "icon": "nf nf-fa-trash",
+                "names": [
+                    "trash",
+                    "Trash",
+                    "Corbeille"
+                ]
+            }
+        ]
     },
     {
-      "text": "Signatures",
-      "code": "signatures"
+        "text": "Signatures",
+        "code": "signatures"
     },
     {
-      "cfg": {
-        "show_code": 1,
-        "show_value": 1
-      },
-      "text": "Types",
-      "code": "types",
-      "items": [
-        {
-          "text": "GMail",
-          "code": "gmail"
+        "cfg": {
+            "show_code": 1,
+            "show_value": 1
         },
-        {
-          "text": "IMAP",
-          "code": "imap"
-        },
-        {
-          "text": "Microsoft Mail (Hotmail, Live...)",
-          "code": "hotmail"
-        },
-        {
-          "text": "POP3",
-          "code": "pop3"
-        }
-      ]
+        "text": "Types",
+        "code": "types",
+        "items": [
+            {
+                "text": "GMail",
+                "code": "gmail"
+            },
+            {
+                "text": "IMAP",
+                "code": "imap"
+            },
+            {
+                "text": "Microsoft Mail (Hotmail, Live...)",
+                "code": "hotmail"
+            },
+            {
+                "text": "POP3",
+                "code": "pop3"
+            }
+        ]
     }
-  ]
-}
+]
