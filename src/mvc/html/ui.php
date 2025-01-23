@@ -6,12 +6,12 @@
       tools
     </div>
     <div class="bbn-flex-fill">
-      <bbn-column-list class="bbn-border"
+      <bbn-kanban-element class="bbn-border"
                        :source="items"
                        component="appui-email-item"
                        :pageable="true">
 
-      </bbn-column-list>
+      </bbn-kanban-element>
     </div>
   </div>
 </div>

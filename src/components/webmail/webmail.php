@@ -44,7 +44,7 @@
                     :resizable="true"
                     :collapsible="true">
         <bbn-pane size="50%">
-          <bbn-column-list v-if="orientation == 'horizontal'"
+          <bbn-kanban-element v-if="orientation == 'horizontal'"
                            class="bbn-border"
                            :source="source.root + 'webmail'"
                            component="appui-email-item"
@@ -59,7 +59,7 @@
                            :sortable="true"
                            :showable="true"
                            :order="[{field: 'date', dir: 'DESC'}]">
-          </bbn-column-list>
+          </bbn-kanban-element>
           <bbn-table v-else
                      :source="source.root + 'webmail'"
                      storage-full-name="appui-email-webmail-table"
