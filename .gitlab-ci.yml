@@ -17,24 +17,43 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # List of stages for jobs, and their order of execution
+  - codeberg
   - github
 
+codeberg-sync:
+  stage: codeberg
+  script:
+    - echo "Synching with Codeberg"
+    - rm -rf ~/plugins_appui-email
+    - mkdir ~/plugins_appui-email
+    - cd ~/plugins_appui-email
+    - git clone --bare git@git.bbn.so:plugins/appui-email.git .
+    - git remote add --mirror=fetch codeberg git@codeberg.org:appui/email.git
+    - git fetch git@git.bbn.so:plugins/appui-email.git master
+    - git fetch git@codeberg.org:appui/email.git master
+    - git push -f git@codeberg.org:appui/email.git master
+    - git push -f git@codeberg.org:appui/email.git --tags
+    - cd -
+    - rm -rf ~/plugins_appui-email
+    - echo "Codeberg synching finished !"
+  tags:
+    - codeberg
 github-sync:       # This job runs in the build stage, which runs first.
   stage: github
   script:
     - echo "Synching with Github..."
-    - cd ~/
-    - rm -rf plugins
-    - mkdir -p plugins/appui-email
-    - git clone --bare git@git.bbn.so:plugins/appui-email.git plugins/appui-email
-    - cd plugins/appui-email
+    - rm -rf ~/plugins_appui-email
+    - mkdir ~/plugins_appui-email
+    - cd ~/plugins_appui-email
+    - git clone --bare git@git.bbn.so:plugins/appui-email.git .
     - git remote add --mirror=fetch github git@github.com:nabab/appui-email.git
     - git fetch git@git.bbn.so:plugins/appui-email.git master
     - git fetch git@github.com:nabab/appui-email.git master
-    - git push -f git@github.com:nabab/appui-email.git --all
+    - git push -f git@github.com:nabab/appui-email.git master
     - git push -f git@github.com:nabab/appui-email.git --tags
     - cd -
-    - rm -rf plugins
-    - echo "Synching finished !"
+    - rm -rf ~/plugins_appui-email
+    - echo "Github synching finished !"
   tags:
     - github
+
