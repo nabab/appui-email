@@ -34,7 +34,7 @@
                     storage-full-name="appui-email-webmail-tree"
                     @select="selectFolder"
                     ref="tree"
-                    :draggable="true"
+                    :drag="true"
                     @move="onMove"/>
         </div>
       </div>
