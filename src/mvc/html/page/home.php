@@ -87,14 +87,14 @@
                        :filterable="false"
                        :editable="false"
                        :sortable="false"
-                       :hidden="true"
+                       :invisible="true"
                        ></bbns-column>
           <bbns-column label="<?= _("content") ?>"
                        field="content"
                        :filterable="false"
                        :editable="false"
                        :sortable="false"
-                       :hidden="true"
+                       :invisible="true"
                        ></bbns-column>
           <bbns-column label="<?= _("Status") ?>"
                        field="state"
@@ -110,7 +110,7 @@
           <bbns-column field="priority"
                        label="<?= _("Priority") ?>"
                        type="number"
-                       :hidden="true"
+                       :invisible="true"
                        ></bbns-column>
           <bbns-column field="attachments"
                        :invisible="true"
@@ -141,12 +141,12 @@
                        :source="source.senders"
                        :default="source.senders[0].value"
                        :required="true"
-                       :hidden="true"
+                       :invisible="true"
                        ></bbns-column>
           <bbns-column label="<?= _("Total emails") ?>"
                        field="total"
                        :width="60"
-                       :hidden="true"
+                       :invisible="true"
                        type="number"
                        :editable="false"
                        :filterable="false"
@@ -154,7 +154,7 @@
                        ></bbns-column>
           <bbns-column label="<?= _("Emails succeeded") ?>"
                        field="success"
-                       :hidden="true"
+                       :invisible="true"
                        type="number"
                        :editable="false"
                        :filterable="false"
@@ -162,7 +162,7 @@
                        ></bbns-column>
           <bbns-column label="<?= _("Emails failed") ?>"
                        field="failure"
-                       :hidden="true"
+                       :invisible="true"
                        type="number"
                        :filterable="false"
                        :editable="false"
@@ -170,7 +170,7 @@
                        ></bbns-column>
           <bbns-column label="<?= _("Emails ready") ?>"
                        field="ready"
-                       :hidden="true"
+                       :invisible="true"
                        type="number"
                        :editable="false"
                        :sortable="false"

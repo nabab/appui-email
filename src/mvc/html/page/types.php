@@ -9,7 +9,7 @@
   <bbns-column label="<?= _("ID") ?>"
               field="id_note"
               :width="100"
-              :hidden="true"/>
+              :invisible="true"/>
   <bbns-column label="<i class='nf nf-fa-check bbn-c bbn-xl'></i>"
               flabel="<?= _("Default") ?>"
               field="default"
@@ -38,7 +38,7 @@
               cls="bbn-c"/>
   <bbns-column label="<?= _("Text") ?>"
               field="content"
-              :hidden="true"/>
+              :invisible="true"/>
   <bbns-column field="id_type"
               :invisible="true"
               :editable="false"/>

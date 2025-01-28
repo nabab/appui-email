@@ -13,7 +13,7 @@
 >
   <bbns-column field="id"
                label="<?= _('ID') ?>"
-               :hidden=true
+               :invisible=true
   ></bbns-column>
   <bbns-column field="email"
                label="<?= _('e-Mail address') ?>"
@@ -45,7 +45,7 @@
   <bbns-column field="read"
                label="<?= _('Read') ?>"
                :width="80"
-               :hidden="true"
+               :invisible="true"
   ></bbns-column>
 </bbn-table-->
 <appui-email-table :source="source" 
