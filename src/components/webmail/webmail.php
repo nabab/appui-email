@@ -1,32 +1,27 @@
 <!-- HTML Document -->
-<div :class="[
-             componentClass,
-             'bbn-overlay'
-             ]">
-  <bbn-splitter orientation="horizontal"
-                v-if="source.accounts.length"
+<div :class="[componentClass, 'bbn-overlay']">
+  <bbn-splitter bbn-if="source.accounts.length"
+                orientation="horizontal"
                 :resizable="true"
                 :collapsible="true">
     <bbn-pane :size="250">
       <div class="bbn-overlay bbn-flex-height">
-        <div class="bbn-header">
+        <div class="bbn-header bbn-xspadding bbn-no-border bbn-flex"
+             style="gap: var(--xsspace)">
           <bbn-button @click="createAccount"
-                      class="bbn-left-xsspace"
                       :notext=true
                       :label="_('Create a new mail account')"
-                      icon="nf nf-md-account_plus"></bbn-button>
+                      icon="nf nf-md-account_plus"/>
           <bbn-button @click="writeNewEmail"
-                      class="bbn-left-xsspace"
                       :notext="true"
                       :label="_('Write new mail')"
-                      icon="nf nf-fa-edit"></bbn-button>
+                      icon="nf nf-fa-edit"/>
           <bbn-button @click="changeOrientation"
-                      class="bbn-left-xsspace"
                       :notext="true"
                       :label="_('Change Webmail orientation to ' + (orientation == 'horizontal' ? 'vertical' : 'horizontal'))"
                       :icon="orientation == 'horizontal' ? 'nf nf-cod-split_vertical' : 'nf nf-cod-split_horizontal'"/>
         </div>
-        <div class="bbn-flex-fill">
+        <div class="bbn-flex-fill bbn-vxspadding bbn-right-xspadding">
           <bbn-tree :source="treeData"
                     uid="id"
                     :menu="treeMenu"
@@ -44,23 +39,22 @@
                     :resizable="true"
                     :collapsible="true">
         <bbn-pane size="50%">
-          <bbn-kanban-element v-if="orientation == 'horizontal'"
-                           class="bbn-border"
-                           :source="source.root + 'webmail'"
-                           component="appui-email-item"
-                           :pageable="true"
-                           :filterable="true"
-                           :selection="true"
-                           @select="tableSelect"
-                           @unselect="tableUnselect"
-                           :multifilter="true"
-                           :data="dataObj"
-                           ref="table"
-                           :sortable="true"
-                           :showable="true"
-                           :order="[{field: 'date', dir: 'DESC'}]">
-          </bbn-kanban-element>
-          <bbn-table v-else
+          <bbn-kanban-element bbn-if="orientation == 'horizontal'"
+                              class="bbn-noradius"
+                              :source="source.root + 'webmail'"
+                              component="appui-email-item"
+                              :pageable="true"
+                              :filterable="true"
+                              :selection="true"
+                              @select="tableSelect"
+                              @unselect="tableUnselect"
+                              :multifilter="true"
+                              :data="dataObj"
+                              ref="table"
+                              :sortable="true"
+                              :showable="true"
+                              :order="[{field: 'date', dir: 'DESC'}]"/>
+          <bbn-table bbn-else
                      :source="source.root + 'webmail'"
                      storage-full-name="appui-email-webmail-table"
                      :filterable="true"
@@ -108,7 +102,7 @@
         </bbn-pane>
         <bbn-pane :scrollable="true">
           <div class="bbn-overlay"
-               v-if="selectedMail">
+               bbn-if="selectedMail">
             <div class="bbn-overlay">
               <div class="bbn-flex-height">
                 <bbn-toolbar class="bbn-m"
@@ -163,34 +157,34 @@
                               :label="_('Move')"
                               :notext="true"
                               @click="moveFolder"/>
-                  <bbn-dropdown v-if="attachments.length"
+                  <bbn-dropdown bbn-if="attachments.length"
                                 :source="attachments"
                                 source-text="name"
                                 source-value="name"
-                                v-model="selectedAttachment"
+                                bbn-model="selectedAttachment"
                                 class="bbn-left-xlspace"/>
-                  <bbn-dropdown v-if="attachments.length"
+                  <bbn-dropdown bbn-if="attachments.length"
                                 :source="attachmentsMode"
-                                v-model="selectedMode"
+                                bbn-model="selectedMode"
                                 class="bbn-left-xsspace"/>
-                  <bbn-button v-if="attachments.length"
+                  <bbn-button bbn-if="attachments.length"
                               class="bbn-left-xsspace"
                               @click="doMode"
                               icon="nf nf-md-folder_download"
                               :notext="true"/>
 
                 </bbn-toolbar>
-                <div v-if="selectedMail.id" class="bbn-flex bbn-spadding email-header">
+                <div bbn-if="selectedMail.id" class="bbn-flex bbn-spadding email-header">
                   <span class="bbn-medium bbn-bottom-xsmargin">{{ selectedMail.subject }}</span>
                   <span class="bbn-bottom-xsmargin">{{_('to: ')}}
-                    <a v-if="extractedTo && extractedTo.name && extractedTo.email && extractedTo.email !== extractedTo.name" :href="'mailto:' + extractedTo.email" :label="extractedTo.email">{{extractedTo.name}}</a>
-                    <a v-else-if="extractedTo" :href="'mailto:' + extractedTo.email" >{{extractedTo.email}}</a>
-                    <span v-else>{{selectedMail.to}}</span>
+                    <a bbn-if="extractedTo && extractedTo.name && extractedTo.email && extractedTo.email !== extractedTo.name" :href="'mailto:' + extractedTo.email" :label="extractedTo.email">{{extractedTo.name}}</a>
+                    <a bbn-else-if="extractedTo" :href="'mailto:' + extractedTo.email" >{{extractedTo.email}}</a>
+                    <span bbn-else>{{selectedMail.to}}</span>
                   </span>
                   <span class="bbn-bottom-xsmargin">{{_('from: ')}}
-                    <a v-if="extractedFrom && extractedFrom.name && extractedFrom.email && extractedFrom.email !== extractedFrom.name" :href="'mailto:' + extractedFrom.email" :label="extractedFrom.email">{{extractedFrom.name}}</a>
-                    <a v-else-if="extractedFrom" :href="'mailto:' + extractedFrom.email">{{extractedFrom.email}}</a>
-                    <span v-else>{{selectedMail.from}}</span>
+                    <a bbn-if="extractedFrom && extractedFrom.name && extractedFrom.email && extractedFrom.email !== extractedFrom.name" :href="'mailto:' + extractedFrom.email" :label="extractedFrom.email">{{extractedFrom.name}}</a>
+                    <a bbn-else-if="extractedFrom" :href="'mailto:' + extractedFrom.email">{{extractedFrom.email}}</a>
+                    <span bbn-else>{{selectedMail.from}}</span>
                   </span>
                   <span class="bbn-small">{{ formatDate(selectedMail.date) }}</span>
                 </div>
@@ -202,16 +196,16 @@
             </div>
           </div>
           <div class="bbn-overlay bbn-middle"
-               v-else>
+               bbn-else>
             <div class="bbn-block bbn-large bbn-c"
-                 v-text="_('Select an email to see its content here')"/>
+                 bbn-text="_('Select an email to see its content here')"/>
           </div>
         </bbn-pane>
       </bbn-splitter>
     </bbn-pane>
   </bbn-splitter>
   <div class="bbn-overlay bbn-middle"
-       v-else>
+       bbn-else>
     <div class="bbn-block bbn-lpadding bbn-lg">
       <p>
         <?= _("You have no account configured yet") ?>
@@ -221,110 +215,4 @@
       </p>
     </div>
   </div>
-
-
-  <script type="text/x-template" :id="scpName + '-editor'">
-<bbn-form :source="account"
-          @success="success"
-          :data="{action: 'save'}"
-          :action="cp.source.root + 'actions/account'">
-  <div class="bbn-overlay" v-show="tree.length">
-    <div class="bbn-flex-height">
-      <div class="bbn-w-100">
-        <div class="bbn-padding">
-          <bbn-button @click="backToConfig"><?= _("Back") ?></bbn-button>
-    </div>
-        <div class="bbn-m bbn-b bbn-c">
-          <?= _("Choose the folders you want to keep synchronized") ?>
-    </div>
-    </div>
-      <div class="bbn-padding bbn-flex-fill">
-        <bbn-tree :source="tree"
-                  ref="tree"
-                  :selection="true"
-                  uid="uid"
-                  :opened="true"/>
-    </div>
-    </div>
-    </div>
-  <div class="bbn-w-100" v-show="!tree.length">
-    <div class="bbn-grid-fields bbn-padding bbn-m">
-      <div class="bbn-label">
-        <?= _("Account type") ?>
-    </div>
-      <bbn-dropdown :source="types"
-                    source-value="id"
-                    placeholder="<?= _("Choose a type of account") ?>"
-                    v-model="account.type"
-                    autocomplete="off"
-                    :required="true"/>
-
-      <div class="bbn-label">
-        <?= _("Main eMail address for this account") ?>
-    </div>
-      <bbn-input v-model="account.email"
-                 type="email"
-                 autocomplete="off"
-                 :required="true"/>
-
-      <div class="bbn-label">
-        <?= _("Login") ?>
-    </div>
-      <bbn-input v-model="account.login"
-                 autocomplete="off"
-                 :required="true"/>
-
-      <div class="bbn-label">
-        <?= _("Password") ?>
-    </div>
-      <bbn-input v-model="account.pass"
-                 type="password"
-                 :no-save="true"
-                 :required="true"/>
-
-      <div v-if="['imap', 'pop3'].includes(accountCode)"
-           class="bbn-label">
-        <?= _("Use SSL") ?>
-    </div>
-      <bbn-checkbox v-if="['imap', 'pop3'].includes(accountCode)"
-                    :value="1"
-                    :novalue="0"
-                    v-model="account.ssl"/>
-
-      <div v-if="['imap', 'pop3'].includes(accountCode)"
-           class="bbn-label">
-        <?= _("Incoming server") ?>
-    </div>
-      <bbn-input v-if="['imap', 'pop3'].includes(accountCode)"
-                 type="hostname"
-                 v-model="account.host"
-                 autocomplete="off"
-                 :required="true"/>
-
-      <div class="bbn-grid-full bbn-c"
-           v-if="account.host && ['imap', 'pop3'].includes(accountCode)">
-        <a href="javascript:;" @click="hasSMTP = !hasSMTP">
-          <?= _("Click here to change the outgoing server configuration if it is different") ?>
-    </a>
-    </div>
-
-      <div v-if="hasSMTP && ['imap', 'pop3'].includes(accountCode)"
-           class="bbn-label">
-        <?= _("Outgoing server") ?>
-    </div>
-      <bbn-input v-if="hasSMTP && ['imap', 'pop3'].includes(accountCode)"
-                 v-model="account.smtp"
-                 type="hostname"
-                 autocomplete="off"
-                 :required="true"/>
-
-      <div class="bbn-grid-full bbn-c bbn-b bbn-state-error bbn-padding"
-           v-if="errorState">
-        <?= _("Impossible to connect to the mail server") ?>
-    </div>
-
-    </div>
-    </div>
-    </bbn-form>
-  </script>
 </div>

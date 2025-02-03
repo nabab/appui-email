@@ -11,12 +11,14 @@ if ($model->hasData('limit')) {
   if (is_null($list)) {
     return null;
   }
+
   for ($i = 0; $i < count($list['data']); $i++) {
     $info = $em->getEmail($list['data'][$i]['id']);
     $list['data'][$i]['from'] = $info['fromaddress'];
     $list['data'][$i]['date'] = $info['date'];
     $list['data'][$i]['to'] = $info['toaddress'];
 	}
+
   return $list;
 }
 else {
