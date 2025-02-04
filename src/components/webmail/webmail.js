@@ -49,7 +49,8 @@
             value: 'private_media_all'
           }
         ],
-        selectedMode: "download"
+        selectedMode: "download",
+        syncId: false
       };
     },
     computed: {
@@ -104,11 +105,9 @@
         this.orientation = this.orientation == 'vertical' ? 'horizontal' : 'vertical';
       },
       currentFolderIsThreads() {
-        bbn.fn.log(this.currentFolder.startWiths('threads-'));
         return this.currentFolder.startWiths('threads-')
       },
       hasExpander(row){
-        bbn.fn.log(!!row.data?.external_uids);
         return !!row.data?.external_uids
       },
       expanderComponent(row){
@@ -535,15 +534,14 @@
         })
         if (this.source.accounts) {
           bbn.fn.each(this.source.accounts, a => {
-            a.folders = a.folders.filter(el => el.subscribed !== false);
-
+            let folders = bbn.fn.clone(a.folders.filter(el => el.subscribed !== false));
             r.push({
               text: a.login,
+              id: a.id,
               uid: a.id,
-              items: fn(a.folders, a.id),
+              items: fn(folders, a.id),
               type: "account"
             });
-            bbn.fn.log("folders", a.folders);
           });
         }
         this.treeData = r;
@@ -596,7 +594,6 @@
           }
         }
         this.getFolders();
-        bbn.fn.log("SELECT");
         this.extractedFrom = this.extractNameAndEmail(this.selectedMail.from);
         this.extractedTo = this.extractNameAndEmail(this.selectedMail.to);
       },
@@ -652,7 +649,7 @@
       },
       deleteMail(){
         this.confirm(bbn._('Do you want to delete this email ?'), () => {
-          this.post(this.root + 'actions/email/delete', {
+          this.post(this.root + '/actions/email/delete', {
             id: this.selectedMail.id,
             status: "ready"
           }, d => {
@@ -685,13 +682,47 @@
         if (this.selectedMail) {
 
         }
+      },
+      synchronize(idAccount, idFolder){
+        const url = this.root + '/actions/email/sync';
+        const data = {
+          id_account: bbn.fn.isString(idAccount) ? idAccount : false,
+          id_folder: bbn.fn.isString(idFolder) ? idFolder : false
+        };
+        this.syncId = bbn.fn.getRequestId(url, data);
+        bbn.fn.stream(
+          url,
+          d => {
+            if (d.success) {
+              bbn.fn.log('SYNC SUCCESS', d);
+              appui.success(bbn._('Synchronization successful'));
+              this.syncId = false;
+            }
+            else {
+              bbn.fn.log('SYNC 10', d)
+            }
+          },
+          data,
+          f => {
+            appui.error(bbn._('An error occured during the synchronization'));
+          },
+          a => {
+            bbn.fn.log('abort', a);
+            this.syncId = false;
+          }
+        )
+      },
+      abortSync(){
+        if (this.syncId) {
+          bbn.fn.abort(this.syncId);
+          this.syncId = false;
+        }
       }
     },
     watch: {
       currentFolder(){
         this.$forceUpdate();
         this.$nextTick(() => {
-          bbn.fn.log("currentFolderWtacher");
           this.getRef('table').updateData()
         })
       }

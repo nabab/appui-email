@@ -25,7 +25,6 @@ if ($model->hasData('action')) {
         }
 
         if ($mb->getStatus() === 'ok') {
-          
           if ($model->data['action'] === 'test') {
             $model->data['res']['success'] = true;
             $res = [];
@@ -58,20 +57,25 @@ if ($model->hasData('action')) {
             break;
           }
           elseif ($model->hasData(['email', 'folders'], true)
-              && is_array($model->data['folders'])
+            && is_array($model->data['folders'])
           ) {
             unset($mb);
             $em = new bbn\User\Email($model->db);
             $cfg['folders'] = $model->data['folders'];
             $cfg['email'] = $model->data['email'];
-            if ($id_account = $em->addAccount($cfg)) {
-              unset($em);
-              $em = new bbn\User\Email($model->db, $model->inc->user, $model->inc->pref);
-              return [
-                'success' => true,
-                'data' => $em->getAccounts(),
-                'id_account' => $id_account
-              ];
+            try {
+              if ($id_account = $em->addAccount($cfg)) {
+                unset($em);
+                $em = new bbn\User\Email($model->db, $model->inc->user, $model->inc->pref);
+                return [
+                  'success' => true,
+                  'data' => $em->getAccounts(),
+                  'id_account' => $id_account
+                ];
+              }
+            }
+            catch (\Exception $e) {
+              return ['error' => $e->getMessage()];
             }
           }
         }

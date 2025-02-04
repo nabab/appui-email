@@ -2,11 +2,14 @@
           @success="success"
           :data="{action: 'save'}"
           :action="cp.source.root + 'actions/account'">
-  <div bbn-show="tree.length"
+  <div bbn-if="tree.length"
        class="bbn-overlay">
     <div class="bbn-flex-height">
       <div class="bbn-w-100 bbn-hpadding bbn-top-padding bbn-bottom-space">
-        <bbn-button @click="backToConfig"><?= _("Back") ?></bbn-button>
+        <bbn-button @click="backToConfig"
+                    class="bbn-bottom-space">
+          <?= _("Back") ?>
+        </bbn-button>
         <div class="bbn-m bbn-b bbn-c">
           <?= _("Choose the folders you want to keep synchronized") ?>
         </div>
@@ -21,7 +24,7 @@
       </div>
     </div>
   </div>
-  <div bbn-show="!tree.length"
+  <div bbn-else
        class="bbn-w-100">
     <div class="bbn-grid-fields bbn-padding bbn-m">
       <div class="bbn-label"><?= _("Account type") ?></div>
@@ -45,40 +48,33 @@
                 type="password"
                 :no-save="true"
                 :required="true"/>
-      <div bbn-if="['imap', 'pop3'].includes(accountCode)"
-           class="bbn-label">
-        <?= _("Use SSL") ?>
-      </div>
-      <bbn-checkbox bbn-if="['imap', 'pop3'].includes(accountCode)"
-                    :value="1"
-                    :novalue="0"
-                    bbn-model="account.ssl"/>
-      <div bbn-if="['imap', 'pop3'].includes(accountCode)"
-           class="bbn-label">
-        <?= _("Incoming server") ?>
-      </div>
-      <bbn-input bbn-if="['imap', 'pop3'].includes(accountCode)"
-                type="hostname"
-                bbn-model="account.host"
-                autocomplete="off"
-                :required="true"/>
-      <div bbn-if="account.host && ['imap', 'pop3'].includes(accountCode)"
-           class="bbn-grid-full bbn-c">
-        <a href="javascript:;"
-           @click="hasSMTP = !hasSMTP">
-          <?= _("Click here to change the outgoing server configuration if it is different") ?>
-        </a>
-      </div>
-      <div bbn-if="hasSMTP && ['imap', 'pop3'].includes(accountCode)"
-           class="bbn-label">
-        <?= _("Outgoing server") ?>
-      </div>
-      <bbn-input bbn-if="hasSMTP && ['imap', 'pop3'].includes(accountCode)"
-                bbn-model="account.smtp"
-                type="hostname"
-                autocomplete="off"
-                :required="true"/>
-
+      <template bbn-if="['imap', 'pop3'].includes(accountCode)">
+        <div class="bbn-label"><?= _("Use SSL") ?></div>
+        <bbn-checkbox :value="1"
+                      :novalue="0"
+                      bbn-model="account.ssl"/>
+        <div class="bbn-label"><?= _("Incoming server") ?></div>
+        <bbn-input type="hostname"
+                   bbn-model="account.host"
+                   autocomplete="off"
+                   :required="true"/>
+        <div bbn-if="account.host"
+             class="bbn-grid-full bbn-c">
+          <a href="javascript:;"
+             @click="hasSMTP = !hasSMTP">
+            <?= _("Click here to change the outgoing server configuration if it is different") ?>
+          </a>
+        </div>
+        <div bbn-if="hasSMTP"
+             class="bbn-label">
+          <?= _("Outgoing server") ?>
+        </div>
+        <bbn-input bbn-if="hasSMTP"
+                   bbn-model="account.smtp"
+                   type="hostname"
+                   autocomplete="off"
+                   :required="true"/>
+      </template>
       <div bbn-if="errorState"
            class="bbn-grid-full bbn-c bbn-b bbn-state-error bbn-padding">
         <?= _("Impossible to connect to the mail server") ?>

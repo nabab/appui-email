@@ -9,15 +9,18 @@ return [[
   'id' => 'appui-email-0',
   'frequency' => 30,
   'function' => function (array $data) use ($model) {
-
     $em = new bbn\User\Email($model->db);
     $error = null;
-    
+
     try {
       $accounts = $em->getAccounts();
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       $error = $e->getMessage();
-      X::log($error, "poller_email_error");
+      X::log([
+        'user' => $model->inc->user->getId(),
+        'error' => $error
+      ], "useremails_poller_error");
       return [
         'success' => false,
         'data' => [
@@ -25,10 +28,10 @@ return [[
         ]
       ];
     }
+
     $tot = 0;
     X::log("Starting email function");
     foreach ($accounts as $a) {
-
       if ($a['stage'] === 1) {
         $f = $em->getFolders($a['id']);
 
@@ -37,7 +40,6 @@ return [[
         if ($tot < 100) {
           X::map(
             function ($folder) use (&$em, &$a, &$tot) {
-
               if ($tot < 100) {
                 try {
                   $check = $em->checkFolder($folder);

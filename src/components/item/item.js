@@ -14,9 +14,6 @@
         extractedFrom: this.extractNameAndEmail(this.source.from),
       }
     },
-    mounted() {
-      bbn.fn.log("SOURCE", this.source);
-    },
     methods: {
       formatDate(date) {
         let emailDate = new Date(date);
