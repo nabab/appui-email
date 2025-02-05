@@ -2,6 +2,7 @@
 use bbn\User\Email;
 use bbn\X;
 
+$ctrl->setStream();
 $emailClass = new Email($ctrl->db);
 $folders = [];
 
@@ -24,52 +25,41 @@ else if ($accounts = $emailClass->getAccountsIds()) {
 }
 
 if (!empty($folders)) {
-  $ctrl->setStream();
   $total = 0;
-  foreach ($folders as $f) {
+  foreach ($folders as $folder) {
     try {
-      $check = $emailClass->checkFolder($f);
-    }
-    catch (\Exception $e) {
-      $check = false;
-    }
-
-    if ($check) {
-      try {
-        foreach ($folders as $folder) {
-          $sync = $emailClass->syncEmails($folder);
-          if (is_object($sync)) {
-            foreach ($sync as $s) {
-              $total++;
-              if ($s % 5 === 0) {
-                $ctrl->stream([
-                  'isSynchronizing' => true,
-                  'synchronized' => $total
-                ]);
-              }
-            }
-          }
-          else {
-            $total = $sync;
+      $sync = $emailClass->syncEmails($folder, 0, true);
+      if (is_object($sync)) {
+        foreach ($sync as $s) {
+          $total++;
+          if ($s % 5 === 0) {
+            $ctrl->stream([
+              'isSynchronizing' => true,
+              'synchronized' => $total
+            ]);
           }
         }
       }
-      catch (\Exception $e) {
-        $error = $e->getMessage();
-        return [
-          'success' => false,
-          'data' => [
-            'error' => $error
-          ]
-        ];
+      else {
+        $total = $sync;
       }
+    }
+    catch (\Exception $e) {
+      $ctrl->stream([
+        'success' => false,
+        'data' => [
+          'error' => $e->getMessage()
+        ]
+      ]);
     }
   }
 
-  return [
+  $ctrl->stream([
     'success' => true,
     'total' => $total
-  ];
+  ]);
+}
+else {
+  $ctrl->stream(['success' => false]);
 }
 
-return ['success' => false];

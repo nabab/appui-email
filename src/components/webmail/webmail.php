@@ -32,6 +32,22 @@
                     :drag="true"
                     @move="onMove"/>
         </div>
+        <div class="bbn-header bbn-xspadding bbn-no-border">
+          <div bbn-if="syncId"
+               class="bbn-middle">
+            <bbn-loadicon class="bbn-right-sspace"/>
+            <div class="bbn-ellipsis"
+                bbn-html="syncMessage"/>
+          </div>
+          <div bbn-elseif="currentFolderObj"
+               class="bbn-middle">
+            {{currentFolderObj.num_msg}} <?= _("email(s)") ?>
+          </div>
+          <div bbn-else
+               class="bbn-middle">
+            {{source.accounts.length}} <?= _("account(s)") ?>
+          </div>
+        </div>
       </div>
     </bbn-pane>
     <bbn-pane>
@@ -190,7 +206,9 @@
                 </div>
                 <hr style="margin:0">
                 <div class="bbn-flex-fill">
-                  <bbn-frame sandbox="allow-scripts" :src="source.root + 'reader/' + selectedMail.id" class="bbn-100"/>
+                  <bbn-frame sandbox="allow-scripts"
+                             :url="source.root + '/reader/' + selectedMail.id"
+                             class="bbn-100"/>
                 </div>
               </div>
             </div>

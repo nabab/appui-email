@@ -7,6 +7,7 @@
     data(){
       return {
         orientation: 'horizontal',
+        currentAccount: null,
         currentFolder: null,
         selectedMail: null,
         treeData: [],
@@ -50,7 +51,8 @@
           }
         ],
         selectedMode: "download",
-        syncId: false
+        syncId: false,
+        syncMessage: ''
       };
     },
     computed: {
@@ -64,6 +66,16 @@
           id_folder: this.currentFolder
         }
       },
+      currentFolderObj(){
+        if (this.currentAccount && this.currentFolder) {
+          const account = bbn.fn.getRow(this.source.accounts, {id: this.currentAccount});
+          if (account) {
+            return bbn.fn.getRow(account.folders, {id: this.currentFolder}) || false;
+          }
+        }
+
+        return false;
+      }
     },
     methods: {
       formatDate(date) {
@@ -573,6 +585,7 @@
         return '-';
       },
       selectFolder(node) {
+        this.currentAccount = node.data.id_account;
         this.currentFolder = node.data.id;
       },
       showSubject(row) {
@@ -690,16 +703,27 @@
           id_folder: bbn.fn.isString(idFolder) ? idFolder : false
         };
         this.syncId = bbn.fn.getRequestId(url, data);
+        this.syncMessage = '<span>' + bbn._('Synchronizing %d/%d', 0, this.currentFolderObj.num_msg - this.currentFolderObj.db_num_msg) + '</span>';
         bbn.fn.stream(
           url,
           d => {
-            if (d.success) {
-              bbn.fn.log('SYNC SUCCESS', d);
-              appui.success(bbn._('Synchronization successful'));
-              this.syncId = false;
+            bbn.fn.log('stream', d);
+            if (!d.success && d.data?.error) {
+              bbn.fn.warning(d.data.error);
+              appui.error(bbn._('Failed synchronization'));
+              this.syncMessage = '<span class="bbn-red">' + bbn._('Failed synchronization') + '</span>';
+              setTimeout(() => {
+                this.syncId = false;
+              }, 3000);
             }
-            else {
-              bbn.fn.log('SYNC 10', d)
+            else if (d.isSynchronizing) {
+              this.syncMessage = '<span>' + bbn._('Synchronizing %d/%d', d.synchronized, this.currentFolderObj.num_msg - this.currentFolderObj.db_num_msg) + '</span>';
+            }
+            else if (d.success) {
+              this.syncMessage = '<span class="bbn-green">' + bbn._('Synchronization successful') + '</span>';
+              setTimeout(() => {
+                this.syncId = false;
+              }, 3000);
             }
           },
           data,
@@ -731,11 +755,17 @@
       this.setTreeData();
       appui.register('appui-email', this);
     },
-    mounted() {
+    mounted(){
       this.$set(appui.pollerObject, 'appui-email', {
         hashes: this.hash
       });
       appui.poll();
+    },
+    beforeDestroy(){
+      if (this.syncId) {
+        bbn.fn.abort(this.syncId);
+        this.syncId = false;
+      }
     }
   };
 })()

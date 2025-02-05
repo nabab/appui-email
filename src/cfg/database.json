@@ -543,10 +543,14 @@
         "type": "varchar",
         "null": 0,
         "key": "MUL",
-        "maxlength": 1000
+        "maxlength": 1000,
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci"
       },
       "excerpt": {
-        "type": "text"
+        "type": "text",
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci"
       },
       "size": {
         "type": "bigint",
