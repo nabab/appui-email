@@ -376,6 +376,8 @@
     }
   },
   "bbn_users_emails": {
+    "charset": "utf8mb4",
+    "collation": "utf8mb4_unicode_ci",
     "keys": {
       "PRIMARY": {
         "columns": [
