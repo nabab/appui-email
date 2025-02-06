@@ -45,6 +45,7 @@ if (!empty($folders)) {
       }
     }
     catch (\Exception $e) {
+      X::log($e->getMessage(), "poller_email_error2");
       $ctrl->stream([
         'success' => false,
         'data' => [

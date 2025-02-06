@@ -585,8 +585,18 @@
         return '-';
       },
       selectFolder(node) {
-        this.currentAccount = node.data.id_account;
-        this.currentFolder = node.data.id;
+        if (node.data.type === "account") {
+          this.currentAccount = node.data.id;
+          this.currentFolder = null;
+        }
+        else if (node.data.type === "folder") {
+          this.currentAccount = node.data.id_account;
+          this.currentFolder = node.data.id;
+        }
+        else if (node.data.type === "folder_types") {
+          this.currentAccount = null;
+          this.currentFolder = null;
+        }
       },
       showSubject(row) {
         let st  = row.subject;
@@ -696,18 +706,47 @@
 
         }
       },
+      onSyncClick(){
+        this.synchronize(this.currentAccount, this.currentFolder);
+      },
       synchronize(idAccount, idFolder){
         const url = this.root + '/actions/email/sync';
         const data = {
           id_account: bbn.fn.isString(idAccount) ? idAccount : false,
           id_folder: bbn.fn.isString(idFolder) ? idFolder : false
         };
+        let numMsg = 0;
+        if (data.id_folder) {
+          bbn.fn.each(this.source.accounts, a => {
+            const folder = bbn.fn.getRow(a.folders, {id: idFolder});
+            if (folder) {
+              numMsg = folder.num_msg - folder.db_num_msg;
+              return false;
+            }
+          });
+        }
+        else if (data.id_account) {
+          const account = bbn.fn.getRow(this.source.accounts, {id: idAccount});
+          bbn.fn.each(account.folders, f => {
+            numMsg += f.num_msg - f.db_num_msg;
+          });
+        }
+        else {
+          bbn.fn.each(this.source.accounts, a => {
+            bbn.fn.each(a.folders, f => {
+              numMsg += f.num_msg - f.db_num_msg;
+            });
+          });
+        }
+
         this.syncId = bbn.fn.getRequestId(url, data);
-        this.syncMessage = '<span>' + bbn._('Synchronizing %d/%d', 0, this.currentFolderObj.num_msg - this.currentFolderObj.db_num_msg) + '</span>';
+        this.syncMessage = '<span>' + bbn._('Synchronizing %d/%d', 0, numMsg) + '</span>';
         bbn.fn.stream(
           url,
           d => {
-            bbn.fn.log('stream', d);
+            if (!d) {
+              bbn.fn.log('stream', d);
+            }
             if (!d.success && d.data?.error) {
               bbn.fn.warning(d.data.error);
               appui.error(bbn._('Failed synchronization'));
@@ -745,9 +784,11 @@
     },
     watch: {
       currentFolder(){
-        this.$forceUpdate();
         this.$nextTick(() => {
-          this.getRef('table').updateData()
+          const table = this.getRef('table');
+          if (table?.updateData) {
+            table.updateData();
+          }
         })
       }
     },
