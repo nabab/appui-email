@@ -9,7 +9,9 @@
              search-operator="contains"
              :toolbar="() => { return [] }"
              :selection="true">
-    <bbns-column field="name"></bbns-column>
-    <bbns-column field="email"></bbns-column>
+    <bbns-column field="name"
+                 label="<?=_("Name")?>"/>
+    <bbns-column field="email"
+                 label="<?=_("e-Mail")?>"/>
   </bbn-table>
 </div>

@@ -32,12 +32,12 @@ if (!empty($folders)) {
       if (is_object($sync)) {
         foreach ($sync as $s) {
           $total++;
-          if ($s % 5 === 0) {
+          //if ($s % 5 === 0) {
             $ctrl->stream([
               'isSynchronizing' => true,
               'synchronized' => $total
             ]);
-          }
+          //}
         }
       }
       else {
@@ -55,6 +55,7 @@ if (!empty($folders)) {
     }
   }
 
+  ob_end_clean();
   $ctrl->stream([
     'success' => true,
     'total' => $total

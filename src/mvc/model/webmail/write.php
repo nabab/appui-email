@@ -1,10 +1,4 @@
 <?php
-/**
-               * What is my purpose?
-               *
-               **/
-
-/** @var bbn\Mvc\Model $model */
 use bbn\X;
 
 $id_signatures = $model->inc->options->fromCode('signatures', 'email', 'appui');
@@ -66,7 +60,7 @@ if ($model->hasData('id', true)) {
   return [
     'reply_to' => $email['msg_unique_id'],
     'references' => $email['references'],
-    'signatures' => $model->inc->pref->getAll($id_signatures, true),
+    'signatures' => $model->inc->pref->getAll($id_signatures, true)?: [],
     'success' => true,
     'isReply' => $isReply,
     'email' => $email,
@@ -78,8 +72,9 @@ if ($model->hasData('id', true)) {
 }
 
 return [
-  'signatures' => $model->inc->pref->getAll($id_signatures, true),
+  'signatures' => $model->inc->pref->getAll($id_signatures, true) ?: [],
   'success' => true,
+  'isReply' => false,
   'email' => [
     'email' => false,
   ],

@@ -1,13 +1,6 @@
 // Javascript Document
 
 (() => {
-  let translate =  {
-    from: bbn._('From'),
-    send: bbn._('Send'),
-    to: bbn._('To'),
-    subject: bbn._('Subject'),
-    unknown: bbn._('Unknown'),
-  };
   return {
     props: {
       replyTo: {
@@ -55,27 +48,18 @@
     },
     data() {
       return {
-        trlt: {
-          from: bbn._('From'),
-          send: bbn._('Send'),
-          to: bbn._('To'),
-          subject: bbn._('Subject'),
-          unknown: bbn._('Unknown'),
-          editor: bbn._('Editor'),
-          cc: bbn._('CC'),
-          cci: bbn._('BCC'),
-          signatures: bbn._('Signatures')
-        },
         rootUrl: appui.plugins['appui-email'],
         ccButton: true,
         cciButton: false,
         attachmentsModel: [],
         attachments: this.attachment,
-        currentTo: "",
-        currentCC: "",
-        currentCCI: "",
-        currentFrom: this.accounts[0].value ?? "",
-        currentSignature: this.signatures.length ? this.signatures[0].id : null,
+        currentTo: this.to?.length ? bbn.fn.clone(this.to) : "",
+        currentCC: this.CC?.length ? bbn.fn.clone(this.CC) : "",
+        currentCCI: this.CCI?.length ? bbn.fn.clone(this.CCI) : "",
+        currentFrom: this.accounts[0]?.value ?? "",
+        currentSignature: this.signatures.length ?
+          this.signatures[0].id :
+          null,
         type: "bbn-rte",
         types: [
           {value: "bbn-rte", text: bbn._('Rich text editor')},
@@ -83,21 +67,13 @@
           {value: "bbn-textarea", text: bbn._('Text')}
         ],
         currentSubject: this.subject,
-        message: (this.source.html && this.source.html != "") ? this.source.html : this.source.plain,
-        originalMessage: "",
+        message: this.source.html?.length ?
+          bbn.fn.clone(this.source.html) :
+          bbn.fn.clone(this.source.plain),
+        originalMessage: this.message || "",
         messageTypeIcon: "nf nf-seti-html",
         messageTypeText: 'html',
       };
-    },
-    mounted() {
-      if (this.source && this.source.login && this.source.login.includes('@bbn.so')) {
-        this.to = this.to.replace(this.source.login + ' ', '');
-      }
-      this.originalMessage = this.message
-      this.currentTo = this.to;
-      this.currentCC = this.CC;
-      this.currentCCI = this.CCI;
-      bbn.fn.log("ACCOUNT", this.accounts);
     },
     methods: {
       // try to find the original mail if is found add the signature beetween original mail and new mail otherwise add the signature at the front
@@ -147,14 +123,14 @@
         return res;
       },
       send() {
-        const toInputItem = this.getRef('toInput').items
-        const ccInputItem = this.getRef('ccInput').items
-        const cciInputItem = this.getRef('cciInput').items
+        const toInputItem = this.getRef('toInput')?.items || [];
+        const ccInputItem = this.getRef('ccInput')?.items || [];
+        const cciInputItem = this.getRef('cciInput')?.items || [];
         const pluck = (objs, property) => objs.map((obj) => obj[property]);
-        const to = toInputItem && toInputItem.length ? pluck(toInputItem, 'email').join(';') : ""
-        const cc = ccInputItem && ccInputItem.length ? pluck(ccInputItem, 'email').join(';') : ""
-        const cci = cciInputItem && cciInputItem.length ? pluck(cciInputItem, 'email').join(';') : ""
-        bbn.fn.post(appui.plugins['appui-email'] + '/actions/email/send', {
+        const to = toInputItem?.length ? pluck(toInputItem, 'email').join(';') : '';
+        const cc = ccInputItem?.length ? pluck(ccInputItem, 'email').join(';') : '';
+        const cci = cciInputItem?.length ? pluck(cciInputItem, 'email').join(';') : '';
+        bbn.fn.post(this.rootUrl + '/actions/email/send', {
           id_account: this.currentFrom,
           email: {
             title: this.currentSubject,
@@ -167,7 +143,10 @@
             in_reply_to: `<${this.replyTo}>`,
             references: this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`
           }
-        })
+        });
+      },
+      saveDraft(){
+
       },
       openContacts(type) {
         this.getPopup({

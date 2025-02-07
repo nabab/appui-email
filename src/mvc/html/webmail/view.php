@@ -51,9 +51,8 @@
                   :source="treeData"/>
   </bbn-toolbar>
   <div class="bbn-flex-fill">
-    <iframe :src="url + source.root + 'reader/' + source.id"
-               					class="bbn-100"
-            						border="0"
-               					sandbox="allow-same-origin"></iframe>
+    <bbn-frame :src="url + source.root + 'reader/' + source.id"
+               class="bbn-100"
+              security="allow-same-origin"/>
   </div>
 </div>

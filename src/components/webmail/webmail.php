@@ -8,20 +8,18 @@
       <div class="bbn-overlay bbn-flex-height">
         <div class="bbn-spadding">
           <bbn-toolbar class="bbn-no-border bbn-radius">
-            <div class="bbn-vmiddle bbn-xspadding"
-                 style="gap: var(--xsspace)">
-              <bbn-button @click="createAccount"
-                          :notext=true
-                          :label="_('Create a new mail account')"
-                          icon="nf nf-md-account_plus"/>
-              <bbn-button @click="writeNewEmail"
-                          :notext="true"
-                          :label="_('Write new mail')"
-                          icon="nf nf-fa-edit"/>
-              <bbn-button @click="changeOrientation"
-                          :notext="true"
-                          :label="_('Change Webmail orientation to ' + (orientation == 'horizontal' ? 'vertical' : 'horizontal'))"
-                          :icon="orientation == 'horizontal' ? 'nf nf-cod-split_vertical' : 'nf nf-cod-split_horizontal'"/>
+            <div class="bbn-flex-fill bbn-vmiddle bbn-xspadding"
+                 style="gap: var(--xsspace); justify-content: space-between">
+              <div>
+                <bbn-button @click="createAccount"
+                            :notext=true
+                            :label="_('Create a new mail account')"
+                            icon="nf nf-fa-folder_plus"/>
+                <bbn-button @click="changeOrientation"
+                            :notext="true"
+                            :label="_('Change Webmail orientation to ' + (orientation == 'horizontal' ? 'vertical' : 'horizontal'))"
+                            :icon="orientation == 'horizontal' ? 'nf nf-cod-split_vertical' : 'nf nf-cod-split_horizontal'"/>
+              </div>
               <bbn-button @click="onSyncClick"
                           :notext="true"
                           :label="_('Synchronize')"
@@ -34,13 +32,13 @@
                     uid="id"
                     :menu="treeMenu"
                     :opened="true"
-                    storage-full-name="appui-email-webmail-tree"
                     @select="selectFolder"
                     ref="tree"
                     :drag="true"
                     @move="onMove"/>
         </div>
-        <div class="bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin">
+        <div class="bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin"
+             style="min-height: 2.5rem">
           <div bbn-if="syncId"
                class="bbn-middle">
             <bbn-loadicon class="bbn-right-sspace"/>
@@ -66,9 +64,14 @@
           <div class="bbn-flex-height">
             <div class="bbn-spadding">
               <bbn-toolbar class="bbn-no-border bbn-radius">
-                <!-- <div class="bbn-vmiddle bbn-xspadding"
-                     style="gap: var(--xsspace)">
-                </div> -->
+                <div class="bbn-flex-fill bbn-vmiddle bbn-xspadding"
+                     style="gap: var(--xsspace); justify-content: space-between">
+                  <bbn-button @click="writeNewEmail"
+                              :notext="true"
+                              :label="_('Write new mail')"
+                              icon="nf nf-fa-edit"/>
+                  <bbn-input button-left="nf nf-fa-search"/>
+                </div>
               </bbn-toolbar>
             </div>
             <bbn-kanban-element bbn-if="orientation == 'horizontal'"
@@ -141,7 +144,7 @@
               <div class="bbn-flex-height">
                 <div class="bbn-spadding">
                   <bbn-toolbar class="bbn-m bbn-no-border bbn-radius">
-                    <div class="bbn-vmiddle bbn-xspadding"
+                    <div class="bbn-flex-fill bbn-vmiddle bbn-xspadding"
                          style="gap: var(--xsspace)">
                       <bbn-button icon="nf nf-fa-mail_reply"
                                   :label="_('Reply')"
@@ -213,10 +216,11 @@
                   <span class="bbn-small">{{ formatDate(selectedMail.date) }}</span>
                 </div>
                 <hr style="margin:0">
-                <div class="bbn-flex-fill">
-                  <bbn-frame sandbox="allow-scripts"
+                <div class="bbn-flex-fill bbn-spadding">
+                  <bbn-frame security="allow-scripts"
                              :url="source.root + '/reader/' + selectedMail.id"
-                             class="bbn-100"/>
+                             class="bbn-100"
+                             :reset-style="true"/>
                 </div>
               </div>
             </div>

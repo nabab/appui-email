@@ -4,19 +4,34 @@
   return {
     mixins: [
       bbn.cp.mixins.basic,
+      bbn.cp.mixins.input,
       bbn.cp.mixins.list,
       bbn.cp.mixins.dropdown
     ],
     props: {
-
+      asArray: {
+        type: Boolean,
+        default: false
+      }
     },
     data() {
+      let items = [];
+      if (bbn.fn.isString(this.value)
+        && this.value.length
+      ) {
+        items = this.value.split(',');
+      }
+      else if (bbn.fn.isArray(this.value)) {
+        items.push(...this.value);
+      }
+
       return {
-        items: [],
+        items,
         currentText: "",
       }
     },
     methods: {
+      isEmail: bbn.fn.isEmail,
       setEvent() {
         let element = this.getRef('autocomplete').getRef('element');
         bbn.fn.log("EVENT", element);
@@ -28,22 +43,21 @@
         }
       },
       select(data) {
-        bbn.fn.log(data);
-        if (!data.name) {
-          data.name = data.email;
-        }
-        if (bbn.fn.search(this.items, {id: data.id}) == -1) {
-          this.items.push(data);
+        if (!this.items.includes(data.email)) {
+          this.items.push(data.email);
+          this.emitInput(this.asArray ? this.items : this.items.join(','));
         }
         this.$nextTick(() => {
           this.getRef('autocomplete').resetDropdown();
         });
       },
       close(item) {
-        const idx = bbn.fn.search(this.items, {id: item.id})
-        this.items.splice(idx, 1);
+        const idx = this.items.indexOf(item);
+        if (idx > -1) {
+          this.items.splice(idx, 1);
+          this.emitInput(this.asArray ? this.items : this.items.join(','));
+        }
       },
-      isEmail: bbn.fn.isEmail,
       clickContainer() {
         const autocomplete = this.getRef('autocomplete');
         if (autocomplete) {

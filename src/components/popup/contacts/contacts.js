@@ -4,8 +4,7 @@
   return {
     props: {
       component: {
-        required: true,
-        type: Object,
+        required: true
       }
     },
     data() {

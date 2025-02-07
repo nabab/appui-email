@@ -57,13 +57,20 @@
     },
     computed: {
       dataObj(){
-        if (!this.currentFolder) {
-          return {
-            id_folder: this.source.folder_types[1].id
-          };
+        let idFolder = this.currentFolder;
+        if (this.currentAccount && !idFolder) {
+          idFolder = bbn.fn.map(
+            bbn.fn.getField(
+              this.source.accounts,
+              'folders',
+              {id: this.currentAccount}
+            ),
+            f => f.id
+          );
         }
+
         return {
-          id_folder: this.currentFolder
+          id_folder: idFolder
         }
       },
       currentFolderObj(){
@@ -368,7 +375,7 @@
         return true;
       },
       treeMenu(node) {
-        res = []
+        const res = []
         if (node.data.type === "account") {
           res.push({
             text: bbn._('Delete account'),
@@ -396,7 +403,7 @@
             }
           })
         }
-        if (node.data.type !== "account" && node.data.type !== "folder_types") {
+        if (!['account', 'folder_types'].includes(node.data.type)) {
           res.push({
             text: bbn._('Remove folder'),
             icon: "nf nf-md-folder_remove",
@@ -404,8 +411,7 @@
               this.removeFolder(this.getAllFolderChild(node.data), node.data.text, node.data.id_account);
               appui.poll();
             }
-          },
-                   {
+          }, {
             text: bbn._('Rename Folder'),
             icon: "nf nf-md-rename_box",
             action: () => {
@@ -422,6 +428,25 @@
             }
           })
         }
+
+        res.push({
+          text: bbn._('Synchronize'),
+          icon: "nf nf-oct-sync",
+          action: () => {
+            switch (node.data.type) {
+              case "account":
+                this.synchronize(node.data.id, false);
+                break;
+              case "folder":
+                this.synchronize(node.data.id_account, node.data.id);
+                break;
+              case "folder_types":
+                this.synchronize(false, false);
+                break;
+            }
+          }
+        });
+
         return res;
       },
       getAllFolderChild(folder) {
@@ -586,16 +611,16 @@
       },
       selectFolder(node) {
         if (node.data.type === "account") {
-          this.currentAccount = node.data.id;
           this.currentFolder = null;
+          this.currentAccount = node.data.id;
         }
         else if (node.data.type === "folder") {
-          this.currentAccount = node.data.id_account;
           this.currentFolder = node.data.id;
+          this.currentAccount = node.data.id_account;
         }
         else if (node.data.type === "folder_types") {
+          this.currentFolder = node.data.id;
           this.currentAccount = null;
-          this.currentFolder = null;
         }
       },
       showSubject(row) {
@@ -760,6 +785,12 @@
             }
             else if (d.success) {
               this.syncMessage = '<span class="bbn-green">' + bbn._('Synchronization successful') + '</span>';
+              if (this.currentFolder
+                && (this.currentFolder === data.id_folder)
+              ) {
+                this.getRef('table').updateData();
+              }
+
               setTimeout(() => {
                 this.syncId = false;
               }, 3000);
