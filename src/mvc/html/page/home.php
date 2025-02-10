@@ -1,6 +1,5 @@
 <bbn-splitter orientation="horizontal"
-              class="appui-email-mailings"
->
+              class="appui-email-mailings bbn-overlay">
   <bbn-pane :size="250" class="bbn-border-right">
 		<bbn-splitter orientation="vertical">
 			<bbn-pane class="bbn-large">
