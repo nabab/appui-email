@@ -200,6 +200,11 @@
                 '&nbsp;</span>'
             }
           }
+          else {
+            st += '<span title="' +
+            bbn._('None sent') +
+            '"><i class="nf nf-fa-envelope bbn-m bbn-grey"></i> -</span>'
+          }
         }
         return st;
       },
@@ -265,7 +270,7 @@
             text: bbn._("Delete"),
             notext: true,
             icon: "nf nf-oct-trashcan",
-            action: this.remove
+            action: this.removeItem
           })
         }
         
@@ -431,7 +436,7 @@
           });
         }
       },
-      remove(row){
+      removeItem(row){
         if ( row.id ){
           appui.confirm(bbn._("Are you sure you want to delete this mailing?"), () => {
             this.post(this.source.root + 'actions/mailing/delete', row, d => {
@@ -607,6 +612,17 @@
             {text: 'Hello', value: 'world'}
           ]
         }
+      },
+      getEtat(a) {
+        if (a.total) {
+          let st = bbn._("Total") + ': ' + a.total;
+          st += '<br>' + bbn._("Sent") + ': ' + (a.success ? '<span class="bbn-success-text">' + a.success + '</span>' : '-');
+          st += '<br>' + bbn._("Failed") + ': ' + (a.failure ? '<span class="bbn-error-text">' + a.failure + '</span>' : '-');
+          st += '<br>' + bbn._("Ready") + ': ' + (a.ready ? '<span class="bbn-info-text">' + a.ready + '</span>' : '-');
+        }
+        else {
+          return bbn._("None sent")
+        }
       }
     },
     watch: {
@@ -701,7 +717,7 @@
             res.push({
               text: bbn._("Delete"),
               icon: "nf nf-oct-trashcan",
-              value: 'remove'
+              value: 'removeItem'
             })
           }
           

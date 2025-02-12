@@ -91,7 +91,7 @@
             title: ((row.status === 'success') && !appui.user.isAdmin) ? bbn._('Only admin users can delete sent emails') : bbn._("Delete the email from the database"),
             notext: true,
             icon: "nf nf-oct-trashcan",
-            action: this.remove, 
+            action: this.removeItem, 
             disabled: ((row.status === 'success') && !appui.user.isAdmin)
           })
         }
@@ -120,7 +120,7 @@
           })
         })
       },
-      remove(row, obj, idx){
+      removeItem(row, obj, idx){
         this.confirm(bbn._('Do you want to completely delete this email? '), () => {
           //if the context is 'sent' send the id_user to the controller, there will be checked again if the user is an admin (only admin users can delete mails with status 'success')
           ((this.context === 'sent') || (this.context === 'details')) ? bbn.fn.extend(row, {id_user: appui.user.id}) : '';

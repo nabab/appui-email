@@ -70,11 +70,10 @@ if ( isset($model->data['start']) && !empty($model->data['limit']) ){
       'bbn_emailings.sender',
       'bbn_emailings.recipients',
       'bbn_emailings.sent',
-      'bbn_notes_versions.title',
-      'bbn_notes_versions.content'
+      'bbn_notes_versions.title'
     ],
     'query' => "
-      SELECT bbn_emailings.*, bbn_notes_versions.title, bbn_notes_versions.content, bbn_notes_versions.id_user,
+      SELECT bbn_emailings.*, bbn_notes_versions.title, bbn_notes_versions.id_user,
         (
           SELECT COUNT(bbn_emails.id)
           FROM bbn_emails

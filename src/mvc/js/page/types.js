@@ -42,7 +42,7 @@
           text: bbn._("Suppr."),
           icon: "nf nf-fa-trash",
           notext: true,
-          action: r => this.remove(r),
+          action: r => this.removeItem(r),
           disabled: !!row.default
         }];
       },
@@ -66,7 +66,7 @@
           }
         })
       },
-      remove(row){
+      removeItem(row){
         if ( row.id_note ){
           appui.confirm(bbn._("Are you sure you want to delete this letter?"), () => {
             this.post(this.source.root + 'actions/types/delete', {id_note: row.id_note}, (d) => {
