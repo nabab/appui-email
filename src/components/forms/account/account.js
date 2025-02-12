@@ -45,12 +45,16 @@
       },
       success(d){
         if (d && d.success) {
-          let tree = this.cp.getRef('tree');
-          let idx = bbn.fn.search(d.data, { id: d.id_account})
+          const idx = bbn.fn.search(d.data, { id: d.id_account})
           this.cp.source.accounts.push(d.data[idx]);
           this.cp.setTreeData();
-          tree.updateData().then( () => {
-            tree.reload()
+          this.$nextTick(() => {
+            const tree = this.cp.getRef('tree');
+            if (tree) {
+              tree.updateData().then(() => {
+                tree.reload();
+              });
+            }
           })
         }
       },

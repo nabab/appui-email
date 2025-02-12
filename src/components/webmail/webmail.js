@@ -80,45 +80,52 @@
             return bbn.fn.getRow(account.folders, {id: this.currentFolder}) || false;
           }
         }
+        else if (this.currentAccount) {
+          const account = bbn.fn.getRow(this.source.accounts, {id: this.currentAccount});
+          const obj = {
+            num_msg: 0,
+            db_num_msg: 0
+          };
+          bbn.fn.each(account.folders, f => {
+            obj.num_msg += f.num_msg;
+            obj.db_num_msg += f.db_num_msg;
+          });
+        }
+        else if (this.currentFolder) {
+          const type = bbn.fn.getField(this.source.folder_types, 'code', {id: this.currentFolder});
+          if (type) {
+            const obj = {
+              num_msg: 0,
+              db_num_msg: 0
+            };
+            bbn.fn.each(this.source.accounts, a => {
+              bbn.fn.each(a.folders, f => {
+                if (f.type === type) {
+                  obj.num_msg += f.num_msg;
+                  obj.db_num_msg += f.db_num_msg;
+                }
+              });
+            });
+            return obj;
+          }
+        }
 
         return false;
       }
     },
     methods: {
       formatDate(date) {
-        let emailDate = new Date(date);
-        let currentDate = new Date();
-
-        if (emailDate.getFullYear() !== currentDate.getFullYear()) {
-          // If the email date year is not the same as the current year, format with the year
-          return emailDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-        } else if (emailDate.getDate() === currentDate.getDate()) {
-          // If the email date is today, format with time only
-          return emailDate.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
-        } else {
-          // Otherwise, format with month and day only
-          return emailDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        const emailDate = dayjs(date);
+        const currentDate = dayjs();
+        if (emailDate.year() !== currentDate.year()) {
+          return dayjs(date).format("lll");
         }
-      },
-      extractNameAndEmail(str) {
-        if (!str) {
-          return "";
+        else if (emailDate.format('DDMMYYYY') === currentDate.format('DDMMYYYY')) {
+          return dayjs(date).format("LT");
         }
-        str = str.replace(/"/g, '');
-        const nameRegex = /(.+) <(.+)>/;
-        const nameMatch = str.match(nameRegex);
-        if (nameMatch) {
-          const [, name, email] = nameMatch;
-          return { name, email };
-        } else {
-          const emailRegex = /([^\s@]+@[^\s@]+\.[^\s@]+)/;
-          const emailMatch = str.match(emailRegex);
-          if (emailMatch) {
-            const email = emailMatch[0];
-            return { email };
-          }
+        else {
+          return dayjs(date).format("lll");
         }
-        return "";
       },
       changeOrientation() {
         this.orientation = this.orientation == 'vertical' ? 'horizontal' : 'vertical';
@@ -610,6 +617,8 @@
         return '-';
       },
       selectFolder(node) {
+        this.selectedMail = null;
+        this.selectedMails = [];
         if (node.data.type === "account") {
           this.currentFolder = null;
           this.currentAccount = node.data.id;
@@ -642,8 +651,6 @@
           }
         }
         this.getFolders();
-        this.extractedFrom = this.extractNameAndEmail(this.selectedMail.from);
-        this.extractedTo = this.extractNameAndEmail(this.selectedMail.to);
       },
       selectedMessageIDisSame(id) {
         if (this.selectedMail === null) {
@@ -741,20 +748,8 @@
           id_folder: bbn.fn.isString(idFolder) ? idFolder : false
         };
         let numMsg = 0;
-        if (data.id_folder) {
-          bbn.fn.each(this.source.accounts, a => {
-            const folder = bbn.fn.getRow(a.folders, {id: idFolder});
-            if (folder) {
-              numMsg = folder.num_msg - folder.db_num_msg;
-              return false;
-            }
-          });
-        }
-        else if (data.id_account) {
-          const account = bbn.fn.getRow(this.source.accounts, {id: idAccount});
-          bbn.fn.each(account.folders, f => {
-            numMsg += f.num_msg - f.db_num_msg;
-          });
+        if (this.currentFolderObj && (data.id_folder || data.id_account)) {
+          numMsg = this.currentFolderObj.num_msg - this.currentFolderObj.db_num_msg;
         }
         else {
           bbn.fn.each(this.source.accounts, a => {
@@ -781,7 +776,7 @@
               }, 3000);
             }
             else if (d.isSynchronizing) {
-              this.syncMessage = '<span>' + bbn._('Synchronizing %d/%d', d.synchronized, this.currentFolderObj.num_msg - this.currentFolderObj.db_num_msg) + '</span>';
+              this.syncMessage = '<span>' + bbn._('Synchronizing %d/%d', d.synchronized, numMsg) + '</span>';
             }
             else if (d.success) {
               this.syncMessage = '<span class="bbn-green">' + bbn._('Synchronization successful') + '</span>';
@@ -811,6 +806,16 @@
           bbn.fn.abort(this.syncId);
           this.syncId = false;
         }
+      },
+      getAccountByFolder(idFolder){
+        return bbn.fn.getRow(this.source.accounts, a => {
+          return bbn.fn.getRow(a.folders, f => {
+            return f.id === idFolder;
+          });
+        });
+      },
+      getAccountIdByFolder(idFolder){
+        return this.getAccountByFolder(idFolder)?.id || null;
       }
     },
     watch: {

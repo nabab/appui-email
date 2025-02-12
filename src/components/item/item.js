@@ -16,18 +16,13 @@
     },
     methods: {
       formatDate(date) {
-        let emailDate = new Date(date);
-        let currentDate = new Date();
-
-        if (emailDate.getFullYear() !== currentDate.getFullYear()) {
-          // If the email date year is not the same as the current year, format with the year
-          return emailDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-        } else if (emailDate.getDate() === currentDate.getDate()) {
-          // If the email date is today, format with time only
-          return emailDate.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
-        } else {
-          // Otherwise, format with month and day only
-          return emailDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        const emailDate = dayjs(date);
+        const currentDate = dayjs();
+        if (emailDate.format('DDMMYYYY') === currentDate.format('DDMMYYYY')) {
+          return dayjs(date).format("LT");
+        }
+        else {
+          return dayjs(date).format("L");
         }
       },
       select() {

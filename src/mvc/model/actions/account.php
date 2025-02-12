@@ -1,5 +1,6 @@
 <?php
 use bbn\X;
+use bbn\User\Email;
 
 /** @var bbn\Mvc\Model $model */
 if ($model->hasData('action')) {
@@ -60,13 +61,13 @@ if ($model->hasData('action')) {
             && is_array($model->data['folders'])
           ) {
             unset($mb);
-            $em = new bbn\User\Email($model->db);
+            $em = new Email($model->db);
             $cfg['folders'] = $model->data['folders'];
             $cfg['email'] = $model->data['email'];
             try {
               if ($id_account = $em->addAccount($cfg)) {
                 unset($em);
-                $em = new bbn\User\Email($model->db, $model->inc->user, $model->inc->pref);
+                $em = new Email($model->db, $model->inc->user, $model->inc->pref);
                 return [
                   'success' => true,
                   'data' => $em->getAccounts(),
@@ -86,7 +87,7 @@ if ($model->hasData('action')) {
       break;
 
     case 'delete':
-      $em = new bbn\User\Email($model->db, $model->inc->user, $model->inc->pref);
+      $em = new Email($model->db, $model->inc->user, $model->inc->pref);
       if ($model->hasData(['data'], true) && $model->data["data"]["id"]) {
         $id = $model->data["data"]['id'];
         if ($em->getAccount($id)) {
@@ -109,7 +110,7 @@ if ($model->hasData('action')) {
     case 'insert':
       break;
     case 'get':
-      $em = new bbn\User\Email($model->db, $model->inc->user, $model->inc->pref);
+      $em = new Email($model->db, $model->inc->user, $model->inc->pref);
       return [
         'account' => $em->getAccount($model->data['id'])
       ];

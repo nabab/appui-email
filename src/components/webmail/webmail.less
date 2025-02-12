@@ -15,13 +15,23 @@
       .bbn-kanban-element-items {
         padding-left: var(--sspace) !important;
         padding-right: var(--sspace) !important;
-      }
-    }
-    .bbn-kanban-element-item.bbn-bottom-space {
-      margin: 0 !important;
-      padding: 0 !important;
-      .bbn-hr {
-        margin: var(--sspace) 0 !important;
+        .bbn-kanban-element-item.bbn-bottom-space {
+          margin: 0 !important;
+          padding: 0 !important;
+          .bbn-hr {
+            margin: var(--sspace) 0 !important;
+          }
+        }
+        .bbn-kanban-element-item:not(:last-child)::after {
+          content: '';
+          display: block;
+          border: 0;
+          border-top: var(--default-border) var(--default-border-style) var(--default-border-width);
+          width: calc(100% - (var(--space) * 2));
+          position: relative;
+          clear: both;
+          margin: var(--sspace) auto;
+        }
       }
     }
     .bbn-loader {
@@ -30,6 +40,12 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+    }
+  }
+  .appui-email-webmail-reader {
+    hr {
+      margin: var(--sspace) auto;
+      width: calc(100% - (var(--space) * 2));
     }
   }
   .email-header {

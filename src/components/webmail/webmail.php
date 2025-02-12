@@ -138,95 +138,125 @@
           </div>
         </bbn-pane>
         <bbn-pane :scrollable="true">
-          <div class="bbn-overlay"
-               bbn-if="selectedMail">
-            <div class="bbn-overlay">
-              <div class="bbn-flex-height">
-                <div class="bbn-spadding">
-                  <bbn-toolbar class="bbn-m bbn-no-border bbn-radius">
-                    <div class="bbn-flex-fill bbn-vmiddle bbn-xspadding"
-                         style="gap: var(--xsspace)">
-                      <bbn-button icon="nf nf-fa-mail_reply"
-                                  :label="_('Reply')"
-                                  :notext="true"
-                                  @click="reply"/>
-                      <bbn-button icon="nf nf-fa-mail_reply_all"
-                                  :label="_('Reply All')"
-                                  :notext="true"
-                                  @click="replyAll"/>
-                      <bbn-button icon="nf nf-fa-mail_forward"
-                                  :label="_('Forward')"
-                                  :notext="true"
-                                  @click="forward"/>
-                      <bbn-button icon="nf nf-md-tab_plus"
-                                  :label="_('Open in a new tab')"
-                                  :notext="true"
-                                  @click="openTab"/>
-                      <bbn-button icon="nf nf-md-window_restore"
-                                  :label="_('Open in a new window')"
-                                  :notext="true"
-                                  @click="openWindow"/>
-                      <bbn-button icon="nf nf-fa-archive"
-                                  :label="_('Archive')"
-                                  :notext="true"
-                                  @click="archive"/>
-                      <bbn-button icon="nf nf-weather-fire"
-                                  :label="_('Set as junk')"
-                                  :notext="true"
-                                  @click="setAsJunk"/>
-                      <bbn-button icon="nf nf-md-delete"
-                                  :label="_('Delete')"
-                                  :notext="true"
-                                  @click="deleteMail"/>
-                      <bbn-button icon="nf nf-fa-bug"
-                                  :label="_('Transform in task')"
-                                  :notext="true"
-                                  @click="mailToTask"/>
-                      <bbn-button icon="nf nf-md-folder_move"
-                                  :label="_('Move')"
-                                  :notext="true"
-                                  @click="moveFolder"/>
-                      <bbn-dropdown bbn-if="attachments.length"
-                                    :source="attachments"
-                                    source-text="name"
-                                    source-value="name"
-                                    bbn-model="selectedAttachment"/>
-                      <bbn-dropdown bbn-if="attachments.length"
-                                    :source="attachmentsMode"
-                                    bbn-model="selectedMode"/>
-                      <bbn-button bbn-if="attachments.length"
-                                  @click="doMode"
-                                  icon="nf nf-md-folder_download"
-                                  :notext="true"/>
-                    </div>
-                  </bbn-toolbar>
+          <div bbn-if="selectedMail"
+               class="bbn-overlay bbn-flex-height appui-email-webmail-reader">
+            <div class="bbn-top-spadding bbn-hspadding bbn-bottom-xspadding">
+              <bbn-toolbar class="bbn-m bbn-no-border bbn-radius">
+                <div class="bbn-flex-fill bbn-vmiddle bbn-xspadding"
+                    style="gap: var(--xsspace)">
+                  <bbn-button icon="nf nf-fa-mail_reply"
+                              :label="_('Reply')"
+                              :notext="true"
+                              @click="reply"/>
+                  <bbn-button icon="nf nf-fa-mail_reply_all"
+                              :label="_('Reply All')"
+                              :notext="true"
+                              @click="replyAll"/>
+                  <bbn-button icon="nf nf-fa-mail_forward"
+                              :label="_('Forward')"
+                              :notext="true"
+                              @click="forward"/>
+                  <bbn-button icon="nf nf-md-tab_plus"
+                              :label="_('Open in a new tab')"
+                              :notext="true"
+                              @click="openTab"/>
+                  <bbn-button icon="nf nf-md-window_restore"
+                              :label="_('Open in a new window')"
+                              :notext="true"
+                              @click="openWindow"/>
+                  <bbn-button icon="nf nf-fa-archive"
+                              :label="_('Archive')"
+                              :notext="true"
+                              @click="archive"/>
+                  <bbn-button icon="nf nf-weather-fire"
+                              :label="_('Set as junk')"
+                              :notext="true"
+                              @click="setAsJunk"/>
+                  <bbn-button icon="nf nf-md-delete"
+                              :label="_('Delete')"
+                              :notext="true"
+                              @click="deleteMail"/>
+                  <bbn-button icon="nf nf-fa-bug"
+                              :label="_('Transform in task')"
+                              :notext="true"
+                              @click="mailToTask"/>
+                  <bbn-button icon="nf nf-md-folder_move"
+                              :label="_('Move')"
+                              :notext="true"
+                              @click="moveFolder"/>
+                  <bbn-dropdown bbn-if="attachments.length"
+                                :source="attachments"
+                                source-text="name"
+                                source-value="name"
+                                bbn-model="selectedAttachment"/>
+                  <bbn-dropdown bbn-if="attachments.length"
+                                :source="attachmentsMode"
+                                bbn-model="selectedMode"/>
+                  <bbn-button bbn-if="attachments.length"
+                              @click="doMode"
+                              icon="nf nf-md-folder_download"
+                              :notext="true"/>
                 </div>
-                <div bbn-if="selectedMail.id" class="bbn-flex bbn-spadding email-header">
-                  <span class="bbn-medium bbn-bottom-xsmargin">{{ selectedMail.subject }}</span>
-                  <span class="bbn-bottom-xsmargin">{{_('to: ')}}
-                    <a bbn-if="extractedTo && extractedTo.name && extractedTo.email && extractedTo.email !== extractedTo.name" :href="'mailto:' + extractedTo.email" :label="extractedTo.email">{{extractedTo.name}}</a>
-                    <a bbn-else-if="extractedTo" :href="'mailto:' + extractedTo.email" >{{extractedTo.email}}</a>
-                    <span bbn-else>{{selectedMail.to}}</span>
-                  </span>
-                  <span class="bbn-bottom-xsmargin">{{_('from: ')}}
-                    <a bbn-if="extractedFrom && extractedFrom.name && extractedFrom.email && extractedFrom.email !== extractedFrom.name" :href="'mailto:' + extractedFrom.email" :label="extractedFrom.email">{{extractedFrom.name}}</a>
-                    <a bbn-else-if="extractedFrom" :href="'mailto:' + extractedFrom.email">{{extractedFrom.email}}</a>
-                    <span bbn-else>{{selectedMail.from}}</span>
-                  </span>
-                  <span class="bbn-small">{{ formatDate(selectedMail.date) }}</span>
+              </bbn-toolbar>
+            </div>
+            <div bbn-if="selectedMail?.id"
+                class="bbn-vspadding bbn-hpadding">
+              <div class="bbn-flex-width bbn-bottom-xsmargin">
+                <div class="bbn-flex-fill">
+                  <span><?= _("From:") ?></span>
+                  <a bbn-if="selectedMail?.from_name
+                      && selectedMail?.from_email
+                      && (selectedMail.from_email !== selectedMail.from_name)"
+                    :href="'mailto:' + selectedMail.from_email"
+                    :title="selectedMail.from_email"
+                    bbn-text="selectedMail.from_name"
+                    class="bbn-light"/>
+                  <a bbn-else-if="selectedMail?.from_email"
+                    :href="'mailto:' + selectedMail.from_email"
+                    bbn-text="selectedMail.from_email"
+                    class="bbn-light"/>
+                  <span bbn-else
+                        bbn-text="selectedMail?.from"
+                        class="bbn-light"/>
                 </div>
-                <hr style="margin:0">
-                <div class="bbn-flex-fill bbn-spadding">
-                  <bbn-frame security="allow-scripts"
-                             :url="source.root + '/reader/' + selectedMail.id"
-                             class="bbn-100"
-                             :reset-style="true"/>
-                </div>
+                <div class="bbn-small"
+                     bbn-text="formatDate(selectedMail?.date)"/>
               </div>
+              <div class="bbn-bottom-xsmargin">
+                <span><?= _("To:") ?></span>
+                <a bbn-if="selectedMail?.to_name
+                    && selectedMail?.to_email
+                    && (selectedMail.to_email !== selectedMail.to_name)"
+                  :href="'mailto:' + selectedMail.to_email"
+                  :title="selectedMail.to_email"
+                  bbn-text="selectedMail.to_email"
+                  class="bbn-light"/>
+                <a bbn-else-if="selectedMail?.to_email"
+                  :href="'mailto:' + selectedMail.to_email"
+                  bbn-text="selectedMail.to_email"
+                  class="bbn-light"/>
+                <span bbn-else
+                      bbn-text="selectedMail?.to"
+                      class="bbn-light"/>
+              </div>
+              <div class="bbn-medium"
+                  bbn-text="selectedMail?.subject"/>
+              <appui-email-reader-entities bbn-if="selectedMail?.from_email"
+                                           class="bbn-top-xsmargin"
+                                           :identifier="selectedMail.id"
+                                           :uid="selectedMail.msg_unique_id"
+                                           :mailbox="getAccountIdByFolder(selectedMail.id_folder)"
+                                           :from="selectedMail.from_email"/>
+            </div>
+            <hr class="bbn-hr">
+            <div class="bbn-flex-fill bbn-spadding">
+              <bbn-frame :url="source.root + '/reader/' + selectedMail?.id"
+                        class="bbn-100"
+                        :reset-style="true"/>
             </div>
           </div>
-          <div class="bbn-overlay bbn-middle"
-               bbn-else>
+          <div bbn-else
+               class="bbn-overlay bbn-middle">
             <div class="bbn-block bbn-large bbn-c"
                  bbn-text="_('Select an email to see its content here')"/>
           </div>

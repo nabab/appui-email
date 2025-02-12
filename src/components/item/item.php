@@ -1,5 +1,5 @@
 <!-- HTML Document -->
-<div :class="['appui-email-item', 'bbn-flex-height', {'bbn-alt-background' : isSelected}]"
+<div :class="['appui-email-item', 'bbn-flex-height', 'bbn-radius', 'bbn-p', {'bbn-alt-background' : isSelected}]"
      @click="select">
   <div class="card bbn-flex-height">
     <span class="bbn-w-100 bbn-bottom-xspadding bbn-top-xspadding bbn-ellipsis subject"
@@ -42,9 +42,6 @@
         <a v-else-if="extractedTo" :href="'mailto:' + extractedTo.email" class="to">{{extractedTo.email}}</a>
         <span v-else class="to">{{source.to}}</span>
       </span>
-    </div>
-    <div class="bbn-w-100 bbn-hr">
-
     </div>
   </div>
 </div>
