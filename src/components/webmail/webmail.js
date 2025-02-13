@@ -52,7 +52,8 @@
         ],
         selectedMode: "download",
         syncId: false,
-        syncMessage: ''
+        syncMessage: '',
+        isFrameLoading: false
       };
     },
     computed: {
@@ -640,17 +641,20 @@
         return st;
       },
       selectMessage(row) {
-        this.selectedMail = row;
-        this.attachments = this.selectedMail.attachments ? JSON.parse(this.selectedMail.attachments) : [];
-        if (this.attachments.length) {
-          if (this.attachments.length === 1) {
-            this.selectedAttachment = this.attachments[0].name;
-          } else {
-            this.attachments.unshift({name: 'Attachments'});
-            this.selectedAttachment = "Attachments";
+        if (!this.selectedMail || this.selectedMail.id !== row.id) {
+          this.isFrameLoading = true;
+          this.selectedMail = row;
+          this.attachments = this.selectedMail.attachments ? JSON.parse(this.selectedMail.attachments) : [];
+          if (this.attachments.length) {
+            if (this.attachments.length === 1) {
+              this.selectedAttachment = this.attachments[0].name;
+            } else {
+              this.attachments.unshift({name: 'Attachments'});
+              this.selectedAttachment = "Attachments";
+            }
           }
+          this.getFolders();
         }
-        this.getFolders();
       },
       selectedMessageIDisSame(id) {
         if (this.selectedMail === null) {
@@ -816,6 +820,11 @@
       },
       getAccountIdByFolder(idFolder){
         return this.getAccountByFolder(idFolder)?.id || null;
+      },
+      onFrameLoaded(){
+        if (this.selectedMail) {
+          this.isFrameLoading = false;
+        }
       }
     },
     watch: {

@@ -246,13 +246,18 @@
                                            :identifier="selectedMail.id"
                                            :uid="selectedMail.msg_unique_id"
                                            :mailbox="getAccountIdByFolder(selectedMail.id_folder)"
-                                           :from="selectedMail.from_email"/>
+                                           :mail="selectedMail.from_email"/>
             </div>
             <hr class="bbn-hr">
             <div class="bbn-flex-fill bbn-spadding">
-              <bbn-frame :url="source.root + '/reader/' + selectedMail?.id"
-                        class="bbn-100"
-                        :reset-style="true"/>
+              <div class="bbn-100">
+                <bbn-frame :url="source.root + '/reader/' + selectedMail?.id"
+                           class="bbn-100"
+                           :reset-style="true"
+                           @load="onFrameLoaded"/>
+                <bbn-loader bbn-if="isFrameLoading"
+                            class="bbn-overlay bbn-middle"/>
+              </div>
             </div>
           </div>
           <div bbn-else
