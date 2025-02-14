@@ -50,13 +50,15 @@
         });
       },
       addToEntity(){
-        if (this.currentEntity) {
+        if (this.currentEntity && !this.isLoading) {
           this.confirm(bbn._("Are you sure you want to save this mail as an entity's note?"), () => {
+            this.isLoading = true;
             this.post(this.root + 'webmail/entities', {
               id: this.identifier,
               mailbox: this.mailbox,
               idEntity: this.currentEntity
             }, d => {
+              this.isLoading = false;
               if (d.success
                 && (d.id === this.identifier)
               ) {
@@ -66,6 +68,8 @@
               else {
                 appui.error();
               }
+            }, () => {
+              this.isLoading = false;
             });
           });
         }
