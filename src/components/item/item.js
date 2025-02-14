@@ -12,6 +12,7 @@
       return {
         extractedTo: this.extractNameAndEmail(this.source.to),
         extractedFrom: this.extractNameAndEmail(this.source.from),
+        excerpt: this.source.excerpt.replaceAll(/\[cid\:.*\]/g, '')
       }
     },
     methods: {

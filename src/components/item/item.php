@@ -28,9 +28,8 @@
       </div>
     </div>
     <div class="bbn-w-100 bbn-vxspadding">
-      <span class="text bbn-small bbn-ellipsis">
-        {{source.excerpt}}
-      </span>
+      <span class="text bbn-small bbn-ellipsis"
+            bbn-html="excerpt"/>
     </div>
     <div class="bbn-w-100 bbn-bottom-xspadding footer">
       <span class="bbn-xs date">
