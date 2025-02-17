@@ -20,40 +20,11 @@
         newCount: 0,
         hash: this.source.hash,
         sync: null,
-        attachments: [],
-        selectedAttachment: "Attachments",
         extractedFrom: null,
         extractedTo: null,
-        attachmentsMode: [
-          {
-            text: bbn._('Download'),
-            value: 'download'
-          },
-          {
-            text: bbn._('Download all'),
-            value: 'download_all'
-          },
-          {
-            text: bbn._('Send to shared media'),
-            value: 'shared_media'
-          },
-          {
-            text: bbn._('Send all to shared media'),
-            value: 'shared_media_all'
-          },
-          {
-            text: bbn._('Send to private media'),
-            value: 'private_media'
-          },
-          {
-            text: bbn._('Send all to private media'),
-            value: 'private_media_all'
-          }
-        ],
         selectedMode: "download",
         syncId: false,
-        syncMessage: '',
-        isFrameLoading: false
+        syncMessage: ''
       };
     },
     computed: {
@@ -141,106 +112,6 @@
         return {
           template: `<component is="appui-email-widget-table" :source="source"/>`,
           props: ['source']
-        }
-      },
-      download() {
-        bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/download/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment);
-      },
-      downloadAll() {
-        for (const att of this.attachments) {
-          if (att.name === 'Attachments')
-            continue;
-          bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/download/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + att.name);
-        }
-      },
-      sendToSharedMedia() {
-        bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
-          mode: 'shared_media',
-          path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment,
-          id: this.selectedMail.id,
-          filename: this.selectedAttachment
-        }, (d) => {
-          if (d.success) {
-            appui.success(bbn._('Files was send to shared media'))
-          } else {
-            appui.error(bbn._('An error occured'))
-          }
-        })
-      },
-      sendAllToSharedMedia() {
-        let success = true;
-        for (const att of this.attachments) {
-          bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
-            mode: 'shared_media',
-            path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + att.name,
-            id: this.selectedMail.id,
-            filename: att.name
-          }, (d) => {
-            if (!d.success) {
-              success = false;
-            }
-          });
-        }
-        if (success) {
-          appui.success(bbn._('All files was send to shared media'))
-        } else {
-          appui.error(bbn._('An error occured'))
-        }
-      },
-      sendToPrivateMedia() {
-        bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
-          mode: 'private_media',
-          path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment,
-          id: this.selectedMail.id,
-          filename: this.selectedAttachment
-        }, (d) => {
-          if (d.success) {
-            appui.success(bbn._('Files was send to shared media'))
-          } else {
-            appui.error(bbn._('An error occured'))
-          }
-        })
-      },
-      sendAllToPrivateMedia() {
-        let success = true;
-        for (const att of this.attachments) {
-          bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
-            mode: 'private_media',
-            path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + att.name,
-            id: this.selectedMail.id,
-            filename: att.name
-          }, (d) => {
-            if (!d.success) {
-              success = false;
-            }
-          });
-        }
-        if (success) {
-          appui.success(bbn._('All files was send to shared media'))
-        } else {
-          appui.error(bbn._('An error occured'))
-        }
-      },
-      doMode() {
-        switch (this.selectedMode) {
-          case 'download':
-            this.download();
-            break;
-          case 'download_all':
-            this.downloadAll();
-            break;
-          case 'shared_media':
-            this.sendToSharedMedia();
-            break;
-          case 'shared_media_all':
-            this.sendAllToSharedMedia()
-            break;
-          case 'private_media':
-            this.sendToPrivateMedia();
-            break;
-          case 'private_media_all':
-            this.sendAllToPrivateMedia();
-            break;
         }
       },
       receive(d) {
@@ -610,13 +481,6 @@
         }
         return this.folders;
       },
-      showAttachments(row){
-        if (row.attachments) {
-          let attachments = bbn.fn.isString(row.attachments) ? JSON.parse(row.attachments) : row.attachments;
-          return attachments.length
-        }
-        return '-';
-      },
       selectFolder(node) {
         this.selectedMail = null;
         this.selectedMails = [];
@@ -642,18 +506,13 @@
       },
       selectMessage(row) {
         if (!this.selectedMail || this.selectedMail.id !== row.id) {
-          this.isFrameLoading = true;
-          this.selectedMail = row;
-          this.attachments = this.selectedMail.attachments ? JSON.parse(this.selectedMail.attachments) : [];
-          if (this.attachments.length) {
-            if (this.attachments.length === 1) {
-              this.selectedAttachment = this.attachments[0].name;
-            } else {
-              this.attachments.unshift({name: 'Attachments'});
-              this.selectedAttachment = "Attachments";
-            }
-          }
-          this.getFolders();
+          this.selectedMail = null;
+          this.$nextTick(() => {
+            setTimeout(() => {
+              this.selectedMail = row;
+              this.getFolders();
+            }, 100);
+          });
         }
       },
       selectedMessageIDisSame(id) {
@@ -675,72 +534,12 @@
           text: a.uid
         }
       },
-      reply(){
-        bbn.fn.link(this.source.root + "webmail/write/reply/" + this.selectedMail.id);
-      },
-      replyAll(){
-        bbn.fn.link(this.source.root + "webmail/write/reply_all/" + this.selectedMail.id);
-      },
-      forward(){
-        bbn.fn.link(this.source.root + "webmail/write/forward/" + this.selectedMail.id);
-      },
       writeNewEmail() {
         this.newCount++;
         bbn.fn.link(this.source.root + "webmail/write/new/" + this.newCount.toString());
       },
-      archive(){
-        if (this.selectedMail) {
-
-        }
-      },
-      setAsJunk(){
-        if (this.selectedMail) {
-
-        }
-      },
-      openTab(){
-        bbn.fn.link(this.source.root + "webmail/view/" + this.selectedMail.id);
-      },
-      openWindow(){
-        if (this.selectedMail) {
-
-        }
-      },
-      deleteMail(){
-        this.confirm(bbn._('Do you want to delete this email ?'), () => {
-          this.post(this.root + '/actions/email/delete', {
-            id: this.selectedMail.id,
-            status: "ready"
-          }, d => {
-            if (d.success) {
-              appui.success(bbn._('Email deleted with success'))
-            } else {
-              appui.error(bbn._('An error occured when deleting the email'))
-            }
-          })
-        })
-      },
-      moveFolder() {
-        this.getFolders();
-        this.getPopup({
-          label: bbn._("Folder changer"),
-          component: 'appui-email-forms-moveto',
-          componentOptions: {
-            source: {
-              id : this.selectedMail.id,
-              folders: this.folders,
-              foldersData: this.foldersData,
-            }
-          }
-        })
-      },
       submitFolderChange() {
         bbn.fn.log("FOLDER", this.moveTo);
-      },
-      mailToTask(){
-        if (this.selectedMail) {
-
-        }
       },
       onSyncClick(){
         this.synchronize(this.currentAccount, this.currentFolder);
@@ -820,11 +619,6 @@
       },
       getAccountIdByFolder(idFolder){
         return this.getAccountByFolder(idFolder)?.id || null;
-      },
-      onFrameLoaded(){
-        if (this.selectedMail) {
-          this.isFrameLoading = false;
-        }
       }
     },
     watch: {

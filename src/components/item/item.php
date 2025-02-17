@@ -1,5 +1,5 @@
 <!-- HTML Document -->
-<div :class="['appui-email-item', 'bbn-flex-height', 'bbn-radius', 'bbn-p', {'bbn-alt-background' : isSelected}]"
+<div :class="['appui-email-item', 'bbn-flex-height', 'bbn-radius', 'bbn-p', 'bbn-reactive', {'bbn-alt-background' : isSelected}]"
      @click="select">
   <div class="card bbn-flex-height">
     <span class="bbn-w-100 bbn-bottom-xspadding bbn-top-xspadding bbn-ellipsis subject"
