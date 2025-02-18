@@ -16,7 +16,7 @@
         selectedMails: [],
         alreadySendUpdateError: false,
         moveTo: "",
-        root: appui.plugins['appui-email'],
+        root: appui.plugins['appui-email'] + '/',
         newCount: 0,
         hash: this.source.hash,
         sync: null,
@@ -139,7 +139,7 @@
           if (addedAccount.length) {
             for (const accountId of addedAccount) {
               if (bbn.fn.search(this.source.accounts, { id: accountId}) < 0) {
-                bbn.fn.post(this.root + '/actions/account', {
+                bbn.fn.post(this.root + 'actions/account', {
                   action: 'get',
                   id: accountId
                 } , d => {
@@ -178,7 +178,7 @@
               }
               // iterate each hash of each folder to see what folder have changed
               if (bbn.fn.search(this.source.accounts, { id: key}) !== -1) {
-                bbn.fn.post(this.root + '/actions/account', {
+                bbn.fn.post(this.root + 'actions/account', {
                   action: 'get',
                   id: key
                 } , d => {
@@ -226,7 +226,7 @@
           event.preventDefault();
           return false;
         }
-        bbn.fn.post(this.root + '/actions/folder/move', {
+        bbn.fn.post(this.root + 'actions/folder/move', {
           to: dest.data,
           id_account: source.data.id_account,
           folders: this.getAllFolderChild(source.data)
@@ -344,7 +344,7 @@
       },
       removeFolder(idArray, text, uid) {
         this.confirm(bbn._(`Do you want to delete the ${text} folder and all the subfolders ?`), () => {
-          bbn.fn.post(this.root + '/actions/folder/delete', {
+          bbn.fn.post(this.root + 'actions/folder/delete', {
             // reverse the array to delete the the last subfolders before
             id: idArray.reverse(),
             id_account: uid
@@ -372,7 +372,7 @@
       },
       deleteAccount(uid) {
         this.confirm(bbn._("Do you want to delete this account ?"), () => {
-          bbn.fn.post(this.root + '/actions/account', {
+          bbn.fn.post(this.root + 'actions/account', {
             action: 'delete',
             data: {
               id: uid
@@ -464,7 +464,7 @@
       },
       getFolders() {
         if (this.selectedMail) {
-          this.post(this.root + '/webmail/get_folders', {
+          this.post(this.root + 'webmail/get_folders', {
             id: this.selectedMail.id_folder,
           }, (d) => {
             if (d.success) {
@@ -545,7 +545,7 @@
         this.synchronize(this.currentAccount, this.currentFolder);
       },
       synchronize(idAccount, idFolder){
-        const url = this.root + '/actions/email/sync';
+        const url = this.root + 'webmail/actions/sync';
         const data = {
           id_account: bbn.fn.isString(idAccount) ? idAccount : false,
           id_folder: bbn.fn.isString(idFolder) ? idFolder : false

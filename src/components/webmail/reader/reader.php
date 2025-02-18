@@ -115,11 +115,11 @@
                  source-icon="icon">
       <i class="nf nf-md-dots_vertical"/>
     </bbn-context>
-    <bbn-context :source="attachmentSrc"
+    <bbn-context bbn-for="att in source.attachments"
+                 :source="getAttachmentSrc(att)"
                  source-icon="icon">
-      <div bbn-for="att in source.attachments"
-          class="bbn-no-border bbn-radius bbn-vmiddle bbn-background bbn-xspadding bbn-reactive">
-        <i class="nf nf-fa-file"/>
+      <div class="bbn-no-border bbn-radius bbn-vmiddle bbn-background bbn-xspadding bbn-reactive">
+        <i :class="getFileIcon(att)"/>
         <span class="bbn-hxsmargin"
               bbn-text="att.name"/>
       </div>

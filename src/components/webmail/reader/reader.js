@@ -11,31 +11,21 @@
       return {
         root: appui.plugins['appui-email'] + '/',
         isFrameLoading: true,
-        attachmentSrc: [{
-          text: bbn._('Download'),
-          value: 'download',
-          icon: 'nf nf-fa-download'
-        }, {
-          text: bbn._('Send to shared media'),
-          value: 'shared_media',
-          icon: 'nf nf-md-image'
-        }, {
-          text: bbn._('Send to private media'),
-          value: 'private_media',
-          icon: 'nf nf-md-image_lock'
-        }],
         attachmentsSrc: [{
           text: bbn._('Download all'),
           value: 'download_all',
-          icon: 'nf nf-fa-download'
+          icon: 'nf nf-fa-download',
+          action: this.downloadAll
         }, {
           text: bbn._('Send all to shared media'),
           value: 'shared_media_all',
-          icon: 'nf nf-md-image'
+          icon: 'nf nf-md-image',
+          action: this.sendAllToSharedMedia
         }, {
           text: bbn._('Send all to private media'),
           value: 'private_media_all',
-          icon: 'nf nf-md-image_lock'
+          icon: 'nf nf-md-image_lock',
+          action: this.sendAllToPrivateMedia
         }],
       }
     },
@@ -121,119 +111,146 @@
 
         }
       },
-      onFrameLoaded(a, b){
+      onFrameLoaded(){
         const f = this.getRef('frame');
         if (f?.src) {
           this.isFrameLoading = false;
         }
       },
-      download() {
-        bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/download/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment);
+      download(att){
+        bbn.fn.download(this.root + 'webmail/actions/attachment/download', {
+          id: this.source.id,
+          filename: att.name
+        });
       },
-      downloadAll() {
-        for (const att of this.attachments) {
-          if (att.name === 'Attachments')
-            continue;
-          bbn.fn.download(appui.plugins['appui-email'] + "/data/attachment/index/download/" + this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + att.name);
+      downloadAll(){
+        if (this.source.attachments?.length) {
+          bbn.fn.each(this.source.attachments, att => {
+            this.download(att);
+          });
         }
       },
-      sendToSharedMedia() {
-        bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
-          mode: 'shared_media',
-          path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment,
-          id: this.selectedMail.id,
-          filename: this.selectedAttachment
-        }, (d) => {
-          if (d.success) {
-            appui.success(bbn._('Files was send to shared media'))
-          } else {
-            appui.error(bbn._('An error occured'))
-          }
-        })
+      saveAsMedia(mode, filename = null){
+        if (this.source.attachments?.length) {
+          this.post(this.root + "webmail/actions/attachment/media", {
+            id: this.source.id,
+            mode,
+            filename
+          }, d => {
+            if (d.success) {
+              appui.success()
+            }
+            else {
+              appui.error()
+            }
+          });
+        }
+      },
+      sendToSharedMedia(att) {
+        if (this.source.attachments?.length) {
+          this.confirm(bbn._('Do you want to send this file to shared media?'), () => {
+            this.saveAsMedia('shared_media', att.name);
+          });
+        }
       },
       sendAllToSharedMedia() {
-        let success = true;
-        for (const att of this.attachments) {
-          bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
-            mode: 'shared_media',
-            path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + att.name,
-            id: this.selectedMail.id,
-            filename: att.name
-          }, (d) => {
-            if (!d.success) {
-              success = false;
-            }
+        if (this.source.attachments?.length) {
+          this.confirm(bbn._('Do you want to send all files to shared media?'), () => {
+            this.saveAsMedia('shared_media_all');
           });
         }
-        if (success) {
-          appui.success(bbn._('All files was send to shared media'))
-        } else {
-          appui.error(bbn._('An error occured'))
-        }
       },
-      sendToPrivateMedia() {
-        bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
-          mode: 'private_media',
-          path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + this.selectedAttachment,
-          id: this.selectedMail.id,
-          filename: this.selectedAttachment
-        }, (d) => {
-          if (d.success) {
-            appui.success(bbn._('Files was send to shared media'))
-          } else {
-            appui.error(bbn._('An error occured'))
-          }
-        })
+      sendToPrivateMedia(att) {
+        if (this.source.attachments?.length) {
+          this.confirm(bbn._('Do you want to send this file to private media?'), () => {
+            this.saveAsMedia('private_media', att.name);
+          });
+        }
       },
       sendAllToPrivateMedia() {
-        let success = true;
-        for (const att of this.attachments) {
-          bbn.fn.post(appui.plugins['appui-email'] + "/data/attachment/index", {
-            mode: 'private_media',
-            path: this.foldersData.find(folder => folder.id === this.selectedMail.id_folder).id_account + '/' + this.selectedMail.id + '/' + att.name,
-            id: this.selectedMail.id,
-            filename: att.name
-          }, (d) => {
-            if (!d.success) {
-              success = false;
-            }
+        if (this.source.attachments?.length) {
+          this.confirm(bbn._('Do you want to send all files to private media?'), () => {
+            this.saveAsMedia('private_media_all');
           });
         }
-        if (success) {
-          appui.success(bbn._('All files was send to shared media'))
-        } else {
-          appui.error(bbn._('An error occured'))
+      },
+      getFileIcon(attachment){
+        switch (attachment.type) {
+          case 'pdf':
+            return 'nf nf-fa-file_pdf_o'
+          case 'zip':
+            return 'nf nf-fa-file_zip_o'
+          case 'rar':
+          case 'tar':
+          case 'bz2':
+          case 'gz':
+          case '7z':
+          case 'cab':
+          case 'cab':
+            return 'nf nf-fa-file_archive_o'
+          case 'jpg':
+          case 'jpeg':
+          case 'png':
+          case 'gif':
+          case 'bmp':
+          case 'svg':
+            return 'nf nf-fa-file_image_o'
+          case 'avi':
+          case 'mov':
+          case 'mkv':
+          case 'mpg':
+          case 'mpeg':
+          case 'wmv':
+          case 'mp4':
+            return 'nf nf-fa-file_movie_o'
+          case 'mp3':
+          case 'wav':
+            return 'nf nf-fa-file_sound_o'
+          case 'php':
+          case 'js':
+          case 'html':
+          case 'htm':
+          case 'css':
+          case 'less':
+            return 'nf nf-fa-file_code_o'
+          case 'txt':
+          case 'rtf':
+            return 'nf nf-fa-file_text_o'
+          case 'doc':
+          case 'docx':
+          case 'odt':
+            return 'nf nf-fa-file_word_o'
+          case 'xls':
+          case 'xlsx':
+          case 'ods':
+          case 'csv':
+            return 'nf nf-fa-file_excel_o'
+          case 'ppt':
+          case 'pptx':
+          case 'odp':
+            return 'nf nf-fa-file_powerpoint_o'
+          default:
+            return 'nf nf-fa-file'
         }
       },
-      doMode() {
-        switch (this.selectedMode) {
-          case 'download':
-            this.download();
-            break;
-          case 'download_all':
-            this.downloadAll();
-            break;
-          case 'shared_media':
-            this.sendToSharedMedia();
-            break;
-          case 'shared_media_all':
-            this.sendAllToSharedMedia()
-            break;
-          case 'private_media':
-            this.sendToPrivateMedia();
-            break;
-          case 'private_media_all':
-            this.sendAllToPrivateMedia();
-            break;
-        }
-      },
-      showAttachments(row){
-        if (row.attachments) {
-          let attachments = bbn.fn.isString(row.attachments) ? JSON.parse(row.attachments) : row.attachments;
-          return attachments.length
-        }
-        return '-';
-      },
+      getAttachmentSrc(att){
+        return [{
+          text: bbn._('Download'),
+          value: 'download',
+          icon: 'nf nf-fa-download',
+          action: () => this.download(att)
+        }, {
+          text: bbn._('Send to shared media'),
+          value: 'shared_media',
+          icon: 'nf nf-md-image',
+          action: () => this.sendToSharedMedia(att)
+        }, {
+          text: bbn._('Send to private media'),
+          value: 'private_media',
+          icon: 'nf nf-md-image_lock',
+          action: () => this.sendToPrivateMedia(att)
+        }]
+      }
     }
   }
 })();

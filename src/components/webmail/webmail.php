@@ -76,7 +76,7 @@
             </div>
             <bbn-kanban-element bbn-if="orientation == 'horizontal'"
                                 class="bbn-noradius bbn-flex-fill"
-                                :source="source.root + 'webmail'"
+                                :source="root + 'webmail'"
                                 component="appui-email-item"
                                 :pageable="true"
                                 :filterable="true"
@@ -90,7 +90,7 @@
                                 :showable="true"
                                 :order="[{field: 'date', dir: 'DESC'}]"/>
             <bbn-table bbn-else
-                       :source="source.root + 'webmail'"
+                       :source="root + 'webmail'"
                        storage-full-name="appui-email-webmail-table"
                        :filterable="true"
                        :selection="true"

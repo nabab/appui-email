@@ -19,7 +19,7 @@
            class="bbn-red nf nf-fa-exclamation"/>
         <i v-if="source.flags.includes('High') && !source.flags.includes('Highest')"
            class="bbn-orange nf nf-fa-exclamation"/>
-        <i v-if="source.attachments"
+        <i v-if="source.attachments?.length"
            class="nf nf nf-md-paperclip"/>
         <i v-if="source.is_read != 0"
            class="nf nf-fae-envelope_open_o"/>
