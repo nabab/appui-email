@@ -19,7 +19,7 @@
             {
                 "text": "Drafts",
                 "code": "drafts",
-                "icon": "nf nf-mdi-file_document",
+                "icon": "nf nf-md-file_document",
                 "names": [
                     "drafts",
                     "Drafts",
@@ -42,7 +42,7 @@
             {
                 "text": "Sent",
                 "code": "sent",
-                "icon": "nf nf-mdi-inbox_arrow_up",
+                "icon": "nf nf-md-inbox_arrow_up",
                 "names": [
                     "sent",
                     "Sent",
@@ -53,7 +53,7 @@
             {
                 "text": "Spam",
                 "code": "spam",
-                "icon": "nf nf-mdi-fire",
+                "icon": "nf nf-md-fire",
                 "names": [
                     "spam",
                     "Spam",
