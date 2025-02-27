@@ -17,9 +17,23 @@ else if (!empty($ctrl->post['id_account'])) {
   }
 }
 else if ($accounts = $emailClass->getAccountsIds()) {
+  function addFolders($list, &$folders){
+    foreach ($list as $l) {
+      if (!empty($l['items'])) {
+        $items = $l['items'];
+        unset($l['items']);
+        $folders[] = $l;
+        addFolders($items, $folders);
+        return;
+      }
+
+      $folders[] = $l;
+    }
+  }
+
   foreach ($accounts as $a) {
     if ($accountFolders = $emailClass->getFolders($a)) {
-      $folders = array_push($folders, ...array_values($accountFolders));
+      addFolders(array_values($accountFolders), $folders);
     }
   }
 }
