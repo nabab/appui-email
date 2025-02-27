@@ -6,6 +6,20 @@ $ctrl->setStream();
 $emailClass = new Email($ctrl->db);
 $folders = [];
 
+function addFolders($list, &$folders){
+  foreach ($list as $l) {
+    if (!empty($l['items'])) {
+      $items = $l['items'];
+      unset($l['items']);
+      $folders[] = $l;
+      addFolders($items, $folders);
+      return;
+    }
+
+    $folders[] = $l;
+  }
+}
+
 if (!empty($ctrl->post['id_folder'])) {
   if ($f = $emailClass->getFolder($ctrl->post['id_folder'])) {
     $folders[] = $f;
@@ -13,24 +27,10 @@ if (!empty($ctrl->post['id_folder'])) {
 }
 else if (!empty($ctrl->post['id_account'])) {
   if ($accountFolders = $emailClass->getFolders($ctrl->post['id_account'])) {
-    $folders = $accountFolders;
+    addFolders(array_values($accountFolders), $folders);
   }
 }
 else if ($accounts = $emailClass->getAccountsIds()) {
-  function addFolders($list, &$folders){
-    foreach ($list as $l) {
-      if (!empty($l['items'])) {
-        $items = $l['items'];
-        unset($l['items']);
-        $folders[] = $l;
-        addFolders($items, $folders);
-        return;
-      }
-
-      $folders[] = $l;
-    }
-  }
-
   foreach ($accounts as $a) {
     if ($accountFolders = $emailClass->getFolders($a)) {
       addFolders(array_values($accountFolders), $folders);
