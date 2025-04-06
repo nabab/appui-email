@@ -269,7 +269,7 @@
           res.push({
             text: bbn._("Delete"),
             notext: true,
-            icon: "nf nf-oct-trashcan",
+            icon: "nf nf-oct-trash",
             action: this.removeItem
           })
         }
@@ -716,7 +716,7 @@
           if ( ((row.state === 'ready') || (row.state === 'cancelled')) && ( row.total === 0 ) && appui.user.isAdmin ){
             res.push({
               text: bbn._("Delete"),
-              icon: "nf nf-oct-trashcan",
+              icon: "nf nf-oct-trash",
               value: 'removeItem'
             })
           }

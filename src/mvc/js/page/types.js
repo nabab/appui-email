@@ -6,7 +6,17 @@
  */
 (() => {
   return {
-    mixins: [bbn.cp.mixins.basic],
+    mixins: [bbn.cp.mixins.basic, bbn.cp.mixins.localStorage],
+    props: {
+      storage: {
+        type: Boolean,
+        default: true
+      },
+      storageFullName: {
+        type: String,
+        default: 'appui-emails-page-types-warning'
+      }
+    },
     methods: {
       insert(){
         this.getPopup({
@@ -23,7 +33,7 @@
           label: bbn._("New letter type")
         });
       },
-      toolbar(){
+      toolbar() {
         return [{
           text: bbn._('Insert new '),
           action: () => {
@@ -84,9 +94,54 @@
             });
           });
         }
+      },
+      showWarning() {
+        const doNotShowAgainValue = this.getStorage() || 0;
+        const cp = this;
+        this.getPopup({
+          minWidth: 550,
+          maxWidth: '80%',
+          scrollable: false,
+          closable: false,
+          label: bbn._("Avertissement sur les lettres types"),
+          component: {
+            template: `
+<div class="bbn-padding">
+  <div class="bbn-w-100 bbn-c bbn-b">Attention!<br><br></div>
+  <div class="bbn-w-100">
+    Ici vous pouvez modifier les lettres types mais elles utilisent un système de "templates" avec lequel il vous faut être très précautionneux.<br><br>
+    Le mieux est de dupliquer une lettre-type existante et de la modifier. Une fois terminée, mettez-là en défaut si elle est utilisée sur une fonctionnalité sans choix (ex: attestations), et allez la tester dans son contexte. Alors vous pourrez effacer l'ancienne ou bien la refaire passer en défaut si votre modification renvoie une erreur.
+  </div>
+  <div class="bbn-w-100 bbn-c">
+    <br><br>
+    <bbn-checkbox :label="doNotShowAgain"
+                  bbn-model="doNotShowAgainValue"/>
+    <br><br>
+    <bbn-button @click="close"
+                label="OK"/>
+  </div>
+</div>`,
+            data() {
+              return {
+                doNotShowAgainValue,
+                doNotShowAgain: bbn._("Ne plus demander à l'avenir")
+              }
+            },
+            methods: {
+              close() {
+                if (this.doNotShowAgainValue) {
+                  cp.setStorage(true);
+                }
+
+                this.closest('bbn-floater').close(true)
+              }
+            }
+          }
+        });
+        
       }
     },
-    created(){
+    created() {
       let types = this,
           mixins = [{
             data(){
@@ -94,16 +149,31 @@
             }
           }];
     },
-    mounted(){
-      this.$nextTick(() => {
-        this.getPopup({
-          width: 850,
-          scrollable: false,
-          height: 200,
-          label: bbn._("Avertissement sur les lettres types"),
-          content: '<div class="bbn-overlay bbn-padding"><div class="bbn-b">Attention!</div><br>Ici vous pouvez modifier les lettres types mais elles utilisent un système de "templates" avec lequel il vous faut être très précautionneu. Le mieux est de dupliquer une lettre-type existante et de la modifier. Une fois terminée, mettez-là en défaut si elle est utilisée sur une fonctionnalité sans choix (ex: attestations), et allez la tester dans son contexte. Alors vous pourrez effacer l\'ancienne ou bien la refaire passer en défaut si votre modification renvoie une erreur.</div>'
+    mounted() {
+      if (this.getStorage()) {
+        this.getContainer().addMenu({
+          text: bbn._("Show warning message"),
+          icon: "nf nf-cod-warning",
+          action: () => {
+            bbn.fn.log("JOJO")
+            this.showWarning()
+          }
         });
-      });
+        this.getContainer().addMenu({
+          text: bbn._("Show warning message when opening"),
+          icon: "nf nf-fa-warning",
+          action: () => {
+            bbn.fn.log(bbn._("Show warning message at opening"))
+            this.setStorage(false)
+            this.showWarning()
+          }
+        })
+      }
+      else {
+        this.$nextTick(() => {
+          this.showWarning()
+        });
+      }
     }
 	}
 })();
