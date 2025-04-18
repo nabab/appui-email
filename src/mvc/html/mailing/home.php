@@ -9,14 +9,13 @@
                   ref="tree"
                   :path="treePath"
                   uid="id"
-                  :style="{'pointer-events': disableTree ? 'none' : 'auto'}"
-        ></bbn-tree>
+                  :style="{'pointer-events': disableTree ? 'none' : 'auto'}"/>
       </bbn-pane>
 			<bbn-pane size="50%">
 				<div class="bbn-100 bbn-block info">
           <div class="bbn-header bbn-vmiddle title">
             <span><strong><?= _('LIVE INFO') ?></strong></span>
-            <bbn-switch @change="toggleGetInfo" :checked="!!info.getInfo"></bbn-switch>
+            <bbn-switch @change="toggleGetInfo" :checked="!!info.getInfo"/>
           </div>
 					<div bbn-if="info.current.id"
 							 class="bbn-block bbn-w-100">
@@ -123,6 +122,7 @@
                        :required="true"/>
           <bbns-column label="<?= _("Object") ?>"
                        field="title"
+                       :min-width="200"
                        :required="true"/>
           <bbns-column label="<?= _("Sender") ?>"
                        field="sender"

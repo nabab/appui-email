@@ -644,6 +644,7 @@
       }
     },
     created(){
+      appui.register('appui-email-mailing', this);
       mailings = this;
       let router = this.closest('bbn-router');
       let id = bbn.fn.search(router.views,'url', 'home');
@@ -651,8 +652,7 @@
         router.views[id].static = true;
       }
     },
-    mounted(){
-      appui.register('appui-email', this);
+    mounted() {
       this.clearGetInfo();
       let current = this.closest('bbn-router').closest('bbn-container').currentURL,
             bit = current.split('/').pop();
@@ -672,7 +672,7 @@
     },
 		beforeDestroy(){
 			this.clearGetInfo();
-      appui.unregister('appui-email');
+      appui.unregister('appui-email-mailing');
     },
     components: {
       menu: {

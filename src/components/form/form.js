@@ -112,7 +112,7 @@
       }
     },
     mounted(){
-      this.emails = appui.getRegistered('appui-email');
+      this.emails = appui.getRegistered('appui-email-mailing');
       this.dataToSend = {ref: this.ref};
       let fl = this.closest('bbn-floater');
       if (fl && fl.data && fl.data.id_parent){

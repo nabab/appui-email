@@ -633,7 +633,7 @@
     },
     created(){
       this.setTreeData();
-      appui.register('appui-email', this);
+      appui.register('appui-email-webmail', this);
     },
     mounted(){
       this.$set(appui.pollerObject, 'appui-email', {
@@ -642,6 +642,7 @@
       appui.poll();
     },
     beforeDestroy(){
+      appui.unregister('appui-email-webmail');
       if (this.syncId) {
         bbn.fn.abort(this.syncId);
         this.syncId = false;

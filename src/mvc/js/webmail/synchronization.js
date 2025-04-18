@@ -11,7 +11,7 @@
       }
     },
     created() {
-      appui.register('appui-email', this);
+      appui.register('appui-email-sync', this);
     },
     mounted() {
       const ct = this.closest('bbn-container')
@@ -28,6 +28,7 @@
       appui.poll();
     },
     beforeDestroy() {
+      appui.unregister('appui-email-sync');
       this.isMount = false;
       if (this.checkInterval) {
         clearInterval(this.checkInterval);

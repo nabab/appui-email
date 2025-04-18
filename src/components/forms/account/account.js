@@ -1,7 +1,7 @@
 (() => {
   return {
     data(){
-      const cp = appui.getRegistered('appui-email');
+      const cp = appui.getRegistered('appui-email-webmail');
       return {
         cp: cp,
         types: cp.source.types,
