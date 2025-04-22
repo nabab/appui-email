@@ -713,7 +713,7 @@
             }*/);
           }
           //only mailings without emails sent can be deleted
-          if ( ((row.state === 'ready') || (row.state === 'cancelled')) && ( row.total === 0 ) && appui.user.isAdmin ){
+          if (((row.state === 'ready') || (row.state === 'cancelled')) && ( row.total === 0 )) {
             res.push({
               text: bbn._("Delete"),
               icon: "nf nf-oct-trash",
