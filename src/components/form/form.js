@@ -94,10 +94,15 @@
       },
       setRecipientsNum(){
         let url = this.emails.source.root + 'data/mailist/num';
-        bbn.fn.abortURL(url);
+        let data = {recipients: this.source.row.recipients, sender: this.source.row.sender};
+        if (this.emails.numRequestId) {
+          bbn.fn.abort(this.emails.numRequestId);
+        }
+
+        this.emails.numRequestId = bbn.fn.getRequestId(url, data);
         if (this.source.row.recipients) {
           this.isNumLoading = true;
-          this.post(url, {recipients: this.source.row.recipients, sender: this.source.row.sender}, (d) => {
+          this.post(url, data, (d) => {
             if (d.success) {
               this.numRecipients = d.num || 0;
             }
@@ -108,6 +113,11 @@
           }, () => {
             this.isNumLoading = false;
           });
+        }
+      },
+      onFormCancel(){
+        if (this.emails.numRequestId) {
+          bbn.fn.abort(this.emails.numRequestId);
         }
       }
     },

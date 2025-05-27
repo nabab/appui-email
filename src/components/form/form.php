@@ -7,7 +7,8 @@
           :prefilled="prefilled"
           @success="success"
           @failure="failure"
-          :disabled="isNumLoading">
+          :disabled="isNumLoading"
+          @cancel="onFormCancel">
   <appui-note-toolbar-version :source="source.row" 
                                :data="{id: source.row.id_note}" 
                                @version="getVersion" 

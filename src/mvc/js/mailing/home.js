@@ -676,7 +676,11 @@
     },
     components: {
       menu: {
-        template: `<bbn-dropdown :source="menu" :template="tpl" @input="select" :placeholder="_('Choose')"></bbn-dropdown>`,
+        template: `<bbn-dropdown :source="menu"
+                                 :template="tpl"
+                                 @input="select"
+                                 :placeholder="_('Choose')"
+                                 ref="dropdown"/>`,
         props: ['source'],
         data(){
           let row = this.source;
@@ -761,6 +765,7 @@
         },
         methods: {
           select(action){
+            this.getRef('dropdown').currentSelectValue = '';
             if (mailings && bbn.fn.isFunction(mailings[action])) {
               mailings[action](this.source);
             }
