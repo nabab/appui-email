@@ -33,7 +33,7 @@ if ($model->hasData('action')) {
             $mbParam = $mb->getParams();
             $put_in_res = function (array $a, &$res, $prefix = '') use (&$put_in_res, &$subscribed, $mbParam) {
               $ele = array_shift($a);
-              $idx = X::find($res, ['text' => $ele]);
+              $idx = X::search($res, ['text' => $ele]);
               if (null === $idx) {
                 $idx   = count($res);
                 $res[] = [

@@ -31,7 +31,7 @@ if ($model->checkAction(['content', 'title', 'sender'], true)) {
       }
       // File comes from parent
       else if (!empty($model->data['id_parent'])) {
-        $idx = \bbn\X::find($medias, ['name' => $f['name']]);
+        $idx = \bbn\X::search($medias, ['name' => $f['name']]);
         if ($idx !== null) {
           // Sending an array with id_media
           $attachments[] = ['id_media' => $f['id']];
