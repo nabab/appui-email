@@ -34,7 +34,7 @@
                     bbn-model="account.type"
                     autocomplete="off"
                     :required="true"/>
-      <div class="bbn-label"><?= _("Main eMail address for this account") ?></div>
+      <div class="bbn-label"><?= _("eMail address") ?></div>
       <bbn-input bbn-model="account.email"
                 type="email"
                 autocomplete="off"
@@ -48,6 +48,10 @@
                 type="password"
                 :no-save="true"
                 :required="true"/>
+      <div class="bbn-label"><?= _("Private account") ?></div>
+      <bbn-switch bbn-model="account.locale"
+                  :value="true"
+                  :novalue="false"/>
       <template bbn-if="['imap', 'pop3'].includes(accountCode)">
         <div class="bbn-label"><?= _("Use SSL") ?></div>
         <bbn-checkbox :value="1"

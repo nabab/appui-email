@@ -9,7 +9,8 @@ if ($model->hasData('action')) {
     case 'test':
     case 'save':
       if ($model->hasData(['type', 'login', 'pass', 'email'], true)
-          && ($code = $model->inc->options->code($model->data['type']))
+        && $model->hasData('locale')
+        && ($code = $model->inc->options->code($model->data['type']))
       ) {
         $cfg = [
           'type' => $code,

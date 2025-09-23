@@ -523,7 +523,7 @@
       },
       createAccount() {
         this.getPopup({
-          height: 450,
+          //height: 450,
           label: bbn._("eMail account configuration"),
           component: 'appui-email-forms-account',
         })

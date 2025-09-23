@@ -18,7 +18,8 @@
           smtp: null,
           pass: '',
           ssl: 1,
-          email: ''
+          email: '',
+          locale: true
         }
       }
     },
