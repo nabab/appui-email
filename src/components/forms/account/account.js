@@ -1,5 +1,6 @@
 (() => {
   return {
+    mixins: [bbn.cp.mixins.basic],
     data(){
       const cp = appui.getRegistered('appui-email-webmail');
       return {
@@ -20,10 +21,36 @@
           ssl: 1,
           email: '',
           locale: true
-        }
+        },
+        currentPage: 1,
+        isTesting: false,
+        isDev: appui.user.isDev
       }
     },
     computed: {
+      formButtons(){
+        const btns = [];
+        switch (this.currentPage) {
+          case 1:
+            btns.push('cancel', {
+              label: bbn._('Next'),
+              action: this.nextToTest,
+              icon: 'nf nf-fa-arrow_circle_right',
+              iconPosition: 'right'
+            });
+            break;
+
+          case 2:
+            btns.push({
+              label: bbn._('Back'),
+              action: this.backToConfig,
+              icon: 'nf nf-fa-arrow_circle_left',
+            }, 'submit');
+            break;
+        }
+
+        return btns;
+      },
       selectedFolders(){
         if (this.tree.length && this.account.folders.length) {
           return JSON.stringify(this.account.folders);
@@ -39,10 +66,74 @@
     },
     methods: {
       backToConfig(){
-        this.errorState = false;
-        this.tree.splice(0, this.tree.length);
-        this.account.folders.splice(0, this.account.folders.length);
+        this.tree.splice(0);
+        this.account.folders.splice(0);
         this.account.pass = '';
+        this.errorState = false;
+        this.isTesting = false;
+        this.currentPage = 1;
+      },
+      nextToTest(){
+        if (this.getRef('form')?.isValid()
+          && this.account.email
+          && bbn.fn.isEmail(this.account.email)
+          && this.account.type
+          && this.account.login
+          && this.account.pass
+        ) {
+          this.tree.splice(0);
+          this.isTesting = true;
+          this.errorState = false;
+          this.currentPage = 2;
+          let ok = false;
+          if (['imap', 'pop'].includes(this.accountCode)) {
+            if (this.account.host
+              && bbn.fn.isHostname(this.account.host)
+              && (!this.hasSMTP || this.smtp)
+            ) {
+              ok = true;
+            }
+          }
+          else {
+            ok = true;
+          }
+
+          if (ok) {
+            this.post(
+              this.cp.source.root + 'actions/account',
+              bbn.fn.extend({action: 'test'}, this.account),
+              d => {
+                if (d.data) {
+                  let checked = [];
+                  bbn.fn.each(d.data, a => {
+                    if (a.subscribed) {
+                      checked.push(a.uid);
+                    }
+
+                    this.tree.push(a);
+                  });
+                  this.isTesting = false;
+                  this.$nextTick(() => {
+                    this.account.folders = checked;
+                    const tree = this.getRef('tree');
+                    if (tree) {
+                      tree.checked = this.account.folders;
+                      tree.updateData();
+                    }
+                  });
+                }
+                else {
+                  this.errorState = true;
+                  this.isTesting = false;
+                }
+              },
+              () => {
+                this.errorState = true;
+                this.isTesting = false;
+              }
+            );
+          }
+        }
       },
       success(d){
         if (d && d.success) {
@@ -67,64 +158,6 @@
         }
         else {
           this.account.smtp = null;
-        }
-      },
-      account: {
-        deep: true,
-        handler(){
-          bbn.fn.log("ACCOUNT WATCHER");
-          if (this.accountChecker) {
-            clearTimeout(this.accountChecker);
-          }
-          this.accountChecker = setTimeout(() => {
-            if (!this.tree.length
-                && this.account.email
-                && bbn.fn.isEmail(this.account.email)
-                && this.account.type
-                && this.account.login
-                && this.account.pass
-               ) {
-              let ok = false;
-              if (['imap', 'pop'].includes(this.accountCode)) {
-                if (this.account.host
-                    && bbn.fn.isHostname(this.account.host)
-                    && (!this.hasSMTP || this.smtp)
-                   ) {
-                  ok = true;
-                }
-              }
-              else {
-                ok = true;
-              }
-              if (ok) {
-                bbn.fn.post(
-                  this.cp.source.root + 'actions/account',
-                  bbn.fn.extend({action: 'test'}, this.account),
-                  d => {
-                    if (d.data) {
-                      bbn.fn.log("DATA", d);
-                      let checked = [];
-                      bbn.fn.each(d.data, a => {
-                        if (a.subscribed) {
-                          checked.push(a.uid);
-                        }
-                        this.tree.push(a);
-                      });
-                      this.errorState = false;
-                      this.$nextTick(() => {
-                        this.account.folders = checked;
-                        this.getRef('tree').checked = this.account.folders;
-                        this.getRef('tree')?.updateData();
-                      });
-                    }
-                    else {
-                      this.errorState = true;
-                    }
-                  }
-                );
-              }
-            }
-          }, 1000)
         }
       },
       "account.email"(nv, ov) {

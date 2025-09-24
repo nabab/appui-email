@@ -12,6 +12,7 @@ if ($model->hasData('action')) {
         && $model->hasData('locale')
         && ($code = $model->inc->options->code($model->data['type']))
       ) {
+        $isLocale = !empty($model->data['locale']);
         $cfg = [
           'type' => $code,
           'login' => $model->data['login'],
@@ -62,13 +63,11 @@ if ($model->hasData('action')) {
             && is_array($model->data['folders'])
           ) {
             unset($mb);
-            $em = new Email($model->db);
+            $em = new Email($model->db, $model->inc->user, $model->inc->pref);
             $cfg['folders'] = $model->data['folders'];
             $cfg['email'] = $model->data['email'];
             try {
-              if ($id_account = $em->addAccount($cfg)) {
-                unset($em);
-                $em = new Email($model->db, $model->inc->user, $model->inc->pref);
+              if ($id_account = $em->addAccount($cfg, $isLocale)) {
                 return [
                   'success' => true,
                   'data' => $em->getAccounts(),

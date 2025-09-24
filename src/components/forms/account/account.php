@@ -1,30 +1,10 @@
 <bbn-form :source="account"
           @success="success"
           :data="{action: 'save'}"
-          :action="cp.source.root + 'actions/account'">
-  <div bbn-if="tree.length"
-       class="bbn-overlay">
-    <div class="bbn-flex-height">
-      <div class="bbn-w-100 bbn-hpadding bbn-top-padding bbn-bottom-space">
-        <bbn-button @click="backToConfig"
-                    class="bbn-bottom-space">
-          <?= _("Back") ?>
-        </bbn-button>
-        <div class="bbn-m bbn-b bbn-c">
-          <?= _("Choose the folders you want to keep synchronized") ?>
-        </div>
-      </div>
-      <div class="bbn-padding bbn-flex-fill">
-        <bbn-tree :source="tree"
-                  ref="tree"
-                  :selection="true"
-                  uid="uid"
-                  :opened="true"
-                  :scrollable="false"/>
-      </div>
-    </div>
-  </div>
-  <div bbn-else
+          :action="cp.source.root + 'actions/account'"
+          ref="form"
+          :buttons="formButtons">
+  <div bbn-if="currentPage === 1"
        class="bbn-w-100">
     <div class="bbn-grid-fields bbn-padding bbn-m">
       <div class="bbn-label"><?= _("Account type") ?></div>
@@ -48,8 +28,10 @@
                 type="password"
                 :no-save="true"
                 :required="true"/>
-      <div class="bbn-label"><?= _("Private account") ?></div>
-      <bbn-switch bbn-model="account.locale"
+      <div bbn-if="isDev"
+           class="bbn-label"><?= _("Private account") ?></div>
+      <bbn-switch bbn-if="isDev"
+                  bbn-model="account.locale"
                   :value="true"
                   :novalue="false"/>
       <template bbn-if="['imap', 'pop3'].includes(accountCode)">
@@ -79,9 +61,29 @@
                    autocomplete="off"
                    :required="true"/>
       </template>
-      <div bbn-if="errorState"
-           class="bbn-grid-full bbn-c bbn-b bbn-state-error bbn-padding">
-        <?= _("Impossible to connect to the mail server") ?>
+    </div>
+  </div>
+
+  <div bbn-elseif="currentPage === 2"
+       class="bbn-w-100 bbn-padding">
+    <bbn-loader bbn-if="isTesting"
+                label="<?=_('Testing account...')?>"
+                style="position: relative !important"/>
+    <div bbn-elseif="errorState"
+         class="bbn-c bbn-b bbn-state-error bbn-padding">
+      <?= _("Impossible to connect to the mail server") ?>
+    </div>
+    <div bbn-elseif="tree.length">
+      <div class="bbn-m bbn-b bbn-c">
+        <?= _("Choose the folders you want to keep synchronized") ?>
+      </div>
+      <div class="bbn-padding">
+        <bbn-tree :source="tree"
+                  ref="tree"
+                  :selection="true"
+                  uid="uid"
+                  :opened="true"
+                  :scrollable="false"/>
       </div>
     </div>
   </div>
