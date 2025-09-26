@@ -70,7 +70,7 @@ if ($model->hasData('action')) {
               if ($id_account = $em->addAccount($cfg, $isLocale)) {
                 return [
                   'success' => true,
-                  'data' => $em->getAccounts(),
+                  'data' => $em->getAccounts(true),
                   'id_account' => $id_account
                 ];
               }
