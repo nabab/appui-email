@@ -12,13 +12,13 @@ if ($model->hasData('action')) {
         && $model->hasData('locale')
         && ($code = $model->inc->options->code($model->data['type']))
       ) {
-        $isLocale = !empty($model->data['locale']);
         $cfg = [
           'type' => $code,
           'login' => $model->data['login'],
           'host' => $model->data['host'] ?? null,
           'pass' => $model->data['pass'],
-          'ssl' => $model->data['ssl'] ?? null
+          'ssl' => $model->data['ssl'] ?? null,
+          'locale' => $model->hasData('locale', true)
         ];
         try {
           $mb = new bbn\Appui\Mailbox($cfg);
@@ -67,7 +67,7 @@ if ($model->hasData('action')) {
             $cfg['folders'] = $model->data['folders'];
             $cfg['email'] = $model->data['email'];
             try {
-              if ($id_account = $em->addAccount($cfg, $isLocale)) {
+              if ($id_account = $em->addAccount($cfg)) {
                 return [
                   'success' => true,
                   'data' => $em->getAccounts(true),

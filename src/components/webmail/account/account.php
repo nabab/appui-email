@@ -1,9 +1,11 @@
-<bbn-form :source="account"
+<bbn-form :source="source"
           @success="success"
           :data="{action: 'save'}"
-          :action="cp.source.root + 'actions/account'"
+          :action="root + 'webmail/actions/account'"
           ref="form"
-          :buttons="formButtons">
+          :buttons="formButtons"
+          class="appui-email-webmail-account"
+          autocomplete="off">
   <div bbn-if="currentPage === 1"
        class="bbn-w-100">
     <div class="bbn-grid-fields bbn-padding bbn-m">
@@ -11,55 +13,41 @@
       <bbn-dropdown :source="types"
                     source-value="id"
                     placeholder="<?= _("Choose a type of account") ?>"
-                    bbn-model="account.type"
-                    autocomplete="off"
+                    bbn-model="source.type"
                     :required="true"/>
       <div class="bbn-label"><?= _("eMail address") ?></div>
-      <bbn-input bbn-model="account.email"
+      <bbn-input bbn-model="source.email"
                 type="email"
-                autocomplete="off"
                 :required="true"/>
       <div class="bbn-label"><?= _("Login") ?></div>
-      <bbn-input bbn-model="account.login"
-                autocomplete="off"
+      <bbn-input bbn-model="source.login"
                 :required="true"/>
       <div class="bbn-label"><?= _("Password") ?></div>
-      <bbn-input bbn-model="account.pass"
+      <bbn-input bbn-model="source.pass"
                 type="password"
                 :no-save="true"
                 :required="true"/>
       <div bbn-if="isDev"
            class="bbn-label"><?= _("Private account") ?></div>
       <bbn-switch bbn-if="isDev"
-                  bbn-model="account.locale"
+                  bbn-model="source.locale"
                   :value="true"
                   :novalue="false"/>
       <template bbn-if="['imap', 'pop3'].includes(accountCode)">
         <div class="bbn-label"><?= _("Use SSL") ?></div>
         <bbn-checkbox :value="1"
                       :novalue="0"
-                      bbn-model="account.ssl"/>
+                      bbn-model="source.ssl"/>
         <div class="bbn-label"><?= _("Incoming server") ?></div>
         <bbn-input type="hostname"
-                   bbn-model="account.host"
-                   autocomplete="off"
-                   :required="true"/>
-        <div bbn-if="account.host"
-             class="bbn-grid-full bbn-c">
-          <a href="javascript:;"
-             @click="hasSMTP = !hasSMTP">
-            <?= _("Click here to change the outgoing server configuration if it is different") ?>
-          </a>
-        </div>
-        <div bbn-if="hasSMTP"
-             class="bbn-label">
-          <?= _("Outgoing server") ?>
-        </div>
-        <bbn-input bbn-if="hasSMTP"
-                   bbn-model="account.smtp"
+                   bbn-model="source.host"
+                   :required="true"
+                   @change="inServerChanged = !!source.host.length"/>
+        <div class="bbn-label"><?= _("Outgoing server") ?></div>
+        <bbn-input bbn-model="source.smtp"
                    type="hostname"
-                   autocomplete="off"
-                   :required="true"/>
+                   :required="true"
+                   @change="outServerChanged = !!source.smtp.length"/>
       </template>
     </div>
   </div>

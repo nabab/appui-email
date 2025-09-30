@@ -139,7 +139,7 @@
           if (addedAccount.length) {
             for (const accountId of addedAccount) {
               if (bbn.fn.search(this.source.accounts, { id: accountId}) < 0) {
-                bbn.fn.post(this.root + 'actions/account', {
+                bbn.fn.post(this.root + 'webmail/actions/account', {
                   action: 'get',
                   id: accountId
                 } , d => {
@@ -178,7 +178,7 @@
               }
               // iterate each hash of each folder to see what folder have changed
               if (bbn.fn.search(this.source.accounts, { id: key}) !== -1) {
-                bbn.fn.post(this.root + 'actions/account', {
+                bbn.fn.post(this.root + 'webmail/actions/account', {
                   action: 'get',
                   id: key
                 } , d => {
@@ -226,7 +226,7 @@
           event.preventDefault();
           return false;
         }
-        bbn.fn.post(this.root + 'actions/folder/move', {
+        bbn.fn.post(this.root + 'webmail/actions/folder/move', {
           to: dest.data,
           id_account: source.data.id_account,
           folders: this.getAllFolderChild(source.data)
@@ -255,27 +255,40 @@
       },
       treeMenu(node) {
         const res = []
-        if (node.data.type === "account") {
-          res.push({
-            text: bbn._('Delete account'),
-            icon: "nf nf-md-delete",
-            action: () => {
-              this.deleteAccount(node.data.uid)
-              appui.poll();
-            }
-          })
-        }
         if (node.data.type !== "folder_types") {
           res.push({
             text: bbn._('Create folder'),
             icon: "nf nf-fa-plus",
             action: () => {
+              const componentOptions = {
+                idAccount: node.data.type === "account" ? node.data.uid : node.data.id_account
+              };
+              if (node.data.type !== "account") {
+                componentOptions.idParent = node.data.id;
+              }
+
               this.getPopup({
                 label: bbn._("Folder name"),
-                component: "appui-email-forms-create",
-                source: {
-                  id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
-                  id_parent: node.data.id || null,
+                component: "appui-email-webmail-folder-create",
+                componentOptions,
+                componentEvents: {
+                  success: d => {
+                    const acc = bbn.fn.getRow(this.source.accounts , {id: d.account.id});
+                    if (acc) {
+                      acc.folders.splice(0, acc.folders.length, ...d.account.folders);
+                    };
+                    this.setTreeData();
+                    this.$nextTick(() => {
+                      const tree = this.getRef('tree');
+                      if (tree) {
+                        tree.updateData().then(() => {
+                          tree.reload()
+                        });
+                      }
+
+                      appui.success(bbn._("Folder created with success"));
+                    });
+                  }
                 }
               })
               appui.poll();
@@ -326,10 +339,21 @@
           }
         });
 
+        if (node.data.type === "account") {
+          res.push({
+            text: bbn._('Delete account'),
+            icon: "nf nf-md-delete",
+            action: () => {
+              this.deleteAccount(node.data.uid)
+              appui.poll();
+            }
+          })
+        }
+
         return res;
       },
       getAllFolderChild(folder) {
-        res = [];
+        const res = [];
         res.push({id: folder.id, text: folder.text, id_parent: folder.id_parent || null})
         if (folder.items) {
           for (let idx in folder.items) {
@@ -344,7 +368,7 @@
       },
       removeFolder(idArray, text, uid) {
         this.confirm(bbn._(`Do you want to delete the ${text} folder and all the subfolders ?`), () => {
-          bbn.fn.post(this.root + 'actions/folder/delete', {
+          bbn.fn.post(this.root + 'webmail/actions/folder/delete', {
             // reverse the array to delete the the last subfolders before
             id: idArray.reverse(),
             id_account: uid
@@ -372,7 +396,7 @@
       },
       deleteAccount(uid) {
         this.confirm(bbn._("Do you want to delete this account ?"), () => {
-          bbn.fn.post(this.root + 'actions/account', {
+          bbn.fn.post(this.root + 'webmail/actions/account', {
             action: 'delete',
             data: {
               id: uid
@@ -384,7 +408,7 @@
               let idx = bbn.fn.search(this.source.accounts, { id: uid})
               this.source.accounts.splice(idx, 1)
               this.setTreeData();
-              tree.updateData().then( () => {
+              tree.updateData().then(() => {
                 tree.reload()
               })
             } else {
@@ -448,7 +472,7 @@
             type: "folder_types"
           });
         })
-        if (this.source.accounts) {
+        if (this.source.accounts?.length) {
           bbn.fn.each(this.source.accounts, a => {
             let folders = bbn.fn.clone(a.folders.filter(el => el.subscribed !== false));
             r.push({
@@ -523,9 +547,30 @@
       },
       createAccount() {
         this.getPopup({
-          //height: 450,
           label: bbn._("eMail account configuration"),
-          component: 'appui-email-forms-account',
+          component: 'appui-email-webmail-account',
+          componentOptions: {
+            types: this.source.types
+          },
+          componentEvents: {
+            success: d => {
+              if (d?.success && d?.id_account) {
+                const acc = bbn.fn.getRow(d.data, {id: d.id_account})
+                if (acc) {
+                  this.source.accounts.push(acc);
+                  this.setTreeData();
+                  this.$nextTick(() => {
+                    const tree = this.getRef('tree');
+                    if (tree) {
+                      tree.updateData().then(() => {
+                        tree.reload();
+                      });
+                    }
+                  })
+                }
+              }
+            }
+          }
         })
         appui.poll();
       },

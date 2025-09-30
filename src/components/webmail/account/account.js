@@ -1,30 +1,40 @@
 (() => {
   return {
     mixins: [bbn.cp.mixins.basic],
+    props: {
+      source: {
+        type: Object,
+        default(){
+          return {
+            folders: [],
+            type: null,
+            email: '',
+            login: '',
+            pass: '',
+            host: '',
+            smtp: '',
+            ssl: 1,
+            locale: true
+          }
+        }
+      },
+      types: {
+        type: Array,
+        required: true
+      }
+    },
     data(){
-      const cp = appui.getRegistered('appui-email-webmail');
       return {
-        cp: cp,
-        types: cp.source.types,
-        hasSMTP: false,
+        root: appui.plugins['appui-email'] + '/',
         lastChecked: null,
         tree: [],
         accountChecker: null,
         errorState: false,
-        account: cp.editedAccount || {
-          folders: [],
-          type: null,
-          host: null,
-          login: '',
-          smtp: null,
-          pass: '',
-          ssl: 1,
-          email: '',
-          locale: true
-        },
         currentPage: 1,
         isTesting: false,
-        isDev: appui.user.isDev
+        isDev: appui.user.isDev,
+        inServerChanged: false,
+        outServerChanged: false
       }
     },
     computed: {
@@ -52,14 +62,14 @@
         return btns;
       },
       selectedFolders(){
-        if (this.tree.length && this.account.folders.length) {
-          return JSON.stringify(this.account.folders);
+        if (this.tree.length && this.source.folders.length) {
+          return JSON.stringify(this.source.folders);
         }
         return '';
       },
       accountCode(){
-        if (this.account.type) {
-          return bbn.fn.getField(this.types, 'code', {id: this.account.type});
+        if (this.source.type) {
+          return bbn.fn.getField(this.types, 'code', {id: this.source.type});
         }
         return null;
       }
@@ -67,19 +77,19 @@
     methods: {
       backToConfig(){
         this.tree.splice(0);
-        this.account.folders.splice(0);
-        this.account.pass = '';
+        this.source.folders.splice(0);
+        this.source.pass = '';
         this.errorState = false;
         this.isTesting = false;
         this.currentPage = 1;
       },
       nextToTest(){
         if (this.getRef('form')?.isValid()
-          && this.account.email
-          && bbn.fn.isEmail(this.account.email)
-          && this.account.type
-          && this.account.login
-          && this.account.pass
+          && this.source.email
+          && bbn.fn.isEmail(this.source.email)
+          && this.source.type
+          && this.source.login
+          && this.source.pass
         ) {
           this.tree.splice(0);
           this.isTesting = true;
@@ -87,9 +97,10 @@
           this.currentPage = 2;
           let ok = false;
           if (['imap', 'pop'].includes(this.accountCode)) {
-            if (this.account.host
-              && bbn.fn.isHostname(this.account.host)
-              && (!this.hasSMTP || this.smtp)
+            if (this.source.host
+              && bbn.fn.isHostname(this.source.host)
+              && this.source.smtp
+              && bbn.fn.isHostname(this.source.smtp)
             ) {
               ok = true;
             }
@@ -100,8 +111,8 @@
 
           if (ok) {
             this.post(
-              this.cp.source.root + 'actions/account',
-              bbn.fn.extend({action: 'test'}, this.account),
+              this.root + 'webmail/actions/account',
+              bbn.fn.extend({action: 'test'}, this.source),
               d => {
                 if (d.data) {
                   let checked = [];
@@ -114,10 +125,10 @@
                   });
                   this.isTesting = false;
                   this.$nextTick(() => {
-                    this.account.folders = checked;
+                    this.source.folders = checked;
                     const tree = this.getRef('tree');
                     if (tree) {
-                      tree.checked = this.account.folders;
+                      tree.checked = this.source.folders;
                       tree.updateData();
                     }
                   });
@@ -136,37 +147,45 @@
         }
       },
       success(d){
-        if (d && d.success) {
-          const idx = bbn.fn.search(d.data, { id: d.id_account})
-          this.cp.source.accounts.push(d.data[idx]);
-          this.cp.setTreeData();
-          this.$nextTick(() => {
-            const tree = this.cp.getRef('tree');
-            if (tree) {
-              tree.updateData().then(() => {
-                tree.reload();
-              });
-            }
-          })
-        }
+        this.$emit('success', d);
       },
+      onServerFocus(on){
+        if (bbn.fn.isString(on) && ['host', 'smtp'].includes(on)) {
+          if (on === 'host' && !this.source.host.length && this.source.smtp.length) {
+            this.source.host = this.source.smtp;
+          }
+          else if (on === 'smtp' && !this.source.smtp.length && this.source.host.length) {
+            this.source.smtp = this.source.host;
+          }
+        }
+      }
     },
     watch: {
-      hasSMTP(v){
-        if (v && this.account.host) {
-          this.account.smtp = this.account.host;
+      "source.host"(v){
+        if (!this.outServerChanged) {
+          this.source.smtp = v;
         }
-        else {
-          this.account.smtp = null;
+
+        if (!v.length && this.inServerChanged) {
+          this.inServerChanged = false;
         }
       },
-      "account.email"(nv, ov) {
+      "source.smtp"(v){
+        if (!this.inServerChanged) {
+          this.source.host = v;
+        }
+
+        if (!v.length && this.outServerChanged) {
+          this.outServerChanged = false;
+        }
+      },
+      "source.email"(nv, ov) {
         if (nv) {
-          if (ov === this.account.login) {
-            this.account.login = nv;
+          if (ov === this.source.login) {
+            this.source.login = nv;
           }
-          else if (!this.account.login) {
-            this.account.login = nv;
+          else if (!this.source.login) {
+            this.source.login = nv;
           }
         }
       }

@@ -34,9 +34,13 @@ if ($model->hasData(['action', 'id_account'], true)) {
       }
       break;
     case 'create':
-      if ($model->hasData('name')) {
+      if ($model->hasData('name', true)) {
         return [
-          'success' => $em->createFolder($model->data['id_account'], $model->data['name'], $model->data['id_parent'] ?? null),
+          'success' => $em->createFolder(
+            $model->data['id_account'],
+            $model->data['name'],
+            !empty($model->data['id_parent']) ? $model->data['id_parent'] : null
+          ),
           'account' => $em->getAccount($model->data['id_account'])
         ];
       }
