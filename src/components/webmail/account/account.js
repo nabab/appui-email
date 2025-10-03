@@ -26,15 +26,11 @@
     data(){
       return {
         root: appui.plugins['appui-email'] + '/',
-        lastChecked: null,
         tree: [],
-        accountChecker: null,
         errorState: false,
         currentPage: 1,
         isTesting: false,
-        isDev: appui.user.isDev,
-        inServerChanged: false,
-        outServerChanged: false
+        isDev: appui.user.isDev
       }
     },
     computed: {
@@ -72,18 +68,46 @@
           return bbn.fn.getField(this.types, 'code', {id: this.source.type});
         }
         return null;
+      },
+      treeSource(){
+        return bbn.fn.order(this.tree, 'text', 'ASC');
+      },
+      totalFolders(){
+        let tot = 0;
+        if (this.tree?.length) {
+          const countItems = (items) => {
+            bbn.fn.each(items, a => {
+              tot++;
+              if (a.items?.length) {
+                countItems(a.items);
+              }
+            })
+          };
+          countItems(this.tree);
+        }
+
+        return tot;
+      },
+      isAllChecked(){
+        return this.tree?.length && (this.source?.folders?.length === this.totalFolders);
+      },
+      isIntermediateChecked(){
+        return this.source?.folders?.length && (this.source?.folders?.length < this.totalFolders);
       }
     },
     methods: {
       backToConfig(){
         this.tree.splice(0);
         this.source.folders.splice(0);
-        this.source.pass = '';
         this.errorState = false;
         this.isTesting = false;
         this.currentPage = 1;
       },
-      nextToTest(){
+      nextToTest(ev){
+        if (ev?.type === 'submit') {
+          ev.preventDefault();
+        }
+
         if (this.getRef('form')?.isValid()
           && this.source.email
           && bbn.fn.isEmail(this.source.email)
@@ -121,6 +145,7 @@
                       checked.push(a.uid);
                     }
 
+                    a.icon = "nf nf-md-folder";
                     this.tree.push(a);
                   });
                   this.isTesting = false;
@@ -149,34 +174,35 @@
       success(d){
         this.$emit('success', d);
       },
-      onServerFocus(on){
-        if (bbn.fn.isString(on) && ['host', 'smtp'].includes(on)) {
-          if (on === 'host' && !this.source.host.length && this.source.smtp.length) {
-            this.source.host = this.source.smtp;
-          }
-          else if (on === 'smtp' && !this.source.smtp.length && this.source.host.length) {
-            this.source.smtp = this.source.host;
-          }
+      checkUncheckAll(){
+        if (this.isAllChecked) {
+          this.source.folders.splice(0);
+        }
+        else {
+          const addToChecked  = (items) => {
+            bbn.fn.each(items, a => {
+              if (!this.source.folders.includes(a.uid)) {
+                this.source.folders.push(a.uid);
+              }
+
+              if (a.items?.length) {
+                addToChecked(a.items);
+              }
+            })
+          };
+          addToChecked(this.tree);
         }
       }
     },
     watch: {
-      "source.host"(v){
-        if (!this.outServerChanged) {
-          this.source.smtp = v;
-        }
-
-        if (!v.length && this.inServerChanged) {
-          this.inServerChanged = false;
-        }
-      },
-      "source.smtp"(v){
-        if (!this.inServerChanged) {
-          this.source.host = v;
-        }
-
-        if (!v.length && this.outServerChanged) {
-          this.outServerChanged = false;
+      "source.host"(nv, ov){
+        if (nv) {
+          if (ov === this.source.smtp) {
+            this.source.smtp = nv;
+          }
+          else if (!this.source.smtp) {
+            this.source.smtp = nv;
+          }
         }
       },
       "source.email"(nv, ov) {

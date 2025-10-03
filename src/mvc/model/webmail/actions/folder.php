@@ -1,9 +1,4 @@
 <?php
-/**
-       * What is my purpose?
-       *
-       **/
-
 use bbn\X;
 use bbn\Str;
 use bbn\User\Email;
@@ -13,22 +8,9 @@ if ($model->hasData(['action', 'id_account'], true)) {
   $em = new Email($model->db);
   switch($model->data['action']) {
     case 'delete':
-      if ($model->hasData('id')) {
-        $success = true;
-        $res = [];
-        foreach ($model->data['id'] as $folder) {
-          $tmp =  $em->deleteFolder($folder['id'], $model->data['id_account']);
-          if ($success && !$tmp) {
-            $success = false;
-          }
-          array_push($res, [
-            'success' => $tmp,
-            'text' => $folder['text']
-          ]);
-        }
+      if ($model->hasData('id', true)) {
         return [
-          'success' => $success,
-          'res' => $res,
+          'success' => $em->deleteFolder($model->data['id'], $model->data['id_account']),
           'account' => $em->getAccount($model->data['id_account'])
         ];
       }
@@ -46,15 +28,19 @@ if ($model->hasData(['action', 'id_account'], true)) {
       }
       return [
         'success' => false,
-        'error' => 'Folder\'s name not given'
+        'error' => _("Folder's name not given")
       ];
       break;
     case 'rename':
-      if ($model->hasData(['name', 'folders'])) {
+      if ($model->hasData(['id', 'name'], true)) {
+        return [
+          'success' => $em->renameFolder($model->data['id'], $model->data['name']),
+          'account' => $em->getAccount($model->data['id_account'])
+        ];
         $folders = $model->data['folders'];
         $success = true;
         $res = [];
-        $success = $em->renameFolder($folders[0]['id'], $model->data['name'], $model->data['id_account'], $folders[0]['id_parent']);
+        $success = $em->renameFolder($model->data['id'], $model->data['name'], $model->data['id_account'], $folders[0]['id_parent']);
         for ($i = 1; $i < count($folders); $i++){
           $tmp = $em->renameFolderDb($folders[$i]['id'],  $folders[$i]['text'], $model->data['id_account'], $folders[$i]['id_parent']);
           if ($success && !$tmp) {
@@ -77,9 +63,9 @@ if ($model->hasData(['action', 'id_account'], true)) {
         $folders = $model->data['folders'];
         $success = true;
         $res = [];
-        $success = $em->renameFolder($folders[0]['id'], $folders[0]['text'], $model->data['id_account'], $to['id'] ?? null);
+        $success = $em->renameFolder($folders[0]['id'], $folders[0]['text'], $to['id'] ?? null);
         for ($i = 1; $i < count($folders); $i++){
-          $tmp = $em->renameFolderDb($folders[$i]['id'],  $folders[$i]['text'], $model->data['id_account'], $folders[$i]['id_parent']);
+          $tmp = $em->renameFolderDb($folders[$i]['id'],  $folders[$i]['text'], $folders[$i]['id_parent']);
           if ($success && !$tmp) {
             $success = false;
           }

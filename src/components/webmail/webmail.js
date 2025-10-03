@@ -268,26 +268,31 @@
               }
 
               this.getPopup({
-                label: bbn._("Folder name"),
+                label: bbn._("Create new folder"),
                 component: "appui-email-webmail-folder-create",
                 componentOptions,
                 componentEvents: {
                   success: d => {
-                    const acc = bbn.fn.getRow(this.source.accounts , {id: d.account.id});
-                    if (acc) {
-                      acc.folders.splice(0, acc.folders.length, ...d.account.folders);
-                    };
-                    this.setTreeData();
-                    this.$nextTick(() => {
-                      const tree = this.getRef('tree');
-                      if (tree) {
-                        tree.updateData().then(() => {
-                          tree.reload()
-                        });
-                      }
+                    if (d.success) {
+                      const acc = bbn.fn.getRow(this.source.accounts , {id: d.account.id});
+                      if (acc) {
+                        acc.folders.splice(0, acc.folders.length, ...d.account.folders);
+                      };
+                      this.setTreeData();
+                      this.$nextTick(() => {
+                        const tree = this.getRef('tree');
+                        if (tree) {
+                          tree.updateData().then(() => {
+                            tree.reload()
+                          });
+                        }
 
-                      appui.success(bbn._("Folder created with success"));
-                    });
+                        appui.success(bbn._("Folder created with success"));
+                      });
+                    }
+                    else {
+                      appui.error(d.error ? d.error : bbn._("Impossible to create the folder"));
+                    }
                   }
                 }
               })
@@ -300,7 +305,7 @@
             text: bbn._('Remove folder'),
             icon: "nf nf-md-folder_remove",
             action: () => {
-              this.removeFolder(this.getAllFolderChild(node.data), node.data.text, node.data.id_account);
+              this.removeFolder(node.data.id, node.data.id_account, node.data.text);
               appui.poll();
             }
           }, {
@@ -308,12 +313,43 @@
             icon: "nf nf-md-rename_box",
             action: () => {
               this.getPopup({
-                label: bbn._("Folder new name"),
-                component: "appui-email-forms-rename",
-                source: {
+                label: bbn._("Rename folder"),
+                component: "appui-email-webmail-folder-rename",
+                componentOptions: {
+                  idAccount: node.data.id_account,
+                  idFolder: node.data.id,
                   name: node.data.text,
-                  id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
-                  folders: this.getAllFolderChild(node.data)
+                  folders: bbn.fn.map(
+                    bbn.fn.filter(
+                      bbn.fn.clone(node.parent.source),
+                      s => s.type === 'folder_types'
+                    ),
+                    f => f.text
+                  )
+                },
+                componentEvents: {
+                  success: d => {
+                    if (d.success) {
+                      const acc = bbn.fn.getRow(this.source.accounts , {id: d.account.id});
+                      if (acc) {
+                        acc.folders.splice(0, acc.folders.length, ...d.account.folders);
+                      };
+                      this.setTreeData();
+                      this.$nextTick(() => {
+                        const tree = this.getRef('tree');
+                        if (tree) {
+                          tree.updateData().then(() => {
+                            tree.reload()
+                          });
+                        }
+
+                        appui.success(bbn._("Folder renamed with success"));
+                      });
+                    }
+                    else {
+                      appui.error(d.error ? d.error : bbn._("Impossible to rename the folder"));
+                    }
+                  }
                 }
               })
               appui.poll();
@@ -366,31 +402,27 @@
         }
         return res;
       },
-      removeFolder(idArray, text, uid) {
-        this.confirm(bbn._(`Do you want to delete the ${text} folder and all the subfolders ?`), () => {
-          bbn.fn.post(this.root + 'webmail/actions/folder/delete', {
-            // reverse the array to delete the the last subfolders before
-            id: idArray.reverse(),
-            id_account: uid
+      removeFolder(idFolder, idAccount, folderTitle) {
+        this.confirm(bbn._(`Do you want to delete the "${folderTitle}" folder and all the subfolders ?`), () => {
+          this.post(this.root + 'webmail/actions/folder/delete', {
+            id: idFolder,
+            id_account: idAccount
           }, d => {
-            let tree = this.getRef('tree');
-            let idx = bbn.fn.search(this.source.accounts, { id: uid})
+            const tree = this.getRef('tree');
+            const idx = bbn.fn.search(this.source.accounts, {id: idAccount})
             if (d.success) {
-              appui.success(bbn._(`${text} folder and subfolders ar successfuly deleted`));
+              appui.success(bbn._(`${folderTitle} folder and subfolders ar successfuly deleted`));
               this.source.accounts.splice(idx, 1, d.account);
-            } else {
-              for (let idx in d.res) {
-                if (d.res[idx].success) {
-                  appui.success(bbn._(`${d.res[idx].text} successfuly deleted`))
-                } else {
-                  appui.success(bbn._(`${d.res[idx].text} impossible to delete`))
-                }
-              }
+              this.setTreeData();
+              this.$nextTick(() => {
+                tree.updateData().then(() => {
+                  tree.reload()
+                })
+              })
             }
-            this.setTreeData();
-            tree.updateData().then( () => {
-              tree.reload()
-            })
+            else {
+              appui.error(bbn._("Impossible to delete the folder"));
+            }
           })
         })
       },
@@ -554,20 +586,17 @@
           },
           componentEvents: {
             success: d => {
-              if (d?.success && d?.id_account) {
-                const acc = bbn.fn.getRow(d.data, {id: d.id_account})
-                if (acc) {
-                  this.source.accounts.push(acc);
-                  this.setTreeData();
-                  this.$nextTick(() => {
-                    const tree = this.getRef('tree');
-                    if (tree) {
-                      tree.updateData().then(() => {
-                        tree.reload();
-                      });
-                    }
-                  })
-                }
+              if (d?.success && d?.data) {
+                this.source.accounts.push(d.data);
+                this.setTreeData();
+                this.$nextTick(() => {
+                  const tree = this.getRef('tree');
+                  if (tree) {
+                    tree.updateData().then(() => {
+                      tree.reload();
+                    });
+                  }
+                })
               }
             }
           }

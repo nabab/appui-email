@@ -70,7 +70,7 @@ if ($model->hasData('action')) {
               if ($id_account = $em->addAccount($cfg)) {
                 return [
                   'success' => true,
-                  'data' => $em->getAccounts(true),
+                  'data' => $em->getAccount($id_account, true),
                   'id_account' => $id_account
                 ];
               }

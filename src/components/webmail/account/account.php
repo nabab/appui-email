@@ -5,7 +5,8 @@
           ref="form"
           :buttons="formButtons"
           class="appui-email-webmail-account"
-          autocomplete="off">
+          autocomplete="off"
+          @submit="ev => currentPage === 1 ? nextToTest(ev) : false">
   <div bbn-if="currentPage === 1"
        class="bbn-w-100">
     <div class="bbn-grid-fields bbn-padding bbn-m">
@@ -41,13 +42,11 @@
         <div class="bbn-label"><?= _("Incoming server") ?></div>
         <bbn-input type="hostname"
                    bbn-model="source.host"
-                   :required="true"
-                   @change="inServerChanged = !!source.host.length"/>
+                   :required="true"/>
         <div class="bbn-label"><?= _("Outgoing server") ?></div>
         <bbn-input bbn-model="source.smtp"
                    type="hostname"
-                   :required="true"
-                   @change="outServerChanged = !!source.smtp.length"/>
+                   :required="true"/>
       </template>
     </div>
   </div>
@@ -62,11 +61,22 @@
       <?= _("Impossible to connect to the mail server") ?>
     </div>
     <div bbn-elseif="tree.length">
-      <div class="bbn-m bbn-b bbn-c">
+      <div class="bbn-m bbn-c bbn-secondary bbn-radius bbn-spadding">
         <?= _("Choose the folders you want to keep synchronized") ?>
       </div>
       <div class="bbn-padding">
-        <bbn-tree :source="tree"
+        <div @click="checkUncheckAll"
+             class="bbn-p bbn-bottom-sspace bbn-hxspadding">
+          <i bbn-if="isAllChecked"
+             class="nf nf-md-checkbox_outline bbn-m"/>
+          <i bbn-elseif="isIntermediateChecked"
+             class="nf nf-md-checkbox_intermediate bbn-m"/>
+          <i bbn-else
+             class="nf nf-md-checkbox_blank_outline bbn-m"/>
+          <span bbn-if="isAllChecked"><?=_("Uncheck all")?></span>
+          <span bbn-else><?=_("Check all")?></span>
+        </div>
+        <bbn-tree :source="treeSource"
                   ref="tree"
                   :selection="true"
                   uid="uid"
