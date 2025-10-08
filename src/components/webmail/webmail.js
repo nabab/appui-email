@@ -300,6 +300,16 @@
             }
           })
         }
+
+        if (node.data.type === "account") {
+          res.push({
+            text: bbn._("Manage subscriptions"),
+            icon: "nf nf-fa-folder_tree",
+            action: () => {},
+            disabled: true
+          })
+        }
+
         if (!['account', 'folder_types'].includes(node.data.type)) {
           res.push({
             text: bbn._('Remove folder'),
@@ -309,7 +319,7 @@
               appui.poll();
             }
           }, {
-            text: bbn._('Rename Folder'),
+            text: bbn._('Rename folder'),
             icon: "nf nf-md-rename_box",
             action: () => {
               this.getPopup({
@@ -358,7 +368,7 @@
         }
 
         res.push({
-          text: bbn._('Synchronize'),
+          text: node.data.type === 'account' ? bbn._('Synchronize account') : bbn._('Synchronize folder'),
           icon: "nf nf-oct-sync",
           action: () => {
             switch (node.data.type) {
@@ -377,6 +387,11 @@
 
         if (node.data.type === "account") {
           res.push({
+            text: bbn._("Account settings"),
+            icon: "nf nf-seti-settings",
+            action: () => {},
+            disabled: true
+          }, {
             text: bbn._('Delete account'),
             icon: "nf nf-md-delete",
             action: () => {
@@ -693,7 +708,14 @@
       },
       getAccountIdByFolder(idFolder){
         return this.getAccountByFolder(idFolder)?.id || null;
-      }
+      },
+      showAttachments(row){
+        if (row.attachments) {
+          let attachments = bbn.fn.isString(row.attachments) ? JSON.parse(row.attachments) : row.attachments;
+          return attachments.length
+        }
+        return '-';
+      },
     },
     watch: {
       currentFolder(){
