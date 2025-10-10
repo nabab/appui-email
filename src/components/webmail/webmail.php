@@ -75,7 +75,7 @@
                 </div>
               </bbn-toolbar>
             </div>
-            <bbn-kanban-element class="bbn-noradius bbn-flex-fill"
+            <bbn-kanban-element class="appui-email-webmail-list bbn-noradius bbn-flex-fill"
                                 :source="root + 'webmail'"
                                 component="appui-email-item"
                                 :pageable="true"
@@ -137,9 +137,20 @@
             </bbn-table>-->
           </div>
         </bbn-pane>
-        <bbn-pane :scrollable="true">
-          <appui-email-webmail-reader bbn-if="selectedMail"
-                                      :source="selectedMail"/>
+        <bbn-pane :scrollable="!threads">
+          <bbn-kanban-element bbn-if="threads && selectedMail"
+                              class="appui-email-webmail-thread bbn-noradius bbn-flex-fill"
+                              :source="selectedMail.thread"
+                              component="appui-email-webmail-reader"
+                              :pageable="false"
+                              :filterable="false"
+                              :selection="false"
+                              ref="thread"
+                              :sortable="true"
+                              :order="[{field: 'date', dir: 'DESC'}]"/>
+          <appui-email-webmail-reader bbn-elseif="selectedMail"
+                                      :source="selectedMail"
+                                      :overlay="true"/>
           <div bbn-else
                class="bbn-overlay bbn-middle">
             <div class="bbn-block bbn-large bbn-c"

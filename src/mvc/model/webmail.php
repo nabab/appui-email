@@ -4,7 +4,9 @@ use bbn\X;
 $em = new bbn\User\Email($model->db);
 if ($model->hasData('limit')) {
   if ($model->hasData('id_folder', true)) {
-    $list = $em->getListAsThreads($model->data['id_folder'], $model->data);
+    $list = $model->hasData('threads', true) ?
+      $em->getListAsThreads($model->data['id_folder'], $model->data) :
+      $em->getList($model->data['id_folder'], $model->data);
     if (is_null($list)) {
       return [
         'data' => [],

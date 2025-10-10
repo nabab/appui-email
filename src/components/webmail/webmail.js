@@ -24,7 +24,8 @@
         extractedTo: null,
         selectedMode: "download",
         syncId: false,
-        syncMessage: ''
+        syncMessage: '',
+        threads: true
       };
     },
     computed: {
@@ -42,7 +43,8 @@
         }
 
         return {
-          id_folder: idFolder
+          id_folder: idFolder,
+          threads: this.threads
         }
       },
       currentFolderObj(){

@@ -5,6 +5,10 @@
       source: {
         type: Object,
         required: true
+      },
+      overlay: {
+        type: Boolean,
+        default: false
       }
     },
     data(){
@@ -113,6 +117,10 @@
       },
       onFrameLoaded(){
         const f = this.getRef('frame');
+        if (!this.overlay) {
+          f.style.height = f.contentWindow.document.documentElement.scrollHeight + 'px';
+        }
+
         if (f?.src) {
           this.isFrameLoading = false;
         }

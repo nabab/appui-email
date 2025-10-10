@@ -1,5 +1,5 @@
-<div class="appui-email-webmail-reader bbn-overlay bbn-flex-height">
-  <div class="bbn-top-spadding bbn-hspadding bbn-bottom-xspadding">
+<div :class="['appui-email-webmail-reader', {'bbn-overlay bbn-flex-height': overlay}]">
+  <div class="bbn-top-spadding bbn-hxspadding bbn-bottom-xspadding">
     <bbn-toolbar class="bbn-m bbn-no-border bbn-radius">
       <div class="bbn-flex-fill bbn-vmiddle bbn-xspadding"
           style="gap: var(--xsspace)">
@@ -95,16 +95,16 @@
                                          :mail="source.from_email"/>
   </div>
   <hr class="bbn-hr">
-  <div class="bbn-flex-fill bbn-spadding">
+  <div class="bbn-flex-fill bbn-hpadding bbn-vspadding">
     <div class="bbn-100">
       <bbn-frame bbn-if="source.id"
                  :url="root + 'reader/' + source.id"
-                 class="bbn-100"
+                 :class="{'bbn-100': overlay, 'bbn-w-100': !overlay}"
                  :reset-style="true"
                  @load="onFrameLoaded"
                  ref="frame"/>
       <bbn-loader bbn-if="isFrameLoading"
-                  class="bbn-overlay bbn-middle"/>
+                  class="bbn-overlay bbn-middle bbn-background"/>
     </div>
   </div>
   <div bbn-if="source.attachments?.length"
