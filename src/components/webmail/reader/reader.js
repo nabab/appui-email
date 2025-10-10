@@ -9,12 +9,22 @@
       overlay: {
         type: Boolean,
         default: false
+      },
+      thread: {
+        type: Boolean,
+        default: false
+      },
+      index: {
+        type: Number,
+        default: 0
       }
     },
     data(){
       return {
         root: appui.plugins['appui-email'] + '/',
         isFrameLoading: true,
+        isInThread: this.$el.parentElement.classList.contains('bbn-kanban-element-item'),
+        isSelected: false,
         attachmentsSrc: [{
           text: bbn._('Download all'),
           value: 'download_all',

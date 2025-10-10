@@ -138,19 +138,10 @@
           </div>
         </bbn-pane>
         <bbn-pane :scrollable="!threads">
-          <bbn-kanban-element bbn-if="threads && selectedMail"
-                              class="appui-email-webmail-thread bbn-noradius bbn-flex-fill"
-                              :source="selectedMail.thread"
-                              component="appui-email-webmail-reader"
-                              :pageable="false"
-                              :filterable="false"
-                              :selection="false"
-                              ref="thread"
-                              :sortable="true"
-                              :order="[{field: 'date', dir: 'DESC'}]"/>
-          <appui-email-webmail-reader bbn-elseif="selectedMail"
+          <appui-email-webmail-reader bbn-if="selectedMail"
                                       :source="selectedMail"
-                                      :overlay="true"/>
+                                      :overlay="true"
+                                      :thread="threads"/>
           <div bbn-else
                class="bbn-overlay bbn-middle">
             <div class="bbn-block bbn-large bbn-c"
