@@ -1,4 +1,5 @@
-<div :class="['appui-email-webmail-reader', {'bbn-overlay bbn-flex-height': overlay || thread}]">
+<div :class="['appui-email-webmail-reader', {'bbn-overlay bbn-flex-height': overlay || thread}]"
+     @click.stop="onSelect">
   <div bbn-if="!isInThread"
        class="bbn-top-spadding bbn-hspadding bbn-bottom-xspadding">
     <bbn-toolbar class="bbn-m bbn-no-border bbn-radius">
@@ -7,43 +8,53 @@
         <bbn-button icon="nf nf-fa-mail_reply"
                     :label="_('Reply')"
                     :notext="true"
-                    @click="reply"/>
+                    @click="reply"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-fa-mail_reply_all"
                     :label="_('Reply All')"
                     :notext="true"
-                    @click="replyAll"/>
+                    @click="replyAll"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-fa-mail_forward"
                     :label="_('Forward')"
                     :notext="true"
-                    @click="forward"/>
+                    @click="forward"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-md-tab_plus"
                     :label="_('Open in a new tab')"
                     :notext="true"
-                    @click="openTab"/>
+                    @click="openTab"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-md-window_restore"
                     :label="_('Open in a new window')"
                     :notext="true"
-                    @click="openWindow"/>
+                    @click="openWindow"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-fa-archive"
                     :label="_('Archive')"
                     :notext="true"
-                    @click="archive"/>
+                    @click="archive"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-weather-fire"
                     :label="_('Set as junk')"
                     :notext="true"
-                    @click="setAsJunk"/>
+                    @click="setAsJunk"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-md-delete"
                     :label="_('Delete')"
                     :notext="true"
-                    @click="deleteMail"/>
+                    @click="deleteMail"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-fa-bug"
                     :label="_('Transform in task')"
                     :notext="true"
-                    @click="mailToTask"/>
+                    @click="mailToTask"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-md-folder_move"
                     :label="_('Move')"
                     :notext="true"
-                    @click="moveFolder"/>
+                    @click="moveFolder"
+                    :disabled="!currentSelected"/>
       </div>
     </bbn-toolbar>
   </div>
@@ -59,7 +70,8 @@
                       :order="[{field: 'date', dir: 'DESC'}]"/>
   <template bbn-else>
     <div bbn-if="isInThread && index"
-         class="bbn-w-100 bbn-header bbn-no-border bbn-spadding bbn-radius bbn-bottom-space"/>
+         class="bbn-w-100 bbn-header bbn-no-border bbn-spadding bbn-radius bbn-vspace"
+         @click.stop.prevent/>
     <div :class="['bbn-vspadding', 'bbn-hpadding', 'bbn-radius', {
            'bbn-background-secondary bbn-secondary-text': !isSelected,
            'bbn-background-primary bbn-primary-text': isSelected,
@@ -112,35 +124,40 @@
                                            :mailbox="source.id_account"
                                            :mail="source.from_email"/>
     </div>
-    <div class="bbn-flex-fill bbn-padding">
-      <div class="bbn-100">
-        <bbn-frame bbn-if="source.id"
-                   :url="root + 'reader/' + source.id"
-                   :class="{'bbn-100': overlay, 'bbn-w-100': !overlay}"
-                   :reset-style="true"
-                   @load="onFrameLoaded"
-                   ref="frame"/>
-        <bbn-loader bbn-if="isFrameLoading"
-                    class="bbn-overlay bbn-middle bbn-background"/>
-      </div>
-    </div>
-    <div bbn-if="source.attachments?.length"
-         class="bbn-top-xsmargin bbn-flex-wrap bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin"
-         style="min-height: 2.5rem; gap: var(--sspace)">
-      <bbn-context bbn-if="source.attachments?.length > 1"
-                   :source="attachmentsSrc"
-                   source-icon="icon">
-        <i class="nf nf-md-dots_vertical"/>
-      </bbn-context>
-      <bbn-context bbn-for="att in source.attachments"
-                   :source="getAttachmentSrc(att)"
-                   source-icon="icon">
-        <div class="bbn-no-border bbn-radius bbn-vmiddle bbn-background bbn-xspadding bbn-reactive">
-          <i :class="getFileIcon(att)"/>
-          <span class="bbn-hxsmargin"
-                bbn-text="att.name"/>
+    <div :class="['bbn-flex-fill', 'bbn-padding', {'bbn-primary-border bbn-radius-bottom': isSelected}]">
+      <div class="bbn-flex-height">
+        <div class="bbn-flex-fill">
+          <div class="bbn-100">
+            <bbn-frame bbn-if="source.id"
+                       :url="root + 'reader/' + source.id"
+                       :class="{'bbn-100': overlay, 'bbn-w-100': !overlay}"
+                       :reset-style="true"
+                       @load="onFrameLoaded"
+                       ref="frame"
+                       @click="onSelect"/>
+            <bbn-loader bbn-if="isFrameLoading"
+                        class="bbn-overlay bbn-middle bbn-background"/>
+          </div>
         </div>
-      </bbn-context>
+      </div>
+      <div bbn-if="source.attachments?.length"
+           class="bbn-top-xsmargin bbn-flex-wrap bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin"
+           style="min-height: 2.5rem; gap: var(--sspace)">
+        <bbn-context bbn-if="source.attachments?.length > 1"
+                     :source="attachmentsSrc"
+                     source-icon="icon">
+          <i class="nf nf-md-dots_vertical"/>
+        </bbn-context>
+        <bbn-context bbn-for="att in source.attachments"
+                     :source="getAttachmentSrc(att)"
+                     source-icon="icon">
+          <div class="bbn-no-border bbn-radius bbn-vmiddle bbn-background bbn-xspadding bbn-reactive">
+            <i :class="getFileIcon(att)"/>
+            <span class="bbn-hxsmargin"
+                  bbn-text="att.name"/>
+          </div>
+        </bbn-context>
+      </div>
     </div>
   </template>
 </div>

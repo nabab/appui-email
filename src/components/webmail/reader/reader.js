@@ -20,11 +20,11 @@
       }
     },
     data(){
+      const isInThread = this.$el.parentElement.classList.contains('bbn-kanban-element-item');
       return {
         root: appui.plugins['appui-email'] + '/',
         isFrameLoading: true,
-        isInThread: this.$el.parentElement.classList.contains('bbn-kanban-element-item'),
-        isSelected: false,
+        isInThread,
         attachmentsSrc: [{
           text: bbn._('Download all'),
           value: 'download_all',
@@ -41,9 +41,21 @@
           icon: 'nf nf-md-image_lock',
           action: this.sendAllToPrivateMedia
         }],
+        mainReader: isInThread ? this.closest('appui-email-webmail-reader') : this,
+        currentSelected: this.thread ? this.source.thread?.[0]?.id : this.source.id,
+      }
+    },
+    computed: {
+      isSelected(){
+        return this.isInThread
+         && (this.mainReader.source.thread?.length > 1)
+         && (this.mainReader.currentSelected === this.source.id);
       }
     },
     methods: {
+      onSelect(){
+        this.mainReader.currentSelected = this.source.id;
+      },
       formatDate(date) {
         const emailDate = dayjs(date);
         const currentDate = dayjs();
@@ -58,53 +70,55 @@
         }
       },
       reply(){
-        if (this.source.id) {
-          bbn.fn.link(this.root + "webmail/write/reply/" + this.source.id);
+        if (this.mainReader.currentSelected) {
+          bbn.fn.link(this.root + "webmail/write/reply/" + this.mainReader.currentSelected);
         }
       },
       replyAll(){
-        if (this.source.id) {
-          bbn.fn.link(this.root + "webmail/write/reply_all/" + this.source.id);
+        if (this.mainReader.currentSelected) {
+          bbn.fn.link(this.root + "webmail/write/reply_all/" + this.mainReader.currentSelected);
         }
       },
       forward(){
-        if (this.source.id) {
-          bbn.fn.link(this.root + "webmail/write/forward/" + this.source.id);
+        if (this.mainReader.currentSelected) {
+          bbn.fn.link(this.root + "webmail/write/forward/" + this.mainReader.currentSelected);
         }
       },
       archive(){
-        if (this.source.id) {
+        if (this.mainReader.currentSelected) {
 
         }
       },
       setAsJunk(){
-        if (this.source.id) {
+        if (this.mainReader.currentSelected) {
 
         }
       },
       openTab(){
-        if (this.source.id) {
-          bbn.fn.link(this.root + "webmail/view/" + this.source.id);
+        if (this.mainReader.currentSelected) {
+          bbn.fn.link(this.root + "webmail/view/" + this.mainReader.currentSelected);
         }
       },
       openWindow(){
-        if (this.source.id) {
+        if (this.mainReader.currentSelected) {
 
         }
       },
       deleteMail(){
-        this.confirm(bbn._('Do you want to delete this email?'), () => {
-          this.post(this.root + 'actions/email/delete', {
-            id: this.sourcel.id,
-            status: "ready"
-          }, d => {
-            if (d.success) {
-              appui.success(bbn._('Email deleted with success'))
-            } else {
-              appui.error(bbn._('An error occured when deleting the email'))
-            }
+        if (this.mainReader.currentSelected) {
+          this.confirm(bbn._('Do you want to delete this email?'), () => {
+            this.post(this.root + 'actions/email/delete', {
+              id: this.mainReader.currentSelected,
+              status: "ready"
+            }, d => {
+              if (d.success) {
+                appui.success(bbn._('Email deleted with success'))
+              } else {
+                appui.error(bbn._('An error occured when deleting the email'))
+              }
+            })
           })
-        })
+        }
       },
       moveFolder() {
         this.getFolders();
@@ -130,6 +144,15 @@
         if (!this.overlay) {
           f.style.height = f.contentWindow.document.documentElement.scrollHeight + 'px';
         }
+
+        f.contentWindow.document.addEventListener('click', e => {
+          this.onSelect();
+          if ((e.target?.tagName === 'A')
+            && e.target?.attributes?.cid
+          ) {
+            this.download(e.target.getAttribute('cid'));
+          }
+        });
 
         if (f?.src) {
           this.isFrameLoading = false;
