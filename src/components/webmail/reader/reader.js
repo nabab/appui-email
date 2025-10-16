@@ -25,22 +25,6 @@
         root: appui.plugins['appui-email'] + '/',
         isFrameLoading: true,
         isInThread,
-        attachmentsSrc: [{
-          text: bbn._('Download all'),
-          value: 'download_all',
-          icon: 'nf nf-fa-download',
-          action: this.downloadAll
-        }, {
-          text: bbn._('Send all to shared media'),
-          value: 'shared_media_all',
-          icon: 'nf nf-md-image',
-          action: this.sendAllToSharedMedia
-        }, {
-          text: bbn._('Send all to private media'),
-          value: 'private_media_all',
-          icon: 'nf nf-md-image_lock',
-          action: this.sendAllToPrivateMedia
-        }],
         mainReader: isInThread ? this.closest('appui-email-webmail-reader') : this,
         currentSelected: this.thread ? this.source.thread?.[0]?.id : this.source.id,
       }
@@ -50,6 +34,50 @@
         return this.isInThread
          && (this.mainReader.source.thread?.length > 1)
          && (this.mainReader.currentSelected === this.source.id);
+      },
+      attachmentsSrc(){
+        const src = [];
+        if (this.source.attachments?.length) {
+          bbn.fn.each(this.source.attachments, a => {
+            src.push({
+              text: a.name,
+              icon: this.getFileIcon(a),
+              items: [{
+                text: bbn._('Download'),
+                value: 'download',
+                icon: 'nf nf-fa-download',
+                action: () => this.download(a)
+              }, {
+                text: bbn._('Send to shared media'),
+                icon: 'nf nf-md-image',
+                action: () => this.sendToSharedMedia(a)
+              }, {
+                text: bbn._('Send to private media'),
+                icon: 'nf nf-md-image_lock',
+                action: () => this.sendToPrivateMedia(a)
+              }]
+            })
+          });
+          src.push({
+            separator: true
+          }, {
+            text: bbn._('Download all'),
+            icon: 'nf nf-fa-download',
+            action: this.downloadAll
+          }, {
+            text: bbn._('Send all to shared media'),
+            value: 'shared_media_all',
+            icon: 'nf nf-md-image',
+            action: this.sendAllToSharedMedia
+          }, {
+            text: bbn._('Send all to private media'),
+            value: 'private_media_all',
+            icon: 'nf nf-md-image_lock',
+            action: this.sendAllToPrivateMedia
+          });
+        }
+
+        return src;
       }
     },
     methods: {
@@ -101,7 +129,12 @@
       },
       openWindow(){
         if (this.mainReader.currentSelected) {
-
+          this.getPopup().load({
+            url: this.root + "webmail/view/" + this.mainReader.currentSelected,
+            width: '90%',
+            height: '90%',
+            maximizable: true
+          })
         }
       },
       deleteMail(){
@@ -141,21 +174,23 @@
       },
       onFrameLoaded(){
         const f = this.getRef('frame');
-        if (!this.overlay) {
-          f.style.height = f.contentWindow.document.documentElement.scrollHeight + 'px';
-        }
-
         f.contentWindow.document.addEventListener('click', e => {
           this.onSelect();
           if ((e.target?.tagName === 'A')
             && e.target?.attributes?.cid
           ) {
-            this.download(e.target.getAttribute('cid'));
+            this.download({name: e.target.getAttribute('cid')});
           }
         });
 
         if (f?.src) {
-          this.isFrameLoading = false;
+          setTimeout(() => {
+            if (!this.overlay) {
+              f.style.height = f.contentWindow.document.documentElement.scrollHeight + 'px';
+            }
+
+            this.isFrameLoading = false;
+          }, 0)
         }
       },
       download(att){

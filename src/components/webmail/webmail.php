@@ -77,7 +77,7 @@
             </div>
             <bbn-kanban-element class="appui-email-webmail-list bbn-noradius bbn-flex-fill"
                                 :source="root + 'webmail'"
-                                component="appui-email-item"
+                                component="appui-email-webmail-item"
                                 :pageable="true"
                                 :filterable="true"
                                 :selection="true"
@@ -140,7 +140,6 @@
         <bbn-pane :scrollable="!threads">
           <appui-email-webmail-reader bbn-if="selectedMail"
                                       :source="selectedMail"
-                                      :overlay="true"
                                       :thread="threads"/>
           <div bbn-else
                class="bbn-overlay bbn-middle">

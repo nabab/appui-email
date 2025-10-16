@@ -8,7 +8,7 @@
     <div class="bbn-flex-fill">
       <bbn-kanban-element class="bbn-border"
                        :source="items"
-                       component="appui-email-item"
+                       component="appui-email-webmail-item"
                        :pageable="true">
 
       </bbn-kanban-element>

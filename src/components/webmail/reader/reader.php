@@ -70,93 +70,75 @@
                       :order="[{field: 'date', dir: 'DESC'}]"/>
   <template bbn-else>
     <div bbn-if="isInThread && index"
-         class="bbn-w-100 bbn-header bbn-no-border bbn-spadding bbn-radius bbn-vspace"
+         class="bbn-w-100 bbn-header bbn-no-border bbn-xspadding bbn-radius bbn-top-space bbn-bottom-space"
          @click.stop.prevent/>
-    <div :class="['bbn-vspadding', 'bbn-hpadding', 'bbn-radius', {
-           'bbn-background-secondary bbn-secondary-text': !isSelected,
-           'bbn-background-primary bbn-primary-text': isSelected,
+    <div :class="['bbn-padding', 'bbn-radius', 'bbn-no-border', {
+           'bbn-header': !isSelected,
+           'bbn-background-secondary bbn-secondary-text': isSelected,
            'bbn-noradius-bottom': isSelected
          }]">
       <div class="bbn-flex-width bbn-bottom-xsmargin">
-        <div class="bbn-flex-fill">
-          <span><?= _("From:") ?></span>
+        <div class="bbn-flex-fill bbn-blue">
           <a bbn-if="source.from_name
               && source.from_email
               && (source.from_email !== source.from_name)"
             :href="'mailto:' + source.from_email"
             :title="source.from_email"
-            bbn-text="source.from_name"
-            class="bbn-light"/>
+            bbn-text="source.from_name"/>
           <a bbn-else-if="source.from_email"
             :href="'mailto:' + source.from_email"
-            bbn-text="source.from_email"
-            class="bbn-light"/>
+            bbn-text="source.from_email"/>
           <span bbn-else
-                bbn-text="source.from"
-                class="bbn-light"/>
+                bbn-text="source.from"/>
         </div>
         <div class="bbn-small"
               bbn-text="formatDate(source.date)"/>
       </div>
-      <div class="bbn-bottom-xsmargin">
-        <span><?= _("To:") ?></span>
-        <a bbn-if="source.to_name
-            && source.to_email
-            && (source.to_email !== source.to_name)"
-          :href="'mailto:' + source.to_email"
-          :title="source.to_email"
-          bbn-text="source.to_email"
-          class="bbn-light"/>
-        <a bbn-else-if="source.to_email"
-          :href="'mailto:' + source.to_email"
-          bbn-text="source.to_email"
-          class="bbn-light"/>
-        <span bbn-else
-              bbn-text="source.to"
-              class="bbn-light"/>
+      <div class="bbn-flex-width bbn-bottom-xsmargin">
+        <div class="bbn-flex-fill">
+          <span><?= _("To:") ?></span>
+          <span class="bbn-radius bbn-background bbn-text bbn-hxspadding">
+            <a bbn-if="source.to_name
+                && source.to_email
+                && (source.to_email !== source.to_name)"
+              :href="'mailto:' + source.to_email"
+              :title="source.to_email"
+              bbn-text="source.to_email"/>
+            <a bbn-else-if="source.to_email"
+              :href="'mailto:' + source.to_email"
+              bbn-text="source.to_email"/>
+            <span bbn-else
+                  bbn-text="source.to"/>
+          </span>
+        </div>
+        <bbn-context bbn-if="source.attachments?.length"
+                     :source="attachmentsSrc"
+                     source-icon="icon"
+                     class="bbn-vmiddle">
+          <i class="nf nf-md-paperclip bbn-m"
+             style="align-self: center"/>
+          <span bbn-text="source.attachments.length"/>
+        </bbn-context>
       </div>
-      <div class="bbn-medium"
-          bbn-text="source.subject"/>
+      <div class="bbn-bottom-xsmargin"
+           bbn-text="source.subject"/>
       <appui-email-webmail-reader-entities bbn-if="source.from_email"
-                                           class="bbn-top-xsmargin"
                                            :identifier="source.id"
                                            :uid="source.msg_unique_id"
                                            :mailbox="source.id_account"
                                            :mail="source.from_email"/>
     </div>
-    <div :class="['bbn-flex-fill', 'bbn-padding', {'bbn-primary-border bbn-radius-bottom': isSelected}]">
-      <div class="bbn-flex-height">
-        <div class="bbn-flex-fill">
-          <div class="bbn-100">
-            <bbn-frame bbn-if="source.id"
-                       :url="root + 'reader/' + source.id"
-                       :class="{'bbn-100': overlay, 'bbn-w-100': !overlay}"
-                       :reset-style="true"
-                       @load="onFrameLoaded"
-                       ref="frame"
-                       @click="onSelect"/>
-            <bbn-loader bbn-if="isFrameLoading"
-                        class="bbn-overlay bbn-middle bbn-background"/>
-          </div>
-        </div>
-      </div>
-      <div bbn-if="source.attachments?.length"
-           class="bbn-top-xsmargin bbn-flex-wrap bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin"
-           style="min-height: 2.5rem; gap: var(--sspace)">
-        <bbn-context bbn-if="source.attachments?.length > 1"
-                     :source="attachmentsSrc"
-                     source-icon="icon">
-          <i class="nf nf-md-dots_vertical"/>
-        </bbn-context>
-        <bbn-context bbn-for="att in source.attachments"
-                     :source="getAttachmentSrc(att)"
-                     source-icon="icon">
-          <div class="bbn-no-border bbn-radius bbn-vmiddle bbn-background bbn-xspadding bbn-reactive">
-            <i :class="getFileIcon(att)"/>
-            <span class="bbn-hxsmargin"
-                  bbn-text="att.name"/>
-          </div>
-        </bbn-context>
+    <div :class="['bbn-flex-fill', 'bbn-padding', {'bbn-secondary-border bbn-radius-bottom': isSelected}]">
+      <div class="bbn-100">
+        <bbn-frame bbn-if="source.id"
+                    :url="root + 'reader/' + source.id"
+                    :class="{'bbn-100': overlay, 'bbn-w-100': !overlay}"
+                    :reset-style="true"
+                    @load="onFrameLoaded"
+                    ref="frame"
+                    @click="onSelect"/>
+        <bbn-loader bbn-if="isFrameLoading"
+                    class="bbn-overlay bbn-middle bbn-background"/>
       </div>
     </div>
   </template>
