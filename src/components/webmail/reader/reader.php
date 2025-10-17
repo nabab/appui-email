@@ -95,21 +95,24 @@
               bbn-text="formatDate(source.date)"/>
       </div>
       <div class="bbn-flex-width bbn-bottom-xsmargin">
-        <div class="bbn-flex-fill">
-          <span><?= _("To:") ?></span>
-          <span class="bbn-radius bbn-background bbn-text bbn-hxspadding">
-            <a bbn-if="source.to_name
-                && source.to_email
-                && (source.to_email !== source.to_name)"
-              :href="'mailto:' + source.to_email"
-              :title="source.to_email"
-              bbn-text="source.to_email"/>
-            <a bbn-else-if="source.to_email"
-              :href="'mailto:' + source.to_email"
-              bbn-text="source.to_email"/>
-            <span bbn-else
-                  bbn-text="source.to"/>
-          </span>
+        <div class="bbn-flex-fill bbn-flex-width">
+          <span class="bbn-right-xsspace"><?= _("To:") ?></span>
+          <div class="bbn-flex-fill bbn-flex-wrap bbn-grid-xsgap">
+            <span class="bbn-radius bbn-background bbn-text bbn-hxspadding"
+                  bbn-for="(r, i) in recipients">
+              <a bbn-if="recipientsNames[i]
+                  && recipientsEmails[i]
+                  && (recipientsEmails[i] !== recipientsNames[i])"
+                :href="'mailto:' + recipientsEmails[i]"
+                :title="recipientsEmails[i]"
+                bbn-text="recipientsNames[i]"/>
+              <a bbn-else-if="recipientsEmails[i]"
+                :href="'mailto:' + recipientsEmails[i]"
+                bbn-text="recipientsEmails[i]"/>
+              <span bbn-else
+                    bbn-text="r"/>
+            </span>
+          </div>
         </div>
         <bbn-context bbn-if="source.attachments?.length"
                      :source="attachmentsSrc"

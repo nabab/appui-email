@@ -78,6 +78,15 @@
         }
 
         return src;
+      },
+      recipients(){
+        return this.source.to ? this.source.to.split(', ') : [];
+      },
+      recipientsNames(){
+        return this.source.to_name ? this.source.to_name.split(', ') : [];
+      },
+      recipientsEmails(){
+        return this.source.to_email ? this.source.to_email.split(', ') : [];
       }
     },
     methods: {
@@ -308,24 +317,6 @@
           default:
             return 'nf nf-fa-file'
         }
-      },
-      getAttachmentSrc(att){
-        return [{
-          text: bbn._('Download'),
-          value: 'download',
-          icon: 'nf nf-fa-download',
-          action: () => this.download(att)
-        }, {
-          text: bbn._('Send to shared media'),
-          value: 'shared_media',
-          icon: 'nf nf-md-image',
-          action: () => this.sendToSharedMedia(att)
-        }, {
-          text: bbn._('Send to private media'),
-          value: 'private_media',
-          icon: 'nf nf-md-image_lock',
-          action: () => this.sendToPrivateMedia(att)
-        }]
       }
     }
   }
