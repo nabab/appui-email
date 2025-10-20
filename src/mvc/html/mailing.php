@@ -2,7 +2,7 @@
   <bbn-router class="appui_email_nav"
               :scrollable="true"
               :autoload="true"
-              :nav="true">
+              mode="tabs">
     <bbn-container url="home"
                    :load="true"
                    label="<?= _('Mailings') ?>"
