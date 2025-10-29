@@ -25,7 +25,8 @@
         selectedMode: "download",
         syncId: false,
         syncMessage: '',
-        threads: true
+        threads: true,
+        accountsIdle: {}
       };
     },
     computed: {
@@ -718,6 +719,34 @@
         }
         return '-';
       },
+      startAccountIdle(idAccount){
+        if (!this.accountsIdle[idAccount]) {
+          const url = this.root + 'webmail/idle';
+          const data = {account: idAccount};
+          this.accountsIdle[idAccount] = {
+            id: bbn.fn.getRequestId(url, data, 'json'),
+            stream: bbn.fn.stream(
+              url,
+              d => bbn.fn.log('STREAAAAAAM:', d),
+              data,
+              d => bbn.fn.log('STREAM FAILURE:', d),
+              d => bbn.fn.log('STREAM ABORT:', d),
+              d => bbn.fn.log('STREAM FINISH:', d)
+            )
+          };
+        }
+      },
+      stopAccountIdle(idAccount){
+        if (this.accountsIdle[idAccount]) {
+          bbn.fn.abort(this.accountsIdle[idAccount].id);
+          try {
+            this.accountsIdle[idAccount].aborter.abort();
+          }
+          catch (e) {}
+          bbn.fn._deleteLoader(this.accountsIdle[idAccount].id, {account: idAccount}, true)
+          delete this.accountsIdle[idAccount];
+        }
+      }
     },
     watch: {
       currentFolder(){
@@ -738,6 +767,10 @@
         hashes: this.hash
       });
       appui.poll();
+
+      if (this.source.accounts?.length) {
+        bbn.fn.each(this.source.accounts, a => this.startAccountIdle(a.id));
+      }
     },
     beforeDestroy(){
       appui.unregister('appui-email-webmail');
@@ -745,6 +778,8 @@
         bbn.fn.abort(this.syncId);
         this.syncId = false;
       }
+
+      bbn.fn.iterate(this.accountsIdle, (val, idAccount) => this.stopAccountIdle(idAccount));
     }
   };
 })()
