@@ -1,4 +1,4 @@
-<bbn-router :nav="true">
+<bbn-router mode="tabs">
 	<bbns-container component="appui-email-webmail"
                  :label="_('Home')"
                  :source="source"

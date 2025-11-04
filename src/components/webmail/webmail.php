@@ -35,7 +35,8 @@
                     @select="selectFolder"
                     ref="tree"
                     :drag="true"
-                    @move="onMove"/>
+                    @move="onMove"
+                    :selectable="item => item.data.type !== 'account'"/>
         </div>
         <div class="bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin"
              style="min-height: 2.5rem">

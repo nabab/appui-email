@@ -628,7 +628,7 @@
       },
       writeNewEmail() {
         this.newCount++;
-        bbn.fn.link(this.source.root + "webmail/write/new/" + this.newCount.toString());
+        bbn.fn.link(this.root + "webmail/write/new/" + this.newCount);
       },
       submitFolderChange() {
         bbn.fn.log("FOLDER", this.moveTo);
@@ -720,6 +720,7 @@
         return '-';
       },
       startAccountIdle(idAccount){
+        return;
         if (!this.accountsIdle[idAccount]) {
           const url = this.root + 'webmail/idle';
           const data = {account: idAccount};
