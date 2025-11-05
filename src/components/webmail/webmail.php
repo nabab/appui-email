@@ -36,6 +36,7 @@
                     ref="tree"
                     :drag="true"
                     @move="onMove"
+                    @dragstart="onMoveStart"
                     :selectable="item => item.data.type !== 'account'"/>
         </div>
         <div class="bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin"

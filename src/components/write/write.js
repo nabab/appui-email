@@ -85,6 +85,7 @@
         originalMessage: this.message || "",
         messageTypeIcon: "nf nf-seti-html",
         messageTypeText: 'html',
+        timestamp: bbn.fn.microtimestamp()
       };
     },
     methods: {
@@ -148,7 +149,7 @@
               to: this.currentTo,
               cc: this.currentCC,
               bcc: this.currentCCI,
-              attachments: this.attachments,
+              attachments: this.attachments.concat(bbn.fn.map(bbn.fn.clone(this.attachmentsModel), a => a.path)),
               important: 0,
               in_reply_to: `<${this.replyTo}>`,
               references: this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`
@@ -191,10 +192,6 @@
             appui.error(bbn._('Impossible to update signatures'))
           }
         })
-      },
-      uploadSuccess(field, fileName, responseData, response) {
-        bbn.fn.log(responseData);
-        this.attachments.push(responseData.path);
       },
       currentToSetter(newValue) {
         this.currentTo = newValue;

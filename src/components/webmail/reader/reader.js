@@ -163,16 +163,13 @@
         }
       },
       moveFolder() {
-        this.getFolders();
+        const webmail = appui.getRegistered('appui-email-webmail');
         this.getPopup({
-          label: bbn._("Folder changer"),
-          component: 'appui-email-forms-moveto',
+          label: bbn._("Move email to another folder"),
+          component: 'appui-email-webmail-email-move',
           componentOptions: {
-            source: {
-              id : this.source.id,
-              folders: this.folders,
-              foldersData: this.foldersData,
-            }
+            email: this.source.id,
+            folders: webmail.folders
           }
         })
       },

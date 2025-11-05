@@ -91,9 +91,12 @@
            style="grid-column-start: 1; grid-column-end: 4">
         <span class="bbn-m"><?=_('Attachment')?></span>
         <bbn-upload bbn-model="attachmentsModel"
-                    :save-url="rootUrl + 'actions/email/upload_file'"
-                    @success="uploadSuccess"
-                    class="bbn-flex-fill bbn-left-space"/>
+                    :save-url="rootUrl + 'webmail/actions/attachment/upload/save'"
+                    :remove-url="rootUrl + 'webmail/actions/attachment/upload/remove'"
+                    class="bbn-flex-fill bbn-left-space"
+                    :data="{
+                      timestamp: timestamp
+                    }"/>
       </div>
     </div>
     <bbn-rte bbn-if="type === 'bbn-rte'"

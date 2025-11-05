@@ -216,20 +216,37 @@
       tableUnselect(col) {
         this.selectedMails.splice(col.id);
       },
+      onMoveStart(source, event) {
+        if (source.data.type === 'account') {
+          event.preventDefault();
+        }
+      },
       onMove(source, dest, event) {
-        if (dest.data.type !== "account" && source.data.id_account !== dest.data.id_account) {
+        if (source.data.type === 'account') {
           event.preventDefault();
           return false;
         }
-        if (dest.data.type === "account" && source.data.id_account !== dest.data.uid) {
+
+        if ((dest.data.type !== 'account')
+          && (source.data.id_account !== dest.data.id_account)
+        ) {
           event.preventDefault();
           return false;
         }
-        if (source.data.type !== "folders") {
+
+        if ((dest.data.type === 'account')
+          && (source.data.id_account !== dest.data.uid)
+        ) {
           event.preventDefault();
           return false;
         }
-        bbn.fn.post(this.root + 'webmail/actions/folder/move', {
+
+        if (source.data.type !== 'folders') {
+          event.preventDefault();
+          return false;
+        }
+
+        this.post(this.root + 'webmail/actions/folder/move', {
           to: dest.data,
           id_account: source.data.id_account,
           folders: this.getAllFolderChild(source.data)
@@ -558,17 +575,20 @@
       selectFolder(node) {
         this.selectedMail = null;
         this.selectedMails = [];
-        if (node.data.type === "account") {
-          this.currentFolder = null;
-          this.currentAccount = node.data.id;
-        }
-        else if (node.data.type === "folder") {
-          this.currentFolder = node.data.id;
-          this.currentAccount = node.data.id_account;
-        }
-        else if (node.data.type === "folder_types") {
-          this.currentFolder = node.data.id;
-          this.currentAccount = null;
+        switch (node.data.type) {
+          case 'account':
+            this.currentFolder = null;
+            this.currentAccount = node.data.id;
+            break;
+          case 'folder':
+          case 'folders':
+            this.currentFolder = node.data.id;
+            this.currentAccount = node.data.id_account;
+            break;
+          case 'folder_types':
+            this.currentFolder = node.data.id;
+            this.currentAccount = null;
+            break;
         }
       },
       showSubject(row) {

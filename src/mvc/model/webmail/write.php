@@ -75,9 +75,7 @@ return [
   'signatures' => $model->inc->pref->getAll($id_signatures, true) ?: [],
   'success' => true,
   'isReply' => false,
-  'email' => [
-    'email' => false,
-  ],
+  'email' => new stdClass(),
   'subject' => "",
   'to' => "",
   'accounts' => $accounts,
