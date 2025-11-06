@@ -3,11 +3,13 @@
              :pageable="true"
              :filterable="true"
              :sortable='true'
-             @click-row="rowClicked"
              :search="true"
              :search-fields="['name', 'email']"
              search-operator="contains"
              :toolbar="() => { return [] }"
+             :limits="[]"
+             uid="email"
+             @toggle="onToggle"
              :selection="true">
     <bbns-column field="name"
                  label="<?=_("Name")?>"/>

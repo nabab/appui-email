@@ -9,14 +9,19 @@
     },
     data() {
       return {
-        root: appui.plugins['appui-email'] + '/'
+        root: appui.plugins['appui-email'] + '/',
+        selected: this.component.items
       }
     },
     methods: {
-      rowClicked(col, colIndex, dataIndex) {
-        bbn.fn.log(colIndex);
-       	this.component.select(col);
-        //this.closest('bbn-floater').close();
+      onToggle(selected, data){
+        bbn.fn.log("TOGGLE", selected, data);
+        if (selected) {
+          this.component.select(data);
+        }
+        else {
+          this.component.unselect(data);
+        }
       }
     }
   }

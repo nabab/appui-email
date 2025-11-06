@@ -43,10 +43,24 @@
         }
       },
       select(data) {
+        bbn.fn.log("SELECT", data, this.items.includes(data.email));
         if (!this.items.includes(data.email)) {
           this.items.push(data.email);
           this.emitInput(this.asArray ? this.items : this.items.join(','));
         }
+
+        this.$nextTick(() => {
+          this.getRef('autocomplete').resetDropdown();
+        });
+      },
+      unselect(data) {
+        bbn.fn.log("UNSELECT", data, this.items.includes(data.email));
+        if (this.items.includes(data.email)) {
+          const idx = this.items.indexOf(data.email);
+          this.items.splice(idx, 1);
+          this.emitInput(this.asArray ? this.items : this.items.join(','));
+        }
+
         this.$nextTick(() => {
           this.getRef('autocomplete').resetDropdown();
         });

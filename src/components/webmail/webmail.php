@@ -14,7 +14,7 @@
                 <bbn-button @click="createAccount"
                             :notext=true
                             :label="_('Create a new mail account')"
-                            icon="nf nf-fa-folder_plus"/>
+                            icon="nf nf-md-mailbox"/>
                 <bbn-button @click="changeOrientation"
                             :notext="true"
                             :label="_('Change Webmail orientation to ' + (orientation == 'horizontal' ? 'vertical' : 'horizontal'))"
@@ -35,7 +35,9 @@
                     @select="selectFolder"
                     ref="tree"
                     :drag="true"
-                    @move="onMove"/>
+                    @move="onMove"
+                    @dragstart="onMoveStart"
+                    :selectable="item => item.data.type !== 'account'"/>
         </div>
         <div class="bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin"
              style="min-height: 2.5rem">
@@ -70,14 +72,14 @@
                               :notext="true"
                               :label="_('Write new mail')"
                               icon="nf nf-fa-edit"/>
-                  <bbn-input button-left="nf nf-fa-search"/>
+                  <bbn-input button-left="nf nf-fa-search"
+                             :disabled="true"/>
                 </div>
               </bbn-toolbar>
             </div>
-            <bbn-kanban-element bbn-if="orientation == 'horizontal'"
-                                class="bbn-noradius bbn-flex-fill"
+            <bbn-kanban-element class="appui-email-webmail-list bbn-noradius bbn-flex-fill"
                                 :source="root + 'webmail'"
-                                component="appui-email-item"
+                                component="appui-email-webmail-item"
                                 :pageable="true"
                                 :filterable="true"
                                 :selection="true"
@@ -89,7 +91,7 @@
                                 :sortable="true"
                                 :showable="true"
                                 :order="[{field: 'date', dir: 'DESC'}]"/>
-            <bbn-table bbn-else
+            <!--<bbn-table bbn-else
                        :source="root + 'webmail'"
                        storage-full-name="appui-email-webmail-table"
                        :filterable="true"
@@ -134,12 +136,13 @@
                            :width="100"
                            field="size"
                            :invisible="true"/>
-            </bbn-table>
+            </bbn-table>-->
           </div>
         </bbn-pane>
-        <bbn-pane :scrollable="true">
+        <bbn-pane :scrollable="!threads">
           <appui-email-webmail-reader bbn-if="selectedMail"
-                                      :source="selectedMail"/>
+                                      :source="selectedMail"
+                                      :thread="threads"/>
           <div bbn-else
                class="bbn-overlay bbn-middle">
             <div class="bbn-block bbn-large bbn-c"

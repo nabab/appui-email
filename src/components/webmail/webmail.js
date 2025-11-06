@@ -24,7 +24,9 @@
         extractedTo: null,
         selectedMode: "download",
         syncId: false,
-        syncMessage: ''
+        syncMessage: '',
+        threads: true,
+        accountsIdle: {}
       };
     },
     computed: {
@@ -42,7 +44,8 @@
         }
 
         return {
-          id_folder: idFolder
+          id_folder: idFolder,
+          threads: this.threads
         }
       },
       currentFolderObj(){
@@ -139,7 +142,7 @@
           if (addedAccount.length) {
             for (const accountId of addedAccount) {
               if (bbn.fn.search(this.source.accounts, { id: accountId}) < 0) {
-                bbn.fn.post(this.root + 'actions/account', {
+                bbn.fn.post(this.root + 'webmail/actions/account', {
                   action: 'get',
                   id: accountId
                 } , d => {
@@ -178,7 +181,7 @@
               }
               // iterate each hash of each folder to see what folder have changed
               if (bbn.fn.search(this.source.accounts, { id: key}) !== -1) {
-                bbn.fn.post(this.root + 'actions/account', {
+                bbn.fn.post(this.root + 'webmail/actions/account', {
                   action: 'get',
                   id: key
                 } , d => {
@@ -213,20 +216,37 @@
       tableUnselect(col) {
         this.selectedMails.splice(col.id);
       },
+      onMoveStart(source, event) {
+        if (source.data.type === 'account') {
+          event.preventDefault();
+        }
+      },
       onMove(source, dest, event) {
-        if (dest.data.type !== "account" && source.data.id_account !== dest.data.id_account) {
+        if (source.data.type === 'account') {
           event.preventDefault();
           return false;
         }
-        if (dest.data.type === "account" && source.data.id_account !== dest.data.uid) {
+
+        if ((dest.data.type !== 'account')
+          && (source.data.id_account !== dest.data.id_account)
+        ) {
           event.preventDefault();
           return false;
         }
-        if (source.data.type !== "folders") {
+
+        if ((dest.data.type === 'account')
+          && (source.data.id_account !== dest.data.uid)
+        ) {
           event.preventDefault();
           return false;
         }
-        bbn.fn.post(this.root + 'actions/folder/move', {
+
+        if (source.data.type !== 'folders') {
+          event.preventDefault();
+          return false;
+        }
+
+        this.post(this.root + 'webmail/actions/folder/move', {
           to: dest.data,
           id_account: source.data.id_account,
           folders: this.getAllFolderChild(source.data)
@@ -255,52 +275,111 @@
       },
       treeMenu(node) {
         const res = []
-        if (node.data.type === "account") {
-          res.push({
-            text: bbn._('Delete account'),
-            icon: "nf nf-md-delete",
-            action: () => {
-              this.deleteAccount(node.data.uid)
-              appui.poll();
-            }
-          })
-        }
         if (node.data.type !== "folder_types") {
           res.push({
             text: bbn._('Create folder'),
             icon: "nf nf-fa-plus",
             action: () => {
+              const componentOptions = {
+                idAccount: node.data.type === "account" ? node.data.uid : node.data.id_account
+              };
+              if (node.data.type !== "account") {
+                componentOptions.idParent = node.data.id;
+              }
+
               this.getPopup({
-                label: bbn._("Folder name"),
-                component: "appui-email-forms-create",
-                source: {
-                  id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
-                  id_parent: node.data.id || null,
+                label: bbn._("Create new folder"),
+                component: "appui-email-webmail-folder-create",
+                componentOptions,
+                componentEvents: {
+                  success: d => {
+                    if (d.success) {
+                      const acc = bbn.fn.getRow(this.source.accounts , {id: d.account.id});
+                      if (acc) {
+                        acc.folders.splice(0, acc.folders.length, ...d.account.folders);
+                      };
+                      this.setTreeData();
+                      this.$nextTick(() => {
+                        const tree = this.getRef('tree');
+                        if (tree) {
+                          tree.updateData().then(() => {
+                            tree.reload()
+                          });
+                        }
+
+                        appui.success(bbn._("Folder created with success"));
+                      });
+                    }
+                    else {
+                      appui.error(d.error ? d.error : bbn._("Impossible to create the folder"));
+                    }
+                  }
                 }
               })
               appui.poll();
             }
           })
         }
+
+        if (node.data.type === "account") {
+          res.push({
+            text: bbn._("Manage subscriptions"),
+            icon: "nf nf-fa-folder_tree",
+            action: () => {},
+            disabled: true
+          })
+        }
+
         if (!['account', 'folder_types'].includes(node.data.type)) {
           res.push({
             text: bbn._('Remove folder'),
             icon: "nf nf-md-folder_remove",
             action: () => {
-              this.removeFolder(this.getAllFolderChild(node.data), node.data.text, node.data.id_account);
+              this.removeFolder(node.data.id, node.data.id_account, node.data.text);
               appui.poll();
             }
           }, {
-            text: bbn._('Rename Folder'),
+            text: bbn._('Rename folder'),
             icon: "nf nf-md-rename_box",
             action: () => {
               this.getPopup({
-                label: bbn._("Folder new name"),
-                component: "appui-email-forms-rename",
-                source: {
+                label: bbn._("Rename folder"),
+                component: "appui-email-webmail-folder-rename",
+                componentOptions: {
+                  idAccount: node.data.id_account,
+                  idFolder: node.data.id,
                   name: node.data.text,
-                  id_account: node.data.type === "account" ? node.data.uid : node.data.id_account,
-                  folders: this.getAllFolderChild(node.data)
+                  folders: bbn.fn.map(
+                    bbn.fn.filter(
+                      bbn.fn.clone(node.parent.source),
+                      s => s.type === 'folder_types'
+                    ),
+                    f => f.text
+                  )
+                },
+                componentEvents: {
+                  success: d => {
+                    if (d.success) {
+                      const acc = bbn.fn.getRow(this.source.accounts , {id: d.account.id});
+                      if (acc) {
+                        acc.folders.splice(0, acc.folders.length, ...d.account.folders);
+                      };
+                      this.setTreeData();
+                      this.$nextTick(() => {
+                        const tree = this.getRef('tree');
+                        if (tree) {
+                          tree.updateData().then(() => {
+                            tree.reload()
+                          });
+                        }
+
+                        appui.success(bbn._("Folder renamed with success"));
+                      });
+                    }
+                    else {
+                      appui.error(d.error ? d.error : bbn._("Impossible to rename the folder"));
+                    }
+                  }
                 }
               })
               appui.poll();
@@ -309,7 +388,7 @@
         }
 
         res.push({
-          text: bbn._('Synchronize'),
+          text: node.data.type === 'account' ? bbn._('Synchronize account') : bbn._('Synchronize folder'),
           icon: "nf nf-oct-sync",
           action: () => {
             switch (node.data.type) {
@@ -326,10 +405,26 @@
           }
         });
 
+        if (node.data.type === "account") {
+          res.push({
+            text: bbn._("Account settings"),
+            icon: "nf nf-seti-settings",
+            action: () => {},
+            disabled: true
+          }, {
+            text: bbn._('Delete account'),
+            icon: "nf nf-md-delete",
+            action: () => {
+              this.deleteAccount(node.data.uid)
+              appui.poll();
+            }
+          })
+        }
+
         return res;
       },
       getAllFolderChild(folder) {
-        res = [];
+        const res = [];
         res.push({id: folder.id, text: folder.text, id_parent: folder.id_parent || null})
         if (folder.items) {
           for (let idx in folder.items) {
@@ -342,37 +437,33 @@
         }
         return res;
       },
-      removeFolder(idArray, text, uid) {
-        this.confirm(bbn._(`Do you want to delete the ${text} folder and all the subfolders ?`), () => {
-          bbn.fn.post(this.root + 'actions/folder/delete', {
-            // reverse the array to delete the the last subfolders before
-            id: idArray.reverse(),
-            id_account: uid
+      removeFolder(idFolder, idAccount, folderTitle) {
+        this.confirm(bbn._(`Do you want to delete the "${folderTitle}" folder and all the subfolders ?`), () => {
+          this.post(this.root + 'webmail/actions/folder/delete', {
+            id: idFolder,
+            id_account: idAccount
           }, d => {
-            let tree = this.getRef('tree');
-            let idx = bbn.fn.search(this.source.accounts, { id: uid})
+            const tree = this.getRef('tree');
+            const idx = bbn.fn.search(this.source.accounts, {id: idAccount})
             if (d.success) {
-              appui.success(bbn._(`${text} folder and subfolders ar successfuly deleted`));
+              appui.success(bbn._(`${folderTitle} folder and subfolders ar successfuly deleted`));
               this.source.accounts.splice(idx, 1, d.account);
-            } else {
-              for (let idx in d.res) {
-                if (d.res[idx].success) {
-                  appui.success(bbn._(`${d.res[idx].text} successfuly deleted`))
-                } else {
-                  appui.success(bbn._(`${d.res[idx].text} impossible to delete`))
-                }
-              }
+              this.setTreeData();
+              this.$nextTick(() => {
+                tree.updateData().then(() => {
+                  tree.reload()
+                })
+              })
             }
-            this.setTreeData();
-            tree.updateData().then( () => {
-              tree.reload()
-            })
+            else {
+              appui.error(bbn._("Impossible to delete the folder"));
+            }
           })
         })
       },
       deleteAccount(uid) {
         this.confirm(bbn._("Do you want to delete this account ?"), () => {
-          bbn.fn.post(this.root + 'actions/account', {
+          bbn.fn.post(this.root + 'webmail/actions/account', {
             action: 'delete',
             data: {
               id: uid
@@ -384,7 +475,7 @@
               let idx = bbn.fn.search(this.source.accounts, { id: uid})
               this.source.accounts.splice(idx, 1)
               this.setTreeData();
-              tree.updateData().then( () => {
+              tree.updateData().then(() => {
                 tree.reload()
               })
             } else {
@@ -448,7 +539,7 @@
             type: "folder_types"
           });
         })
-        if (this.source.accounts) {
+        if (this.source.accounts?.length) {
           bbn.fn.each(this.source.accounts, a => {
             let folders = bbn.fn.clone(a.folders.filter(el => el.subscribed !== false));
             r.push({
@@ -484,17 +575,20 @@
       selectFolder(node) {
         this.selectedMail = null;
         this.selectedMails = [];
-        if (node.data.type === "account") {
-          this.currentFolder = null;
-          this.currentAccount = node.data.id;
-        }
-        else if (node.data.type === "folder") {
-          this.currentFolder = node.data.id;
-          this.currentAccount = node.data.id_account;
-        }
-        else if (node.data.type === "folder_types") {
-          this.currentFolder = node.data.id;
-          this.currentAccount = null;
+        switch (node.data.type) {
+          case 'account':
+            this.currentFolder = null;
+            this.currentAccount = node.data.id;
+            break;
+          case 'folder':
+          case 'folders':
+            this.currentFolder = node.data.id;
+            this.currentAccount = node.data.id_account;
+            break;
+          case 'folder_types':
+            this.currentFolder = node.data.id;
+            this.currentAccount = null;
+            break;
         }
       },
       showSubject(row) {
@@ -523,9 +617,27 @@
       },
       createAccount() {
         this.getPopup({
-          height: 450,
           label: bbn._("eMail account configuration"),
-          component: 'appui-email-forms-account',
+          component: 'appui-email-webmail-account',
+          componentOptions: {
+            types: this.source.types
+          },
+          componentEvents: {
+            success: d => {
+              if (d?.success && d?.data) {
+                this.source.accounts.push(d.data);
+                this.setTreeData();
+                this.$nextTick(() => {
+                  const tree = this.getRef('tree');
+                  if (tree) {
+                    tree.updateData().then(() => {
+                      tree.reload();
+                    });
+                  }
+                })
+              }
+            }
+          }
         })
         appui.poll();
       },
@@ -536,7 +648,7 @@
       },
       writeNewEmail() {
         this.newCount++;
-        bbn.fn.link(this.source.root + "webmail/write/new/" + this.newCount.toString());
+        bbn.fn.link(this.root + "webmail/write/new/" + this.newCount);
       },
       submitFolderChange() {
         bbn.fn.log("FOLDER", this.moveTo);
@@ -619,6 +731,42 @@
       },
       getAccountIdByFolder(idFolder){
         return this.getAccountByFolder(idFolder)?.id || null;
+      },
+      showAttachments(row){
+        if (row.attachments) {
+          let attachments = bbn.fn.isString(row.attachments) ? JSON.parse(row.attachments) : row.attachments;
+          return attachments.length
+        }
+        return '-';
+      },
+      startAccountIdle(idAccount){
+        return;
+        if (!this.accountsIdle[idAccount]) {
+          const url = this.root + 'webmail/idle';
+          const data = {account: idAccount};
+          this.accountsIdle[idAccount] = {
+            id: bbn.fn.getRequestId(url, data, 'json'),
+            stream: bbn.fn.stream(
+              url,
+              d => bbn.fn.log('STREAAAAAAM:', d),
+              data,
+              d => bbn.fn.log('STREAM FAILURE:', d),
+              d => bbn.fn.log('STREAM ABORT:', d),
+              d => bbn.fn.log('STREAM FINISH:', d)
+            )
+          };
+        }
+      },
+      stopAccountIdle(idAccount){
+        if (this.accountsIdle[idAccount]) {
+          bbn.fn.abort(this.accountsIdle[idAccount].id);
+          try {
+            this.accountsIdle[idAccount].aborter.abort();
+          }
+          catch (e) {}
+          bbn.fn._deleteLoader(this.accountsIdle[idAccount].id, {account: idAccount}, true)
+          delete this.accountsIdle[idAccount];
+        }
       }
     },
     watch: {
@@ -640,6 +788,10 @@
         hashes: this.hash
       });
       appui.poll();
+
+      if (this.source.accounts?.length) {
+        bbn.fn.each(this.source.accounts, a => this.startAccountIdle(a.id));
+      }
     },
     beforeDestroy(){
       appui.unregister('appui-email-webmail');
@@ -647,6 +799,8 @@
         bbn.fn.abort(this.syncId);
         this.syncId = false;
       }
+
+      bbn.fn.iterate(this.accountsIdle, (val, idAccount) => this.stopAccountIdle(idAccount));
     }
   };
 })()

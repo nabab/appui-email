@@ -4,7 +4,5 @@
                  :source="source"
                  url="home"
                  :closable="false"
-                 :pinned="true"
-                 >
-  </bbns-container>
+                 :pinned="true"/>
 </bbn-router>

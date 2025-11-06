@@ -2,7 +2,11 @@
 
 (() => {
   return {
+    mixins: [bbn.cp.mixins.basic],
     props: {
+      account: {
+        type: String
+      },
       replyTo: {
         type: String
       },
@@ -47,16 +51,24 @@
       }
     },
     data() {
+      let currentAccount = this.account;
+      if (!this.account) {
+        const webmail = appui.getRegistered('appui-email-webmail');
+        if (webmail) {
+          currentAccount = webmail.currentAccount;
+        }
+      }
+
       return {
-        rootUrl: appui.plugins['appui-email'],
+        rootUrl: appui.plugins['appui-email'] + '/',
         ccButton: true,
         cciButton: false,
         attachmentsModel: [],
         attachments: this.attachment,
-        currentTo: this.to?.length ? bbn.fn.clone(this.to) : "",
-        currentCC: this.CC?.length ? bbn.fn.clone(this.CC) : "",
-        currentCCI: this.CCI?.length ? bbn.fn.clone(this.CCI) : "",
-        currentFrom: this.accounts[0]?.value ?? "",
+        currentTo: this.to?.length ? bbn.fn.clone(this.to) : '',
+        currentCC: this.CC?.length ? bbn.fn.clone(this.CC) : '',
+        currentCCI: this.CCI?.length ? bbn.fn.clone(this.CCI) : '',
+        currentAccount: currentAccount || this.accounts[0]?.value || '',
         currentSignature: this.signatures.length ?
           this.signatures[0].id :
           null,
@@ -73,6 +85,7 @@
         originalMessage: this.message || "",
         messageTypeIcon: "nf nf-seti-html",
         messageTypeText: 'html',
+        timestamp: bbn.fn.microtimestamp()
       };
     },
     methods: {
@@ -123,27 +136,26 @@
         return res;
       },
       send() {
-        const toInputItem = this.getRef('toInput')?.items || [];
-        const ccInputItem = this.getRef('ccInput')?.items || [];
-        const cciInputItem = this.getRef('cciInput')?.items || [];
-        const pluck = (objs, property) => objs.map((obj) => obj[property]);
-        const to = toInputItem?.length ? pluck(toInputItem, 'email').join(';') : '';
-        const cc = ccInputItem?.length ? pluck(ccInputItem, 'email').join(';') : '';
-        const cci = cciInputItem?.length ? pluck(cciInputItem, 'email').join(';') : '';
-        bbn.fn.post(this.rootUrl + '/actions/email/send', {
-          id_account: this.currentFrom,
-          email: {
-            title: this.currentSubject,
-            text: this.message,
-            to: to,
-            cc: cc,
-            bcc: cci,
-            attachments: this.attachments,
-            important: 0,
-            in_reply_to: `<${this.replyTo}>`,
-            references: this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`
-          }
-        });
+        if (this.currentTo?.length
+          && (this.currentSubject.length
+            || this.message.length
+          )
+        ) {
+          this.post(this.rootUrl + 'actions/email/send', {
+            id_account: this.currentAccount,
+            email: {
+              title: this.currentSubject,
+              text: this.message,
+              to: this.currentTo,
+              cc: this.currentCC,
+              bcc: this.currentCCI,
+              attachments: this.attachments.concat(bbn.fn.map(bbn.fn.clone(this.attachmentsModel), a => a.path)),
+              important: 0,
+              in_reply_to: `<${this.replyTo}>`,
+              references: this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`
+            }
+          });
+        }
       },
       saveDraft(){
 
@@ -180,10 +192,6 @@
             appui.error(bbn._('Impossible to update signatures'))
           }
         })
-      },
-      uploadSuccess(field, fileName, responseData, response) {
-        bbn.fn.log(responseData);
-        this.attachments.push(responseData.path);
       },
       currentToSetter(newValue) {
         this.currentTo = newValue;

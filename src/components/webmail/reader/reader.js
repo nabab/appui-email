@@ -5,31 +5,94 @@
       source: {
         type: Object,
         required: true
+      },
+      overlay: {
+        type: Boolean,
+        default: false
+      },
+      thread: {
+        type: Boolean,
+        default: false
+      },
+      index: {
+        type: Number,
+        default: 0
       }
     },
     data(){
+      const isInThread = this.$el.parentElement.classList.contains('bbn-kanban-element-item');
       return {
         root: appui.plugins['appui-email'] + '/',
         isFrameLoading: true,
-        attachmentsSrc: [{
-          text: bbn._('Download all'),
-          value: 'download_all',
-          icon: 'nf nf-fa-download',
-          action: this.downloadAll
-        }, {
-          text: bbn._('Send all to shared media'),
-          value: 'shared_media_all',
-          icon: 'nf nf-md-image',
-          action: this.sendAllToSharedMedia
-        }, {
-          text: bbn._('Send all to private media'),
-          value: 'private_media_all',
-          icon: 'nf nf-md-image_lock',
-          action: this.sendAllToPrivateMedia
-        }],
+        isInThread,
+        mainReader: isInThread ? this.closest('appui-email-webmail-reader') : this,
+        currentSelected: this.thread ? this.source.thread?.[0]?.id : this.source.id,
+      }
+    },
+    computed: {
+      isSelected(){
+        return this.isInThread
+         && (this.mainReader.source.thread?.length > 1)
+         && (this.mainReader.currentSelected === this.source.id);
+      },
+      attachmentsSrc(){
+        const src = [];
+        if (this.source.attachments?.length) {
+          bbn.fn.each(this.source.attachments, a => {
+            src.push({
+              text: a.name,
+              icon: this.getFileIcon(a),
+              items: [{
+                text: bbn._('Download'),
+                value: 'download',
+                icon: 'nf nf-fa-download',
+                action: () => this.download(a)
+              }, {
+                text: bbn._('Send to shared media'),
+                icon: 'nf nf-md-image',
+                action: () => this.sendToSharedMedia(a)
+              }, {
+                text: bbn._('Send to private media'),
+                icon: 'nf nf-md-image_lock',
+                action: () => this.sendToPrivateMedia(a)
+              }]
+            })
+          });
+          src.push({
+            separator: true
+          }, {
+            text: bbn._('Download all'),
+            icon: 'nf nf-fa-download',
+            action: this.downloadAll
+          }, {
+            text: bbn._('Send all to shared media'),
+            value: 'shared_media_all',
+            icon: 'nf nf-md-image',
+            action: this.sendAllToSharedMedia
+          }, {
+            text: bbn._('Send all to private media'),
+            value: 'private_media_all',
+            icon: 'nf nf-md-image_lock',
+            action: this.sendAllToPrivateMedia
+          });
+        }
+
+        return src;
+      },
+      recipients(){
+        return this.source.to ? this.source.to.split(', ') : [];
+      },
+      recipientsNames(){
+        return this.source.to_name ? this.source.to_name.split(', ') : [];
+      },
+      recipientsEmails(){
+        return this.source.to_email ? this.source.to_email.split(', ') : [];
       }
     },
     methods: {
+      onSelect(){
+        this.mainReader.currentSelected = this.source.id;
+      },
       formatDate(date) {
         const emailDate = dayjs(date);
         const currentDate = dayjs();
@@ -44,65 +107,69 @@
         }
       },
       reply(){
-        if (this.source.id) {
-          bbn.fn.link(this.root + "webmail/write/reply/" + this.source.id);
+        if (this.mainReader.currentSelected) {
+          bbn.fn.link(this.root + "webmail/write/reply/" + this.mainReader.currentSelected);
         }
       },
       replyAll(){
-        if (this.source.id) {
-          bbn.fn.link(this.root + "webmail/write/reply_all/" + this.source.id);
+        if (this.mainReader.currentSelected) {
+          bbn.fn.link(this.root + "webmail/write/reply_all/" + this.mainReader.currentSelected);
         }
       },
       forward(){
-        if (this.source.id) {
-          bbn.fn.link(this.root + "webmail/write/forward/" + this.source.id);
+        if (this.mainReader.currentSelected) {
+          bbn.fn.link(this.root + "webmail/write/forward/" + this.mainReader.currentSelected);
         }
       },
       archive(){
-        if (this.source.id) {
+        if (this.mainReader.currentSelected) {
 
         }
       },
       setAsJunk(){
-        if (this.source.id) {
+        if (this.mainReader.currentSelected) {
 
         }
       },
       openTab(){
-        if (this.source.id) {
-          bbn.fn.link(this.root + "webmail/view/" + this.source.id);
+        if (this.mainReader.currentSelected) {
+          bbn.fn.link(this.root + "webmail/view/" + this.mainReader.currentSelected);
         }
       },
       openWindow(){
-        if (this.source.id) {
-
+        if (this.mainReader.currentSelected) {
+          this.getPopup().load({
+            url: this.root + "webmail/view/" + this.mainReader.currentSelected,
+            width: '90%',
+            height: '90%',
+            maximizable: true
+          })
         }
       },
       deleteMail(){
-        this.confirm(bbn._('Do you want to delete this email?'), () => {
-          this.post(this.root + 'actions/email/delete', {
-            id: this.sourcel.id,
-            status: "ready"
-          }, d => {
-            if (d.success) {
-              appui.success(bbn._('Email deleted with success'))
-            } else {
-              appui.error(bbn._('An error occured when deleting the email'))
-            }
+        if (this.mainReader.currentSelected) {
+          this.confirm(bbn._('Do you want to delete this email?'), () => {
+            this.post(this.root + 'actions/email/delete', {
+              id: this.mainReader.currentSelected,
+              status: "ready"
+            }, d => {
+              if (d.success) {
+                appui.success(bbn._('Email deleted with success'))
+              } else {
+                appui.error(bbn._('An error occured when deleting the email'))
+              }
+            })
           })
-        })
+        }
       },
       moveFolder() {
-        this.getFolders();
+        const webmail = appui.getRegistered('appui-email-webmail');
         this.getPopup({
-          label: bbn._("Folder changer"),
-          component: 'appui-email-forms-moveto',
+          label: bbn._("Move email to another folder"),
+          component: 'appui-email-webmail-email-move',
           componentOptions: {
-            source: {
-              id : this.source.id,
-              folders: this.folders,
-              foldersData: this.foldersData,
-            }
+            email: this.source.id,
+            folders: webmail.folders
           }
         })
       },
@@ -113,8 +180,23 @@
       },
       onFrameLoaded(){
         const f = this.getRef('frame');
+        f.contentWindow.document.addEventListener('click', e => {
+          this.onSelect();
+          if ((e.target?.tagName === 'A')
+            && e.target?.attributes?.cid
+          ) {
+            this.download({name: e.target.getAttribute('cid')});
+          }
+        });
+
         if (f?.src) {
-          this.isFrameLoading = false;
+          setTimeout(() => {
+            if (!this.overlay) {
+              f.style.height = f.contentWindow.document.documentElement.scrollHeight + 'px';
+            }
+
+            this.isFrameLoading = false;
+          }, 0)
         }
       },
       download(att){
@@ -232,24 +314,6 @@
           default:
             return 'nf nf-fa-file'
         }
-      },
-      getAttachmentSrc(att){
-        return [{
-          text: bbn._('Download'),
-          value: 'download',
-          icon: 'nf nf-fa-download',
-          action: () => this.download(att)
-        }, {
-          text: bbn._('Send to shared media'),
-          value: 'shared_media',
-          icon: 'nf nf-md-image',
-          action: () => this.sendToSharedMedia(att)
-        }, {
-          text: bbn._('Send to private media'),
-          value: 'private_media',
-          icon: 'nf nf-md-image_lock',
-          action: () => this.sendToPrivateMedia(att)
-        }]
       }
     }
   }

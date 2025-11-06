@@ -1,7 +1,9 @@
 <?php
-
 /** @var bbn\Mvc\Controller $ctrl */
-$ctrl->combo("test", [
-  'id' => $ctrl->arguments[0],
-	'root' => APPUI_EMAIL_ROOT
-]);
+if ($ctrl->hasArguments()
+  && ($m = $ctrl->getModel([
+    'id' => $ctrl->arguments[0]
+  ]))
+) {
+  $ctrl->combo($m['subject'], $m);
+}

@@ -1,128 +1,148 @@
-<div class="appui-email-webmail-reader bbn-overlay bbn-flex-height">
-  <div class="bbn-top-spadding bbn-hspadding bbn-bottom-xspadding">
+<div :class="['appui-email-webmail-reader', {'bbn-overlay bbn-flex-height': overlay || thread}]"
+     @click.stop="onSelect">
+  <div bbn-if="!isInThread"
+       class="bbn-top-spadding bbn-hspadding bbn-bottom-xspadding">
     <bbn-toolbar class="bbn-m bbn-no-border bbn-radius">
       <div class="bbn-flex-fill bbn-vmiddle bbn-xspadding"
           style="gap: var(--xsspace)">
         <bbn-button icon="nf nf-fa-mail_reply"
                     :label="_('Reply')"
                     :notext="true"
-                    @click="reply"/>
+                    @click="reply"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-fa-mail_reply_all"
                     :label="_('Reply All')"
                     :notext="true"
-                    @click="replyAll"/>
+                    @click="replyAll"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-fa-mail_forward"
                     :label="_('Forward')"
                     :notext="true"
-                    @click="forward"/>
+                    @click="forward"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-md-tab_plus"
                     :label="_('Open in a new tab')"
                     :notext="true"
-                    @click="openTab"/>
+                    @click="openTab"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-md-window_restore"
                     :label="_('Open in a new window')"
                     :notext="true"
-                    @click="openWindow"/>
+                    @click="openWindow"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-fa-archive"
                     :label="_('Archive')"
                     :notext="true"
-                    @click="archive"/>
+                    @click="archive"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-weather-fire"
                     :label="_('Set as junk')"
                     :notext="true"
-                    @click="setAsJunk"/>
+                    @click="setAsJunk"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-md-delete"
                     :label="_('Delete')"
                     :notext="true"
-                    @click="deleteMail"/>
+                    @click="deleteMail"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-fa-bug"
                     :label="_('Transform in task')"
                     :notext="true"
-                    @click="mailToTask"/>
+                    @click="mailToTask"
+                    :disabled="!currentSelected"/>
         <bbn-button icon="nf nf-md-folder_move"
                     :label="_('Move')"
                     :notext="true"
-                    @click="moveFolder"/>
+                    @click="moveFolder"
+                    :disabled="!currentSelected"/>
       </div>
     </bbn-toolbar>
   </div>
-  <div class="bbn-vspadding bbn-hpadding">
-    <div class="bbn-flex-width bbn-bottom-xsmargin">
-      <div class="bbn-flex-fill">
-        <span><?= _("From:") ?></span>
-        <a bbn-if="source.from_name
-            && source.from_email
-            && (source.from_email !== source.from_name)"
-          :href="'mailto:' + source.from_email"
-          :title="source.from_email"
-          bbn-text="source.from_name"
-          class="bbn-light"/>
-        <a bbn-else-if="source.from_email"
-          :href="'mailto:' + source.from_email"
-          bbn-text="source.from_email"
-          class="bbn-light"/>
-        <span bbn-else
-              bbn-text="source.from"
-              class="bbn-light"/>
+  <bbn-kanban-element bbn-if="thread"
+                      class="appui-email-webmail-thread bbn-noradius bbn-flex-fill"
+                      :source="source.thread"
+                      component="appui-email-webmail-reader"
+                      :pageable="false"
+                      :filterable="false"
+                      :selection="true"
+                      ref="thread"
+                      :sortable="true"
+                      :order="[{field: 'date', dir: 'DESC'}]"/>
+  <template bbn-else>
+    <div bbn-if="isInThread && index"
+         class="bbn-w-100 bbn-header bbn-no-border bbn-xspadding bbn-radius bbn-top-space bbn-bottom-space"
+         @click.stop.prevent/>
+    <div :class="['bbn-padding', 'bbn-radius', 'bbn-no-border', {
+           'bbn-header': !isSelected,
+           'bbn-background-secondary bbn-secondary-text': isSelected,
+           'bbn-noradius-bottom': isSelected
+         }]">
+      <div class="bbn-flex-width bbn-bottom-xsmargin">
+        <div class="bbn-flex-fill bbn-blue">
+          <a bbn-if="source.from_name
+              && source.from_email
+              && (source.from_email !== source.from_name)"
+            :href="'mailto:' + source.from_email"
+            :title="source.from_email"
+            bbn-text="source.from_name"/>
+          <a bbn-else-if="source.from_email"
+            :href="'mailto:' + source.from_email"
+            bbn-text="source.from_email"/>
+          <span bbn-else
+                bbn-text="source.from"/>
+        </div>
+        <div class="bbn-small"
+              bbn-text="formatDate(source.date)"/>
       </div>
-      <div class="bbn-small"
-            bbn-text="formatDate(source.date)"/>
-    </div>
-    <div class="bbn-bottom-xsmargin">
-      <span><?= _("To:") ?></span>
-      <a bbn-if="source.to_name
-          && source.to_email
-          && (source.to_email !== source.to_name)"
-        :href="'mailto:' + source.to_email"
-        :title="source.to_email"
-        bbn-text="source.to_email"
-        class="bbn-light"/>
-      <a bbn-else-if="source.to_email"
-        :href="'mailto:' + source.to_email"
-        bbn-text="source.to_email"
-        class="bbn-light"/>
-      <span bbn-else
-            bbn-text="source.to"
-            class="bbn-light"/>
-    </div>
-    <div class="bbn-medium"
-        bbn-text="source.subject"/>
-    <appui-email-webmail-reader-entities bbn-if="source.from_email"
-                                         class="bbn-top-xsmargin"
-                                         :identifier="source.id"
-                                         :uid="source.msg_unique_id"
-                                         :mailbox="source.id_account"
-                                         :mail="source.from_email"/>
-  </div>
-  <hr class="bbn-hr">
-  <div class="bbn-flex-fill bbn-spadding">
-    <div class="bbn-100">
-      <bbn-frame bbn-if="source.id"
-                 :url="root + 'reader/' + source.id"
-                 class="bbn-100"
-                 :reset-style="true"
-                 @load="onFrameLoaded"
-                 ref="frame"/>
-      <bbn-loader bbn-if="isFrameLoading"
-                  class="bbn-overlay bbn-middle"/>
-    </div>
-  </div>
-  <div bbn-if="source.attachments?.length"
-       class="bbn-top-xsmargin bbn-flex-wrap bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin"
-       style="min-height: 2.5rem; gap: var(--sspace)">
-    <bbn-context bbn-if="source.attachments?.length > 1"
-                 :source="attachmentsSrc"
-                 source-icon="icon">
-      <i class="nf nf-md-dots_vertical"/>
-    </bbn-context>
-    <bbn-context bbn-for="att in source.attachments"
-                 :source="getAttachmentSrc(att)"
-                 source-icon="icon">
-      <div class="bbn-no-border bbn-radius bbn-vmiddle bbn-background bbn-xspadding bbn-reactive">
-        <i :class="getFileIcon(att)"/>
-        <span class="bbn-hxsmargin"
-              bbn-text="att.name"/>
+      <div class="bbn-flex-width bbn-bottom-xsmargin">
+        <div class="bbn-flex-fill bbn-flex-width">
+          <span class="bbn-right-xsspace"><?= _("To:") ?></span>
+          <div class="bbn-flex-fill bbn-flex-wrap bbn-grid-xsgap">
+            <span class="bbn-radius bbn-background bbn-text bbn-hxspadding"
+                  bbn-for="(r, i) in recipients">
+              <a bbn-if="recipientsNames[i]
+                  && recipientsEmails[i]
+                  && (recipientsEmails[i] !== recipientsNames[i])"
+                :href="'mailto:' + recipientsEmails[i]"
+                :title="recipientsEmails[i]"
+                bbn-text="recipientsNames[i]"/>
+              <a bbn-else-if="recipientsEmails[i]"
+                :href="'mailto:' + recipientsEmails[i]"
+                bbn-text="recipientsEmails[i]"/>
+              <span bbn-else
+                    bbn-text="r"/>
+            </span>
+          </div>
+        </div>
+        <bbn-context bbn-if="source.attachments?.length"
+                     :source="attachmentsSrc"
+                     source-icon="icon"
+                     class="bbn-vmiddle">
+          <i class="nf nf-md-paperclip bbn-m"
+             style="align-self: center"/>
+          <span bbn-text="source.attachments.length"/>
+        </bbn-context>
       </div>
-    </bbn-context>
-  </div>
+      <div class="bbn-bottom-xsmargin"
+           bbn-text="source.subject"/>
+      <appui-email-webmail-reader-entities bbn-if="source.from_email"
+                                           :identifier="source.id"
+                                           :uid="source.msg_unique_id"
+                                           :mailbox="source.id_account"
+                                           :mail="source.from_email"/>
+    </div>
+    <div :class="['bbn-flex-fill', 'bbn-padding', {'bbn-secondary-border bbn-radius-bottom': isSelected}]">
+      <div class="bbn-100">
+        <bbn-frame bbn-if="source.id"
+                    :url="root + 'reader/' + source.id"
+                    :class="{'bbn-100': overlay, 'bbn-w-100': !overlay}"
+                    :reset-style="true"
+                    @load="onFrameLoaded"
+                    ref="frame"
+                    @click="onSelect"/>
+        <bbn-loader bbn-if="isFrameLoading"
+                    class="bbn-overlay bbn-middle bbn-background"/>
+      </div>
+    </div>
+  </template>
 </div>

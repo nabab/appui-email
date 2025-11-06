@@ -9,14 +9,16 @@ if ($model->hasData('action')) {
     case 'test':
     case 'save':
       if ($model->hasData(['type', 'login', 'pass', 'email'], true)
-          && ($code = $model->inc->options->code($model->data['type']))
+        && $model->hasData('locale')
+        && ($code = $model->inc->options->code($model->data['type']))
       ) {
         $cfg = [
           'type' => $code,
           'login' => $model->data['login'],
           'host' => $model->data['host'] ?? null,
           'pass' => $model->data['pass'],
-          'ssl' => $model->data['ssl'] ?? null
+          'ssl' => $model->data['ssl'] ?? null,
+          'locale' => $model->hasData('locale', true)
         ];
         try {
           $mb = new bbn\Appui\Mailbox($cfg);
@@ -61,16 +63,14 @@ if ($model->hasData('action')) {
             && is_array($model->data['folders'])
           ) {
             unset($mb);
-            $em = new Email($model->db);
+            $em = new Email($model->db, $model->inc->user, $model->inc->pref);
             $cfg['folders'] = $model->data['folders'];
             $cfg['email'] = $model->data['email'];
             try {
               if ($id_account = $em->addAccount($cfg)) {
-                unset($em);
-                $em = new Email($model->db, $model->inc->user, $model->inc->pref);
                 return [
                   'success' => true,
-                  'data' => $em->getAccounts(),
+                  'data' => $em->getAccount($id_account, true),
                   'id_account' => $id_account
                 ];
               }
