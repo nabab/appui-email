@@ -170,7 +170,7 @@
             if (this.hash[key] && d[key].hash !== this.hash[key].hash) {
               if (d[key].folders[this.currentFolder] && d[key].folders[this.currentFolder] !== this.hash[key].folders[this.currentFolder]) {
                 if (!this.selectedMails.length) {
-                  this.getRef('table')?.updateData();
+                  this.reloadTable();
                   if (this.alreadySendUpdateError) {
                     this.alreadySendUpdateError = false;
                   }
@@ -396,6 +396,7 @@
                 this.synchronize(node.data.id, false);
                 break;
               case "folder":
+              case "folders":
                 this.synchronize(node.data.id_account, node.data.id);
                 break;
               case "folder_types":
@@ -461,25 +462,23 @@
           })
         })
       },
-      deleteAccount(uid) {
+      deleteAccount(id) {
         this.confirm(bbn._("Do you want to delete this account ?"), () => {
           bbn.fn.post(this.root + 'webmail/actions/account', {
             action: 'delete',
-            data: {
-              id: uid
-            }
+            id
           }, d => {
             if (d.success) {
               appui.success(bbn._("Account deleted with success"));
               let tree = this.getRef('tree');
-              let idx = bbn.fn.search(this.source.accounts, { id: uid})
+              let idx = bbn.fn.search(this.source.accounts, {id})
               this.source.accounts.splice(idx, 1)
               this.setTreeData();
               tree.updateData().then(() => {
                 tree.reload()
               })
             } else {
-              appui.error(bbn._(d.error ? d.error : "Impossible to delete the account"));
+              appui.error(d.error ? d.error : bbn._("Impossible to delete the account"));
             }
           })
         })
@@ -555,7 +554,7 @@
       },
       getFolders() {
         if (this.selectedMail) {
-          this.post(this.root + 'webmail/get_folders', {
+          this.post(this.root + 'webmail/data/folders', {
             id: this.selectedMail.id_folder,
           }, (d) => {
             if (d.success) {
@@ -698,7 +697,7 @@
               if (this.currentFolder
                 && (this.currentFolder === data.id_folder)
               ) {
-                this.getRef('table').updateData();
+                this.reloadTable();
               }
 
               setTimeout(() => {
@@ -767,15 +766,18 @@
           bbn.fn._deleteLoader(this.accountsIdle[idAccount].id, {account: idAccount}, true)
           delete this.accountsIdle[idAccount];
         }
+      },
+      reloadTable(){
+        const table = this.getRef('table');
+        if (table?.updateData) {
+          table.updateData();
+        }
       }
     },
     watch: {
       currentFolder(){
         this.$nextTick(() => {
-          const table = this.getRef('table');
-          if (table?.updateData) {
-            table.updateData();
-          }
+          this.reloadTable();
         })
       }
     },

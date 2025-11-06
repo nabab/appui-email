@@ -169,7 +169,26 @@
           component: 'appui-email-webmail-email-move',
           componentOptions: {
             email: this.source.id,
-            folders: webmail.folders
+            folders: bbn.fn.filter(webmail.folders, f => f.value !== webmail.currentFolder)
+          },
+          componentEvents: {
+            success: (d, selectedFolder) => {
+              if (d.success) {
+                if ((webmail.currentFolder === this.source.id_folder)
+                  || (selectedFolder === webmail.currentFolder)
+                ) {
+                  webmail.reloadTable();
+                }
+
+                appui.success(bbn._('Email moved successfully'));
+              }
+              else {
+                appui.error(d.error || bbn._('An error occurred while moving the email'));
+              }
+            },
+            failure: d => {
+              appui.error(d.error || bbn._('An error occurred while moving the email'));
+            }
           }
         })
       },

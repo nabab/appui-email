@@ -6,12 +6,19 @@ if ($model->hasData('action', true)) {
   switch ($model->data['action']) {
     case 'move':
       if ($model->hasData(['id', 'id_folder'], true)) {
-        return [
-          'success' => $em->moveEmailToFolder(
-            $model->data['id'],
-            $model->data['id_folder']
-          )
-        ];
+        try {
+          $success = $em->moveEmailToFolder($model->data['id'], $model->data['id_folder']);
+          return [
+            'success' => $success
+          ];
+        }
+        catch (Exception $e) {
+          return [
+            'success' => false,
+            'error' => $e->getMessage()
+          ];
+
+        }
       }
       break;
   }

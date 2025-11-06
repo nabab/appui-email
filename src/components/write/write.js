@@ -141,7 +141,7 @@
             || this.message.length
           )
         ) {
-          this.post(this.rootUrl + 'actions/email/send', {
+          const obj = {
             id_account: this.currentAccount,
             email: {
               title: this.currentSubject,
@@ -150,11 +150,15 @@
               cc: this.currentCC,
               bcc: this.currentCCI,
               attachments: this.attachments.concat(bbn.fn.map(bbn.fn.clone(this.attachmentsModel), a => a.path)),
-              important: 0,
-              in_reply_to: `<${this.replyTo}>`,
-              references: this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`
+              important: 0
             }
-          });
+          };
+          if (this.replyTo?.length) {
+            obj.email.in_reply_to = `<${this.replyTo}>`;
+            obj.email.references = this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`;
+          }
+
+          this.post(this.rootUrl + 'actions/email/send', obj);
         }
       },
       saveDraft(){

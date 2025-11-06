@@ -60,29 +60,51 @@
          class="bbn-c bbn-b bbn-state-error bbn-padding">
       <?= _("Impossible to connect to the mail server") ?>
     </div>
-    <div bbn-elseif="tree.length">
-      <div class="bbn-m bbn-c bbn-secondary bbn-radius bbn-spadding">
-        <?= _("Choose the folders you want to keep synchronized") ?>
-      </div>
-      <div class="bbn-padding">
-        <div @click="checkUncheckAll"
-             class="bbn-p bbn-bottom-sspace bbn-hxspadding">
-          <i bbn-if="isAllChecked"
-             class="nf nf-md-checkbox_outline bbn-m"/>
-          <i bbn-elseif="isIntermediateChecked"
-             class="nf nf-md-checkbox_intermediate bbn-m"/>
-          <i bbn-else
-             class="nf nf-md-checkbox_blank_outline bbn-m"/>
-          <span bbn-if="isAllChecked"><?=_("Uncheck all")?></span>
-          <span bbn-else><?=_("Check all")?></span>
+    <bbn-splitter bbn-elseif="tree.length"
+                  :full-size="false">
+      <bbn-pane>
+        <div class="bbn-m bbn-c bbn-secondary bbn-radius bbn-spadding">
+          <?= _("Choose the folders you want to keep synchronized") ?>
         </div>
-        <bbn-tree :source="treeSource"
-                  ref="tree"
-                  :selection="true"
-                  uid="uid"
-                  :opened="true"
-                  :scrollable="false"/>
-      </div>
-    </div>
+        <div class="bbn-padding">
+          <div @click="checkUncheckAll"
+               class="bbn-p bbn-bottom-sspace bbn-hxspadding">
+            <i bbn-if="isAllChecked"
+               class="nf nf-md-checkbox_outline bbn-m"/>
+            <i bbn-elseif="isIntermediateChecked"
+               class="nf nf-md-checkbox_intermediate bbn-m"/>
+            <i bbn-else
+               class="nf nf-md-checkbox_blank_outline bbn-m"/>
+            <span bbn-if="isAllChecked"><?=_("Uncheck all")?></span>
+            <span bbn-else><?=_("Check all")?></span>
+          </div>
+          <bbn-tree :source="treeSource"
+                    ref="tree"
+                    :selection="true"
+                    uid="uid"
+                    :opened="true"
+                    :scrollable="false"/>
+        </div>
+      </bbn-pane>
+      <bbn-pane class="bbn-left-margin bbn-alt-background bbn-alt-text bbn-radius">
+        <div class="bbn-m bbn-c bbn-secondary bbn-radius bbn-spadding">
+          <?= _("Set rules for folders") ?>
+        </div>
+        <div class="bbn-grid-fields bbn-padding">
+          <div class="bbn-label"><?= _("Inbox") ?></div>
+          <bbn-dropdown/>
+          <div class="bbn-label"><?= _("Drafts") ?></div>
+          <bbn-dropdown/>
+          <div class="bbn-label"><?= _("Sent") ?></div>
+          <bbn-dropdown/>
+          <div class="bbn-label"><?= _("Junk") ?></div>
+          <bbn-dropdown/>
+          <div class="bbn-label"><?= _("Trash") ?></div>
+          <bbn-dropdown/>
+          <div class="bbn-label"><?= _("Archive") ?></div>
+          <bbn-dropdown/>
+        </div>
+      </bbn-pane>
+    </bbn-splitter>
   </div>
 </bbn-form>

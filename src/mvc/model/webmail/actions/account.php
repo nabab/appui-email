@@ -1,6 +1,7 @@
 <?php
 use bbn\X;
 use bbn\User\Email;
+use bbn\Appui\Mailbox;
 
 /** @var bbn\Mvc\Model $model */
 if ($model->hasData('action')) {
@@ -21,7 +22,7 @@ if ($model->hasData('action')) {
           'locale' => $model->hasData('locale', true)
         ];
         try {
-          $mb = new bbn\Appui\Mailbox($cfg);
+          $mb = new Mailbox($cfg);
         }
         catch (\Exception $e) {
           return ['error' => $e->getMessage()];
@@ -56,6 +57,7 @@ if ($model->hasData('action')) {
               $bits = X::split($tmp, '.');
               $put_in_res($bits, $res);
             }
+
             $model->data['res']['data'] = $res;
             break;
           }
@@ -88,27 +90,29 @@ if ($model->hasData('action')) {
 
     case 'delete':
       $em = new Email($model->db, $model->inc->user, $model->inc->pref);
-      if ($model->hasData(['data'], true) && $model->data["data"]["id"]) {
-        $id = $model->data["data"]['id'];
-        if ($em->getAccount($id)) {
+      if ($model->hasData('id', true)) {
+        if ($em->getAccount($model->data['id'])) {
           return [
-            'success' => $em->deleteAccount($id)
+            'success' => $em->deleteAccount($model->data['id'])
           ];
         }
+
         return [
           'success' => false,
-          'error' => 'Account does not exist'
+          'error' => X::_('Account does not exist')
         ];
       }
+
       return [
         'success' => false,
-        'error' => 'id object not found in the data request'
+        'error' => X::_('id object not found in the data request')
       ];
       break;
+
     case 'update':
+      $em = new Email($model->db, $model->inc->user, $model->inc->pref);
       break;
-    case 'insert':
-      break;
+
     case 'get':
       $em = new Email($model->db, $model->inc->user, $model->inc->pref);
       return [
