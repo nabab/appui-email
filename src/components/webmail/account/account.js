@@ -1,4 +1,5 @@
 (() => {
+  const rules = ['inbox', 'drafts', 'sent', 'spam', 'trash', 'archive'];
   return {
     mixins: [bbn.cp.mixins.basic],
     props: {
@@ -7,6 +8,7 @@
         default(){
           return {
             folders: [],
+            rules: rules.reduce((a, v) => ({...a, [v]: ''}), {}),
             type: null,
             email: '',
             login: '',
@@ -19,6 +21,10 @@
         }
       },
       types: {
+        type: Array,
+        required: true
+      },
+      folderTypes: {
         type: Array,
         required: true
       }
@@ -56,12 +62,6 @@
         }
 
         return btns;
-      },
-      selectedFolders(){
-        if (this.tree.length && this.source.folders.length) {
-          return JSON.stringify(this.source.folders);
-        }
-        return '';
       },
       accountCode(){
         if (this.source.type) {
@@ -156,6 +156,16 @@
                       tree.checked = this.source.folders;
                       tree.updateData();
                     }
+
+                    bbn.fn.each(rules, r => {
+                      if (!this.source.rules[r].length) {
+                        const af = this.availableFolders(r) || [];
+                        const t = bbn.fn.getField(this.folderTypes, 'id', {code: r});
+                        if (t) {
+                          this.source.rules[r] = bbn.fn.getField(af, 'value', {id_option: t}) || '';
+                        }
+                      }
+                    });
                   });
                 }
                 else {
@@ -192,6 +202,58 @@
           };
           addToChecked(this.tree);
         }
+      },
+      availableFolders(role){
+        return bbn.fn.order(
+          bbn.fn.map(
+            bbn.fn.filter(
+              this.tree || [],
+              f => {
+                const rules = bbn.fn.clone(this.source.rules);
+                delete rules[role];
+                return !Object.values(rules).includes(f.uid)
+              }
+            ),
+            f => {
+              /* const bits = f.uid.split('.');
+              let o;
+              let t = '';
+              let u = '';
+              bbn.fn.each(bits, (b, i) => {
+                o = bbn.fn.getRow(o ? o.items : this.tree, {uid: u.length ? u + b : b});
+                t += o.text;
+                u += b;
+                if (bits[i + 1]) {
+                  t += ' > ';
+                  u += '.';
+                }
+
+              });
+              return {
+                text: t,
+                value: o.uid,
+                icon: o.icon,
+                id_option: o.id_option
+              } */
+              return {
+                text: f.text,
+                value: f.uid,
+                icon: f.icon,
+                id_option: f.id_option
+              }
+            }
+          ),
+          'text'
+        );
+      }
+    },
+    beforeMount(){
+      if (this.source.rules) {
+        bbn.fn.each(rules, r => {
+          if ((this.source.rules[r] === undefined)) {
+            this.source.rules[r] = '';
+          }
+        });
       }
     },
     watch: {

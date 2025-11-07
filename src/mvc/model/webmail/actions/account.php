@@ -5,6 +5,7 @@ use bbn\Appui\Mailbox;
 
 /** @var bbn\Mvc\Model $model */
 if ($model->hasData('action')) {
+  $em = new Email($model->db, $model->inc->user, $model->inc->pref);
   switch ($model->data['action'])
   {
     case 'test':
@@ -23,6 +24,7 @@ if ($model->hasData('action')) {
         ];
         try {
           $mb = new Mailbox($cfg);
+          $folderTypes = $em->getFolderTypes();
         }
         catch (\Exception $e) {
           return ['error' => $e->getMessage()];
@@ -34,14 +36,40 @@ if ($model->hasData('action')) {
             $res = [];
             $subscribed = $mb->listAllSubscribed();
             $mbParam = $mb->getParams();
-            $put_in_res = function (array $a, &$res, $prefix = '') use (&$put_in_res, &$subscribed, $mbParam) {
+            $put_in_res = function (
+              array $a,
+              &$res,
+              $prefix = ''
+            ) use (
+              &$put_in_res,
+              &$subscribed,
+              $mbParam,
+              $folderTypes
+            ) {
               $ele = array_shift($a);
-              $idx = X::search($res, ['text' => $ele]);
+              $idx = X::search($res, ['uid' => $prefix.$ele]);
               if (null === $idx) {
                 $idx   = count($res);
+                $idOpt = X::getField($folderTypes, ['code' => 'folders'], 'id');
+                if (empty($prefix)) {
+                  foreach ($folderTypes as $type) {
+                    if (!empty($type['names'])) {
+                      if (in_array(
+                        strtolower($ele),
+                        array_map(fn($n) => strtolower($n), $type['names']),
+                        true
+                      )) {
+                        $idOpt = $type['id'];
+                        break;
+                      }
+                    }
+                  }
+                }
+
                 $res[] = [
                   'text' => $ele,
                   'uid' => $prefix.$ele,
+                  'id_option' => $idOpt,
                   'items' => [],
                   'subscribed' => in_array($mbParam.$prefix.$ele, $subscribed)
                 ];
@@ -61,13 +89,13 @@ if ($model->hasData('action')) {
             $model->data['res']['data'] = $res;
             break;
           }
-          elseif ($model->hasData(['email', 'folders'], true)
+          elseif ($model->hasData(['email', 'folders', 'rules'], true)
             && is_array($model->data['folders'])
           ) {
             unset($mb);
-            $em = new Email($model->db, $model->inc->user, $model->inc->pref);
             $cfg['folders'] = $model->data['folders'];
             $cfg['email'] = $model->data['email'];
+            $cfg['rules'] = $model->data['rules'];
             try {
               if ($id_account = $em->addAccount($cfg)) {
                 return [
@@ -89,7 +117,6 @@ if ($model->hasData('action')) {
       break;
 
     case 'delete':
-      $em = new Email($model->db, $model->inc->user, $model->inc->pref);
       if ($model->hasData('id', true)) {
         if ($em->getAccount($model->data['id'])) {
           return [
@@ -110,11 +137,10 @@ if ($model->hasData('action')) {
       break;
 
     case 'update':
-      $em = new Email($model->db, $model->inc->user, $model->inc->pref);
+
       break;
 
     case 'get':
-      $em = new Email($model->db, $model->inc->user, $model->inc->pref);
       return [
         'account' => $em->getAccount($model->data['id'])
       ];

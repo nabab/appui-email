@@ -61,12 +61,15 @@
       <?= _("Impossible to connect to the mail server") ?>
     </div>
     <bbn-splitter bbn-elseif="tree.length"
-                  :full-size="false">
+                  :full-size="false"
+                  orientation="horizontal">
       <bbn-pane>
-        <div class="bbn-m bbn-c bbn-secondary bbn-radius bbn-spadding">
+        <div class="bbn-m bbn-c bbn-background-secondary bbn-secondary-text bbn-radius-top bbn-spadding bbn-upper"
+             style="max-width: 25rem">
           <?= _("Choose the folders you want to keep synchronized") ?>
         </div>
-        <div class="bbn-padding">
+        <div class="bbn-padding bbn-radius-bottom bbn-border-bottom bbn-border-left bbn-border-right"
+             style="border-color: var(--secondary-background) !important">
           <div @click="checkUncheckAll"
                class="bbn-p bbn-bottom-sspace bbn-hxspadding">
             <i bbn-if="isAllChecked"
@@ -86,23 +89,36 @@
                     :scrollable="false"/>
         </div>
       </bbn-pane>
-      <bbn-pane class="bbn-left-margin bbn-alt-background bbn-alt-text bbn-radius">
-        <div class="bbn-m bbn-c bbn-secondary bbn-radius bbn-spadding">
-          <?= _("Set rules for folders") ?>
+      <bbn-pane class="bbn-left-margin bbn-radius">
+        <div class="bbn-m bbn-c bbn-background-tertiary bbn-tertiary-text bbn-radius-top bbn-spadding bbn-upper">
+          <?= _("Mailbox rules") ?>
         </div>
-        <div class="bbn-grid-fields bbn-padding">
-          <div class="bbn-label"><?= _("Inbox") ?></div>
-          <bbn-dropdown/>
-          <div class="bbn-label"><?= _("Drafts") ?></div>
-          <bbn-dropdown/>
-          <div class="bbn-label"><?= _("Sent") ?></div>
-          <bbn-dropdown/>
-          <div class="bbn-label"><?= _("Junk") ?></div>
-          <bbn-dropdown/>
-          <div class="bbn-label"><?= _("Trash") ?></div>
-          <bbn-dropdown/>
-          <div class="bbn-label"><?= _("Archive") ?></div>
-          <bbn-dropdown/>
+        <div class="bbn-grid-fields bbn-padding bbn-radius-bottom bbn-border-bottom bbn-border-left bbn-border-right"
+             style="border-color: var(--tertiary-background) !important">
+          <div class="bbn-label"><?= _("Inbox folder") ?></div>
+          <bbn-dropdown :source="availableFolders('inbox')"
+                        bbn-model="source.rules.inbox"
+                        :required="true"/>
+          <div class="bbn-label"><?= _("Drafts folder") ?></div>
+          <bbn-dropdown :source="availableFolders('drafts')"
+                        bbn-model="source.rules.drafts"
+                        :required="true"/>
+          <div class="bbn-label"><?= _("Sent folder") ?></div>
+          <bbn-dropdown :source="availableFolders('sent')"
+                        bbn-model="source.rules.sent"
+                        :required="true"/>
+          <div class="bbn-label"><?= _("Spam folder") ?></div>
+          <bbn-dropdown :source="availableFolders('spam')"
+                        bbn-model="source.rules.spam"
+                        :required="true"/>
+          <div class="bbn-label"><?= _("Trash folder") ?></div>
+          <bbn-dropdown :source="availableFolders('trash')"
+                        bbn-model="source.rules.trash"
+                        :required="true"/>
+          <div class="bbn-label"><?= _("Archive folder") ?></div>
+          <bbn-dropdown :source="availableFolders('archive')"
+                        bbn-model="source.rules.archive"
+                        :required="true"/>
         </div>
       </bbn-pane>
     </bbn-splitter>

@@ -619,7 +619,8 @@
           label: bbn._("eMail account configuration"),
           component: 'appui-email-webmail-account',
           componentOptions: {
-            types: this.source.types
+            types: this.source.types,
+            folderTypes: this.source.folder_types
           },
           componentEvents: {
             success: d => {
