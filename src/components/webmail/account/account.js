@@ -27,6 +27,12 @@
       folderTypes: {
         type: Array,
         required: true
+      },
+      smtps: {
+        type: Array,
+        default(){
+          return [];
+        }
       }
     },
     data(){
@@ -36,7 +42,8 @@
         errorState: false,
         currentPage: 1,
         isTesting: false,
-        isDev: appui.user.isDev
+        isDev: appui.user.isDev,
+        isTreeLoaded: false
       }
     },
     computed: {
@@ -154,6 +161,9 @@
                     const tree = this.getRef('tree');
                     if (tree) {
                       tree.checked = this.source.folders;
+                      tree.$once('dataloaded', () => {
+                        this.isTreeLoaded = true;
+                      });
                       tree.updateData();
                     }
 
@@ -204,6 +214,11 @@
         }
       },
       availableFolders(role){
+        const tree = this.getRef('tree');
+        if (!tree) {
+          return [];
+        }
+
         return bbn.fn.order(
           bbn.fn.map(
             bbn.fn.filter(
@@ -211,7 +226,7 @@
               f => {
                 const rules = bbn.fn.clone(this.source.rules);
                 delete rules[role];
-                return !Object.values(rules).includes(f.uid)
+                return !Object.values(rules).includes(f.uid) && tree.checked.includes(f.uid);
               }
             ),
             f => {
@@ -245,6 +260,65 @@
           ),
           'text'
         );
+      },
+      addSmtp(){
+        this.getPopup({
+          label: bbn._('Add SMTP server'),
+          component: 'appui-email-webmail-smtp',
+          componentOptions: {
+            locale: !!this.source.locale
+          },
+          componentEvents: {
+            success: (d) => {
+              if (d.success && d.data?.id) {
+                this.smtps.push(d.data);
+                this.source.smtp = d.data.id;
+                appui.success(bbn._('The SMTP server has been added'));
+              }
+              else {
+                appui.error(d.error || bbn._('Cannot add the SMTP server'));
+              }
+            },
+            failure: (d) => {
+              appui.error(d.error || bbn._('Cannot add the SMTP server'));
+            }
+          }
+        });
+      },
+      editSmtp(idSmtp){
+        if (idSmtp) {
+          const smtp = bbn.fn.getRow(this.smtps, {id: idSmtp});
+          if (smtp) {
+            this.getPopup({
+              label: bbn._('Edit SMTP server'),
+              component: 'appui-email-webmail-smtp',
+              componentOptions: {
+                source: bbn.fn.clone(smtp)
+              },
+              componentEvents: {
+                success: (d) => {
+                  if (d.success && d.data) {
+                    const index = bbn.fn.search(this.smtps, {id: idSmtp});
+                    if (index !== -1) {
+                      this.smtps.splice(index, 1, d.data);
+                    }
+
+                    appui.success(bbn._('The SMTP server has been updated'));
+                  }
+                },
+                failure: (d) => {
+                  appui.error(d.error || bbn._('Cannot add the SMTP server'));
+                }
+              }
+            });
+          }
+        }
+      },
+      onTreeCheck(a,b,c){
+        bbn.fn.log('mikko',a,b,c);
+      },
+      onTreeUncheck(a,b,c){
+        bbn.fn.log('mikko2',a,b,c);
       }
     },
     beforeMount(){

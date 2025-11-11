@@ -1,6 +1,8 @@
 <bbn-form :source="source"
           @success="success"
-          :data="{action: 'save'}"
+          :data="{
+            action: 'save'
+          }"
           :action="root + 'webmail/actions/account'"
           ref="form"
           :buttons="formButtons"
@@ -28,9 +30,9 @@
                 type="password"
                 :no-save="true"
                 :required="true"/>
-      <div bbn-if="isDev"
+      <div bbn-if="isDev && !source.id"
            class="bbn-label"><?= _("Private account") ?></div>
-      <bbn-switch bbn-if="isDev"
+      <bbn-switch bbn-if="isDev && !source.id"
                   bbn-model="source.locale"
                   :value="true"
                   :novalue="false"/>
@@ -44,9 +46,18 @@
                    bbn-model="source.host"
                    :required="true"/>
         <div class="bbn-label"><?= _("Outgoing server") ?></div>
-        <bbn-input bbn-model="source.smtp"
-                   type="hostname"
-                   :required="true"/>
+        <div>
+          <bbn-dropdown :source="smtps"
+                        bbn-model="source.smtp"
+                        :required="true"/>
+          <bbn-button bbn-if="!!source.smtp"
+                      icon="nf nf-fa-edit"
+                      :notext="true"
+                      @click="editSmtp(source.smtp)"/>
+          <bbn-button icon="nf nf-fa-plus"
+                      :notext="true"
+                      @click="addSmtp"/>
+        </div>
       </template>
     </div>
   </div>
@@ -86,10 +97,13 @@
                     :selection="true"
                     uid="uid"
                     :opened="true"
-                    :scrollable="false"/>
+                    :scrollable="false"
+                    @check="onTreeCheck"
+                    @uncheck="onTreeUncheck"/>
         </div>
       </bbn-pane>
-      <bbn-pane class="bbn-left-margin bbn-radius">
+      <bbn-pane bbn-if="isTreeLoaded"
+                class="bbn-left-margin bbn-radius">
         <div class="bbn-m bbn-c bbn-background-tertiary bbn-tertiary-text bbn-radius-top bbn-spadding bbn-upper">
           <?= _("Mailbox rules") ?>
         </div>

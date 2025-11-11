@@ -26,6 +26,7 @@ else {
   return [
     'root' => $model->data['root'],
     'accounts' => $em->getAccounts(),
+    'smtps' => $em->getSmtps(),
     'types' => bbn\User\Email::getAccountTypes(),
     'contacts' => $em->getContacts(),
     'folder_types' => bbn\User\Email::getFolderTypes(),

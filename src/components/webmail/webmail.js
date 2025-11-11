@@ -410,13 +410,15 @@
           res.push({
             text: bbn._("Account settings"),
             icon: "nf nf-seti-settings",
-            action: () => {},
+            action: () => {
+              this.editAccount(node.data.id);
+            },
             disabled: true
           }, {
             text: bbn._('Delete account'),
             icon: "nf nf-md-delete",
             action: () => {
-              this.deleteAccount(node.data.uid)
+              this.deleteAccount(node.data.id)
               appui.poll();
             }
           })
@@ -614,14 +616,23 @@
         }
         return this.selectedMail.id === id;
       },
-      createAccount() {
+      createAccount(){
+        this.editAccount(null);
+        appui.poll();
+      },
+      editAccount(idAccount){
+        const componentOptions = {
+          types: this.source.types,
+          folderTypes: this.source.folder_types
+        };
+        if (idAccount && bbn.fn.isString(idAccount)) {
+          componentOptions.source = bbn.fn.clone(bbn.fn.getRow(this.source.accounts, {id: idAccount}));
+        }
+
         this.getPopup({
           label: bbn._("eMail account configuration"),
           component: 'appui-email-webmail-account',
-          componentOptions: {
-            types: this.source.types,
-            folderTypes: this.source.folder_types
-          },
+          componentOptions,
           componentEvents: {
             success: d => {
               if (d?.success && d?.data) {
@@ -638,8 +649,7 @@
               }
             }
           }
-        })
-        appui.poll();
+        });
       },
       treeMapper(a) {
         return {
