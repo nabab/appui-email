@@ -5,16 +5,17 @@ if ($model->hasData(['action'], true)) {
   switch ($model->data['action']) {
     case 'insert':
     case 'update':
-      if ($model->hasData(['name', 'host', 'login', 'pass'], true)
-        && $model->hasData(['encryption', 'port'])
+      if ($model->hasData(['name', 'host', 'login', 'pass', 'encryption'], true)
+        && $model->hasData(['port', 'validatecert'])
       ) {
         $data = [
           'name' => $model->data['name'],
           'host' => $model->data['host'],
-          'encryption' => $model->data['encryption'],
-          'port' => $model->data['port'],
           'login' => $model->data['login'],
           'pass' => $model->data['pass'],
+          'encryption' => $model->data['encryption'],
+          'port' => $model->data['port'],
+          'validatecert' => !empty($model->data['validatecert']) ? 1 : 0,
           $em->getLocaleField() => $model->data[$em->getLocaleField()] ?? false
         ];
         try {

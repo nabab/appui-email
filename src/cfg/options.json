@@ -79,6 +79,10 @@
         "code": "signatures"
     },
     {
+        "text": "SMTPs",
+        "code": "smtps"
+    },
+    {
         "cfg": {
             "show_code": 1,
             "show_value": 1
@@ -87,7 +91,7 @@
         "code": "types",
         "items": [
             {
-                "text": "GMail",
+                "text": "Gmail",
                 "code": "gmail"
             },
             {
@@ -99,8 +103,8 @@
                 "code": "hotmail"
             },
             {
-                "text": "POP3",
-                "code": "pop3"
+                "text": "Localhost",
+                "code": "local"
             }
         ]
     }

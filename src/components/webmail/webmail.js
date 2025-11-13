@@ -623,7 +623,8 @@
       editAccount(idAccount){
         const componentOptions = {
           types: this.source.types,
-          folderTypes: this.source.folder_types
+          folderTypes: this.source.folder_types,
+          smtps: this.source.smtps
         };
         if (idAccount && bbn.fn.isString(idAccount)) {
           componentOptions.source = bbn.fn.clone(bbn.fn.getRow(this.source.accounts, {id: idAccount}));

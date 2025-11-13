@@ -1,23 +1,26 @@
 (() => {
   const rules = ['inbox', 'drafts', 'sent', 'spam', 'trash', 'archive'];
+  const defaultSource = {
+    folders: [],
+    rules: rules.reduce((a, v) => ({...a, [v]: ''}), {}),
+    type: null,
+    email: '',
+    login: '',
+    pass: '',
+    host: '',
+    encryption: 1,
+    port: 993,
+    validatecert: 1,
+    smtp: '',
+    locale: true
+  };
   return {
     mixins: [bbn.cp.mixins.basic],
     props: {
       source: {
         type: Object,
         default(){
-          return {
-            folders: [],
-            rules: rules.reduce((a, v) => ({...a, [v]: ''}), {}),
-            type: null,
-            email: '',
-            login: '',
-            pass: '',
-            host: '',
-            smtp: '',
-            ssl: 1,
-            locale: true
-          }
+          return bbn.fn.clone(defaultSource);
         }
       },
       types: {
@@ -40,6 +43,7 @@
         root: appui.plugins['appui-email'] + '/',
         tree: [],
         errorState: false,
+        errorMessage: null,
         currentPage: 1,
         isTesting: false,
         isDev: appui.user.isDev,
@@ -64,13 +68,17 @@
               label: bbn._('Back'),
               action: this.backToConfig,
               icon: 'nf nf-fa-arrow_circle_left',
-            }, 'submit');
+            });
+            if (!this.errorState) {
+              btns.push('submit')
+            }
+
             break;
         }
 
         return btns;
       },
-      accountCode(){
+      typeCode(){
         if (this.source.type) {
           return bbn.fn.getField(this.types, 'code', {id: this.source.type});
         }
@@ -106,7 +114,9 @@
       backToConfig(){
         this.tree.splice(0);
         this.source.folders.splice(0);
+        bbn.fn.iterate(this.source.rules, (v, k) => this.source.rules[k] = '');
         this.errorState = false;
+        this.errorMessage = null;
         this.isTesting = false;
         this.currentPage = 1;
       },
@@ -125,9 +135,10 @@
           this.tree.splice(0);
           this.isTesting = true;
           this.errorState = false;
+          this.errorMessage = null;
           this.currentPage = 2;
           let ok = false;
-          if (['imap', 'pop'].includes(this.accountCode)) {
+          if (this.typeCode === 'imap') {
             if (this.source.host
               && bbn.fn.isHostname(this.source.host)
               && this.source.smtp
@@ -180,11 +191,13 @@
                 }
                 else {
                   this.errorState = true;
+                  this.errorMessage = d.error || null;
                   this.isTesting = false;
                 }
               },
-              () => {
+              d => {
                 this.errorState = true;
+                this.errorMessage = d.error || null;
                 this.isTesting = false;
               }
             );
@@ -314,6 +327,14 @@
           }
         }
       },
+      resetSource(){
+        const newSource = bbn.fn.clone(defaultSource);
+        bbn.fn.each(newSource, (v, k) => {
+          if (k !== 'type') {
+            this.source[k] = v;
+          }
+        });
+      },
       onTreeCheck(a,b,c){
         bbn.fn.log('mikko',a,b,c);
       },
@@ -331,17 +352,10 @@
       }
     },
     watch: {
-      "source.host"(nv, ov){
-        if (nv) {
-          if (ov === this.source.smtp) {
-            this.source.smtp = nv;
-          }
-          else if (!this.source.smtp) {
-            this.source.smtp = nv;
-          }
-        }
+      'source.type'(){
+        this.resetSource();
       },
-      "source.email"(nv, ov) {
+      'source.email'(nv, ov) {
         if (nv) {
           if (ov === this.source.login) {
             this.source.login = nv;
@@ -349,6 +363,17 @@
           else if (!this.source.login) {
             this.source.login = nv;
           }
+        }
+      },
+      'source.encryption'(newVal){
+        if (!newVal) {
+          this.source.validatecert = 0;
+          if (this.source.port === 993) {
+            this.source.port = 143;
+          }
+        }
+        else if (this.source.port === 143) {
+          this.source.port = 993;
         }
       }
     }

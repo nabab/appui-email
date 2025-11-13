@@ -5,13 +5,13 @@ use bbn\Appui\Mailbox;
 
 /** @var bbn\Mvc\Model $model */
 if ($model->hasData('action')) {
-  $em = new Email($model->db, $model->inc->user, $model->inc->pref);
+  $em = new Email($model->db);
   switch ($model->data['action'])
   {
     case 'test':
     case 'save':
-      if ($model->hasData(['type', 'login', 'pass', 'email'], true)
-        && $model->hasData('locale')
+      if ($model->hasData(['type', 'login', 'pass', 'email', 'smtp', 'port'], true)
+        && $model->hasData(['encryption', 'locale', 'validatecert'])
         && ($code = $model->inc->options->code($model->data['type']))
       ) {
         $cfg = [
@@ -19,7 +19,10 @@ if ($model->hasData('action')) {
           'login' => $model->data['login'],
           'host' => $model->data['host'] ?? null,
           'pass' => $model->data['pass'],
-          'ssl' => $model->data['ssl'] ?? null,
+          'encryption' => !empty($model->data['encryption']) ? 1 : 0,
+          'validatecert' => !empty($model->data['validatecert']) ? 1 : 0,
+          'port' => $model->data['port'],
+          'smtp' => $model->data['smtp'],
           'locale' => $model->hasData('locale', true)
         ];
         try {

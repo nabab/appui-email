@@ -18,6 +18,12 @@
                     placeholder="<?= _("Choose a type of account") ?>"
                     bbn-model="source.type"
                     :required="true"/>
+      <div bbn-if="isDev && !source.id"
+           class="bbn-label"><?= _("Private account") ?></div>
+      <bbn-switch bbn-if="isDev && !source.id"
+                  bbn-model="source.locale"
+                  :value="true"
+                  :novalue="false"/>
       <div class="bbn-label"><?= _("eMail address") ?></div>
       <bbn-input bbn-model="source.email"
                 type="email"
@@ -30,26 +36,32 @@
                 type="password"
                 :no-save="true"
                 :required="true"/>
-      <div bbn-if="isDev && !source.id"
-           class="bbn-label"><?= _("Private account") ?></div>
-      <bbn-switch bbn-if="isDev && !source.id"
-                  bbn-model="source.locale"
-                  :value="true"
-                  :novalue="false"/>
-      <template bbn-if="['imap', 'pop3'].includes(accountCode)">
-        <div class="bbn-label"><?= _("Use SSL") ?></div>
-        <bbn-checkbox :value="1"
-                      :novalue="0"
-                      bbn-model="source.ssl"/>
+      <template bbn-if="typeCode === 'imap'">
         <div class="bbn-label"><?= _("Incoming server") ?></div>
         <bbn-input type="hostname"
                    bbn-model="source.host"
                    :required="true"/>
+        <div class="bbn-label"><?= _("Use encryption") ?></div>
+        <bbn-switch :value="1"
+                    :novalue="0"
+                    bbn-model="source.encryption"/>
+        <div class="bbn-label"><?= _("Port") ?></div>
+        <bbn-input type="number"
+                   bbn-model="source.port"
+                   :required="true"/>
+        <div bbn-if="!!source.encryption"
+             class="bbn-label"><?= _("Validate certificate") ?></div>
+        <bbn-switch bbn-if="!!source.encryption"
+                    :value="1"
+                    :novalue="0"
+                    bbn-model="source.validatecert"/>
         <div class="bbn-label"><?= _("Outgoing server") ?></div>
         <div>
           <bbn-dropdown :source="smtps"
                         bbn-model="source.smtp"
-                        :required="true"/>
+                        :required="true"
+                        source-value="id"
+                        source-text="name"/>
           <bbn-button bbn-if="!!source.smtp"
                       icon="nf nf-fa-edit"
                       :notext="true"
@@ -68,8 +80,11 @@
                 label="<?=_('Testing account...')?>"
                 style="position: relative !important"/>
     <div bbn-elseif="errorState"
-         class="bbn-c bbn-b bbn-state-error bbn-padding">
-      <?= _("Impossible to connect to the mail server") ?>
+         class="bbn-c bbn-padding bbn-state-error bbn-radius">
+      <div class="bbn-b"><?= _("Impossible to connect to the mail server") ?></div>
+      <div bbn-if="errorMessage"
+           bbn-text="errorMessage"
+           class="bbn-text"/>
     </div>
     <bbn-splitter bbn-elseif="tree.length"
                   :full-size="false"

@@ -1,7 +1,7 @@
 <?php
-use bbn\X;
+use bbn\User\Email;
 
-$em = new bbn\User\Email($model->db);
+$em = new Email($model->db);
 if ($model->hasData('limit')) {
   if ($model->hasData('id_folder', true)) {
     $list = $model->hasData('threads', true) ?

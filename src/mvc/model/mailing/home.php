@@ -26,7 +26,17 @@ return [
     ORDER BY text
   "),
   'count' => $model->getModel(APPUI_EMAIL_ROOT.'data/count'),
-  'recipients' => $model->inc->options->textValueOptions('emails_listes'),
+  'recipients' => array_map(
+    fn($a) => [
+      'text' => $a['text'],
+      'value' => $a['id'],
+      'code' => $a['code'],
+    ],
+    array_values(array_filter(
+      $model->inc->options->fullOptions('emails_listes'),
+      fn($a) => !$a['archived']
+    ))
+  ),
   'senders' => array_map(function($a){
     return [
       'text' => $a['text'],

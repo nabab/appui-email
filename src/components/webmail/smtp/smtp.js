@@ -7,10 +7,11 @@
           return {
             name: '',
             host: '',
-            encryption: '',
-            port: '',
             login: '',
-            pass: ''
+            pass: '',
+            encryption: 'starttls',
+            port: 587,
+            validatecert: 1,
           }
         }
       },
@@ -24,16 +25,19 @@
         root: appui.plugins['appui-email'] + '/',
         encryptions: [{
           text: bbn._('None'),
-          value: '',
-          port: 25
+          value: 'none',
+          port: 25,
+          validatecert: 0
         }, {
-          text: bbn._('SSL'),
-          value: 'ssl',
-          port: 465
-        }, {
-          text: bbn._('TLS'),
+          text: bbn._('TLS/SSL'),
           value: 'tls',
-          port: 587
+          port: 465,
+          validatecert: 1
+        }, {
+          text: bbn._('STARTTLS'),
+          value: 'starttls',
+          port: 587,
+          validatecert: 1
         }]
       }
     },
@@ -53,9 +57,15 @@
       }
     },
     watch: {
-      'source.encryption'(newVal){
-        if (!this.source.port) {
+      'source.encryption'(newVal, oldVal){
+        const oldPort = bbn.fn.getField(this.encryptions, 'port', 'value', oldVal) || null;
+        const oldValidateCert = bbn.fn.getField(this.encryptions, 'validatecert', 'value', oldVal) || null;
+        if (!this.source.port || (oldPort === this.source.port)) {
           this.source.port = bbn.fn.getField(this.encryptions, 'port', 'value', newVal);
+        }
+
+        if (oldValidateCert === this.source.validatecert) {
+          this.source.validatecert = bbn.fn.getField(this.encryptions, 'validatecert', 'value', newVal);
         }
       }
     }
