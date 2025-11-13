@@ -158,7 +158,15 @@
             obj.email.references = this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`;
           }
 
-          this.post(this.rootUrl + 'actions/email/send', obj);
+          this.post(this.rootUrl + 'actions/email/send', obj, d => {
+            if (d.success) {
+              appui.success(bbn._('Email sent successfully'));
+              this.closest('bbn-container').close();
+            }
+            else {
+              appui.error(bbn._('Error sending email'));
+            }
+          });
         }
       },
       saveDraft(){

@@ -9,9 +9,9 @@ if ($model->hasData('action')) {
   switch ($model->data['action'])
   {
     case 'test':
-    case 'save':
-      if ($model->hasData(['type', 'login', 'pass', 'email', 'smtp', 'port'], true)
-        && $model->hasData(['encryption', 'locale', 'validatecert'])
+    case 'insert':
+      if ($model->hasData(['type', 'login', 'pass', 'email'], true)
+        && $model->hasData(['port', 'smtp', 'encryption', 'locale', 'validatecert'])
         && ($code = $model->inc->options->code($model->data['type']))
       ) {
         $cfg = [
@@ -21,8 +21,8 @@ if ($model->hasData('action')) {
           'pass' => $model->data['pass'],
           'encryption' => !empty($model->data['encryption']) ? 1 : 0,
           'validatecert' => !empty($model->data['validatecert']) ? 1 : 0,
-          'port' => $model->data['port'],
-          'smtp' => $model->data['smtp'],
+          'port' => $model->data['port'] ?? null,
+          'smtp' => $model->data['smtp'] ?? null,
           'locale' => $model->hasData('locale', true)
         ];
         try {
@@ -92,7 +92,7 @@ if ($model->hasData('action')) {
             $model->data['res']['data'] = $res;
             break;
           }
-          elseif ($model->hasData(['email', 'folders', 'rules'], true)
+          elseif ($model->hasData(['folders', 'rules'], true)
             && is_array($model->data['folders'])
           ) {
             unset($mb);
@@ -140,6 +140,40 @@ if ($model->hasData('action')) {
       break;
 
     case 'update':
+      if ($model->hasData(['id', 'type', 'login', 'pass', 'email', 'folders', 'rules'], true)
+        && $model->hasData(['smtp', 'port', 'encryption', 'locale', 'validatecert'])
+        && ($code = $model->inc->options->code($model->data['type']))
+        && is_array($model->data['folders'])
+      ) {
+        $cfg = [
+          'type' => $code,
+          'login' => $model->data['login'],
+          'host' => $model->data['host'] ?? null,
+          'pass' => $model->data['pass'],
+          'encryption' => !empty($model->data['encryption']) ? 1 : 0,
+          'validatecert' => !empty($model->data['validatecert']) ? 1 : 0,
+          'port' => $model->data['port'] ?? null,
+          'smtp' => $model->data['smtp'] ?? null,
+          'folders' => $model->data['folders'],
+          'email' => $model->data['email'],
+          'rules' => $model->data['rules'],
+        ];
+        if ($model->hasData(['folders', 'rules'], true)
+          && is_array($model->data['folders'])
+        ) {
+          try {
+            if ($em->updateAccount($model->data['id'], $cfg)) {
+              return [
+                'success' => true,
+                'data' => $em->getAccount($model->data['id'], true)
+              ];
+            }
+          }
+          catch (\Exception $e) {
+            return ['error' => $e->getMessage()];
+          }
+        }
+      }
 
       break;
 

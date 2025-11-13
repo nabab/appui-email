@@ -145,7 +145,7 @@
                                       :thread="threads"/>
           <div bbn-else
                class="bbn-overlay bbn-middle">
-            <div class="bbn-block bbn-large bbn-c"
+            <div class="bbn-block bbn-spadding bbn-c"
                  bbn-text="_('Select an email to see its content here')"/>
           </div>
         </bbn-pane>

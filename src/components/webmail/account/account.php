@@ -1,7 +1,7 @@
 <bbn-form :source="source"
           @success="success"
           :data="{
-            action: 'save'
+            action: source.id ? 'update' : 'insert'
           }"
           :action="root + 'webmail/actions/account'"
           ref="form"

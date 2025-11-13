@@ -321,15 +321,6 @@
           })
         }
 
-        if (node.data.type === "account") {
-          res.push({
-            text: bbn._("Manage subscriptions"),
-            icon: "nf nf-fa-folder_tree",
-            action: () => {},
-            disabled: true
-          })
-        }
-
         if (!['account', 'folder_types'].includes(node.data.type)) {
           res.push({
             text: bbn._('Remove folder'),
