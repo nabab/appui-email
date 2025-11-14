@@ -34,7 +34,7 @@ return [
     ],
     array_values(array_filter(
       $model->inc->options->fullOptions('emails_listes'),
-      fn($a) => !$a['archived']
+      fn($a) => empty($a['archived'])
     ))
   ),
   'senders' => array_map(function($a){

@@ -61,7 +61,8 @@
                         bbn-model="source.smtp"
                         :required="true"
                         source-value="id"
-                        source-text="name"/>
+                        source-text="name"
+                        ref="smtps"/>
           <bbn-button bbn-if="!!source.smtp"
                       icon="nf nf-fa-edit"
                       :notext="true"

@@ -306,7 +306,7 @@
               label: bbn._('Edit SMTP server'),
               component: 'appui-email-webmail-smtp',
               componentOptions: {
-                source: bbn.fn.clone(smtp)
+                source: smtp
               },
               componentEvents: {
                 success: (d) => {
@@ -316,6 +316,7 @@
                       this.smtps.splice(index, 1, d.data);
                     }
 
+                    this.getRef('smtps').updateData();
                     appui.success(bbn._('The SMTP server has been updated'));
                   }
                 },

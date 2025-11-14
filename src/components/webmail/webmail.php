@@ -28,7 +28,7 @@
           </bbn-toolbar>
         </div>
         <div class="bbn-flex-fill bbn-bottom-xspadding bbn-right-xspadding">
-          <bbn-tree :source="treeData"
+          <bbn-tree :source="treeSource"
                     uid="id"
                     :menu="treeMenu"
                     :opened="true"

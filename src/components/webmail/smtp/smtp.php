@@ -30,7 +30,7 @@
                :required="true"/>
     <div bbn-if="source.encryption !== 'none'"
          class="bbn-label"><?= _("Validate certificate") ?></div>
-    <bbn-checkbox bbn-if="source.encryption !== 'none'"
+    <bbn-switch bbn-if="source.encryption !== 'none'"
                   bbn-model="source.validatecert"
                   :value="1"
                   :novalue="0"/>

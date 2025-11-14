@@ -30,6 +30,47 @@
       };
     },
     computed: {
+      treeSource(){
+        const r = [];
+        const getItems = items => {
+          return bbn.fn.map(items || [], a => {
+            return {
+              id_account: a.id_account,
+              id: a.id,
+              uid: a.uid,
+              text: a.text,
+              icon: a.icon,
+              type: a.type !== 'folders' ? 'folder' : 'folders',
+              items: getItems(a.items || []),
+              originalData: a
+            }
+          });
+        };
+        bbn.fn.each(this.source.folder_types, a => {
+          r.push({
+            id: a.id,
+            uid: a.code,
+            text: a.text,
+            icon: a.icon,
+            type: 'folder_types',
+            originalData: a
+          });
+        })
+        if (this.source.accounts?.length) {
+          bbn.fn.each(this.source.accounts, a => {
+            r.push({
+              id: a.id,
+              uid: a.id,
+              text: a.login,
+              type: 'account',
+              items: getItems(a.folders),
+              originalData: a
+            });
+          });
+        }
+
+        return r;
+      },
       dataObj(){
         let idFolder = this.currentFolder;
         if (this.currentAccount && !idFolder) {
@@ -148,10 +189,11 @@
                 } , d => {
                   if (d.account) {
                     this.source.accounts.push(d.account);
-                    this.setTreeData();
-                    tree.updateData().then(() => {
-                      tree.reload()
-                    })
+                    this.$nextTick(() => {
+                      tree.updateData().then(() => {
+                        tree.reload()
+                      });
+                    });
                   }
                 });
               }
@@ -189,20 +231,22 @@
                     let idx = bbn.fn.search(this.source.accounts, {id: d.account.id});
                     if (idx >= 0) {
                       this.source.accounts[idx] = d.account;
-                      this.setTreeData();
-                      tree.updateData().then(() => {
-                        tree.reload()
-                      })
+                      this.$nextTick(() => {
+                        tree.updateData().then(() => {
+                          tree.reload()
+                        });
+                      });
                     }
                   }
                 });
               }
             }
           }
-          this.setTreeData();
-          tree.updateData().then(() => {
-            tree.reload()
-          })
+          this.$nextTick(() => {
+            tree.updateData().then(() => {
+              tree.reload()
+            });
+          });
           this.hash = d;
           this.$set(appui.pollerObject, 'appui-email', {
             hashes: this.hash
@@ -265,9 +309,11 @@
               }
             }
           }
-          this.setTreeData();
-          tree.updateData().then( () => {
-            tree.reload()
+
+          this.$nextTick(() => {
+            tree.updateData().then( () => {
+              tree.reload()
+            })
           })
         })
         event.preventDefault();
@@ -297,8 +343,8 @@
                       const acc = bbn.fn.getRow(this.source.accounts , {id: d.account.id});
                       if (acc) {
                         acc.folders.splice(0, acc.folders.length, ...d.account.folders);
-                      };
-                      this.setTreeData();
+                      }
+
                       this.$nextTick(() => {
                         const tree = this.getRef('tree');
                         if (tree) {
@@ -354,8 +400,8 @@
                       const acc = bbn.fn.getRow(this.source.accounts , {id: d.account.id});
                       if (acc) {
                         acc.folders.splice(0, acc.folders.length, ...d.account.folders);
-                      };
-                      this.setTreeData();
+                      }
+
                       this.$nextTick(() => {
                         const tree = this.getRef('tree');
                         if (tree) {
@@ -442,7 +488,6 @@
             if (d.success) {
               appui.success(bbn._(`${folderTitle} folder and subfolders ar successfuly deleted`));
               this.source.accounts.splice(idx, 1, d.account);
-              this.setTreeData();
               this.$nextTick(() => {
                 tree.updateData().then(() => {
                   tree.reload()
@@ -466,11 +511,13 @@
               let tree = this.getRef('tree');
               let idx = bbn.fn.search(this.source.accounts, {id})
               this.source.accounts.splice(idx, 1)
-              this.setTreeData();
-              tree.updateData().then(() => {
-                tree.reload()
-              })
-            } else {
+              this.$nextTick(() => {
+                tree.updateData().then(() => {
+                  tree.reload()
+                });
+              });
+            }
+            else {
               appui.error(d.error ? d.error : bbn._("Impossible to delete the account"));
             }
           })
@@ -484,8 +531,8 @@
           Sent: "nf nf-md-inbox_arrow_up",
           Drafts: "nf nf-md-file_document"
         }
-        let r = [];
-        let fn = (ar, id_account) => {
+        const r = [];
+        /* const fn = (ar, id_account) => {
           let res = [];
           bbn.fn.each(this.source.folder_types, ft => {
             bbn.fn.each(ar, a => {
@@ -520,7 +567,22 @@
             }
           })
           return res;
-        }
+        }; */
+        const fn = (items) => {
+          let res = [];
+          bbn.fn.each(items, a => {
+            res.push({
+              id_account: a.id_account,
+              uid: a.uid,
+              text: a.text,
+              icon: a.icon,
+              type: a.type !== 'folders' ? 'folder' : 'folders',
+              items: fn(a.items || []),
+              data: a
+            });
+          });
+          return res;
+        };
         bbn.fn.each(this.source.folder_types, a => {
           r.push({
             text: a.text,
@@ -533,12 +595,12 @@
         })
         if (this.source.accounts?.length) {
           bbn.fn.each(this.source.accounts, a => {
-            let folders = bbn.fn.clone(a.folders.filter(el => el.subscribed !== false));
+            const folders = bbn.fn.clone(a.folders.filter(el => el.subscribed !== false));
             r.push({
               text: a.login,
               id: a.id,
               uid: a.id,
-              items: fn(folders, a.id),
+              items: fn(folders),
               type: "account"
             });
           });
@@ -627,9 +689,15 @@
           componentOptions,
           componentEvents: {
             success: d => {
-              if (d?.success && d?.data) {
-                this.source.accounts.push(d.data);
-                this.setTreeData();
+              if (d?.success && d?.data?.id) {
+                const index = bbn.fn.search(this.source.accounts, {id: d.data.id});
+                if (index > -1) {
+                  this.source.accounts.splice(index, 1, d.data);
+                }
+                else {
+                  this.source.accounts.push(d.data);
+                }
+
                 this.$nextTick(() => {
                   const tree = this.getRef('tree');
                   if (tree) {
@@ -785,7 +853,6 @@
       }
     },
     created(){
-      this.setTreeData();
       appui.register('appui-email-webmail', this);
     },
     mounted(){

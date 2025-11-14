@@ -27,9 +27,12 @@ if ($model->hasData(['action'], true)) {
               ];
             }
           }
-          elseif ($model->hasData('id', true)) {
+          elseif ($model->hasData('id', true)
+            && $em->updateSmtp($model->data['id'], $data)
+          ) {
             return [
-              'success' => $em->updateSmtp($model->data['id'], $data)
+              'success' => true,
+              'data' => $em->getSmtp($model->data['id'])
             ];
           }
         }
