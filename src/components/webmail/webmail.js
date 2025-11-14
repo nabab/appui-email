@@ -127,6 +127,13 @@
         }
 
         return false;
+      },
+      currentAccountObj(){
+        if (this.currentAccount) {
+          return bbn.fn.getRow(this.source.accounts, {id: this.currentAccount}) || false;
+        }
+
+        return false;
       }
     },
     methods: {

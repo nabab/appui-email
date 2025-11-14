@@ -344,6 +344,10 @@
       }
     },
     beforeMount(){
+      if (bbn.fn.isArray(this.source.rules)) {
+        this.source.rules = {};
+      }
+
       if (this.source.rules) {
         bbn.fn.each(rules, r => {
           if ((this.source.rules[r] === undefined)) {

@@ -27,6 +27,7 @@
         isInThread,
         mainReader: isInThread ? this.closest('appui-email-webmail-reader') : this,
         currentSelected: this.thread ? this.source.thread?.[0]?.id : this.source.id,
+        webmail: appui.getRegistered('appui-email-webmail')
       }
     },
     computed: {
@@ -87,6 +88,31 @@
       },
       recipientsEmails(){
         return this.source.to_email ? this.source.to_email.split(', ') : [];
+      },
+      spamFolderId(){
+        if (this.webmail?.currentAccountObj?.rules?.spam) {
+          return bbn.fn.getField(
+            this.webmail?.currentAccountObj?.folders || [],
+            'id',
+            {uid: this.webmail.currentAccountObj.rules.spam}
+          );
+        }
+
+        return null;
+      },
+      archiveFolderId(){
+        if (this.webmail?.currentAccountObj?.rules?.archive) {
+          return bbn.fn.getField(
+            this.webmail?.currentAccountObj?.folders || [],
+            'id',
+            {uid: this.webmail.currentAccountObj.rules.archive}
+          );
+        }
+
+        return null;
+      },
+      otherFolders(){
+        return bbn.fn.filter(this.webmail.folders || [], f => f.value !== this.webmail.currentFolder)
       }
     },
     methods: {
@@ -122,13 +148,64 @@
         }
       },
       archive(){
-        if (this.mainReader.currentSelected) {
+        if (this.archiveFolderId
+          && this.mainReader.currentSelected
+        ) {
+          this.mainReader.confirm(bbn._('Do you want to move this email to archive?'), () => {
+            this.post(this.root + 'webmail/actions/email/move', {
+              id: this.mainReader.currentSelected,
+              id_folder: this.archiveFolderId
+            }, d => {
+              if (d.success) {
+                if ((this.mainReader.currentSelected === this.webmail.selectedMail?.id)
+                  && (this.mainReader.currentSelected === this.source.id)
+                ) {
+                  this.webmail.selectedMail = null;
+                }
 
+                if ((this.webmail.currentFolder === this.source.id_folder)
+                  || (this.spamFolderId === this.webmail.currentFolder)
+                ) {
+                  this.webmail.reloadTable();
+                }
+
+                appui.success(bbn._('Email moved to archive with success'))
+              }
+              else {
+                appui.error(bbn._('An error occured when moving the email to archive'))
+              }
+            })
+          })
         }
       },
-      setAsJunk(){
-        if (this.mainReader.currentSelected) {
+      moveToSpam(){
+        if (this.spamFolderId
+          && this.mainReader.currentSelected
+        ) {
+          this.mainReader.confirm(bbn._('Do you want to mark this email as spam?'), () => {
+            this.post(this.root + 'webmail/actions/email/move', {
+              id: this.mainReader.currentSelected,
+              id_folder: this.spamFolderId
+            }, d => {
+              if (d.success) {
+                if ((this.mainReader.currentSelected === this.webmail.selectedMail?.id)
+                  && (this.mainReader.currentSelected === this.source.id)
+                ) {
+                  this.webmail.selectedMail = null;
+                }
 
+                if ((this.webmail.currentFolder === this.source.id_folder)
+                  || (this.spamFolderId === this.webmail.currentFolder)
+                ) {
+                  this.webmail.reloadTable();
+                }
+
+                appui.success(bbn._('Email marked as spam with success'))
+              } else {
+                appui.error(bbn._('An error occured when marking the email as spam'))
+              }
+            })
+          })
         }
       },
       openTab(){
@@ -163,34 +240,41 @@
         }
       },
       moveFolder() {
-        const webmail = appui.getRegistered('appui-email-webmail');
-        this.getPopup({
-          label: bbn._("Move email to another folder"),
-          component: 'appui-email-webmail-email-move',
-          componentOptions: {
-            email: this.source.id,
-            folders: bbn.fn.filter(webmail.folders, f => f.value !== webmail.currentFolder)
-          },
-          componentEvents: {
-            success: (d, selectedFolder) => {
-              if (d.success) {
-                if ((webmail.currentFolder === this.source.id_folder)
-                  || (selectedFolder === webmail.currentFolder)
-                ) {
-                  webmail.reloadTable();
-                }
+        if (this.otherFolders?.length) {
+          this.getPopup({
+            label: bbn._("Move email to another folder"),
+            component: 'appui-email-webmail-email-move',
+            componentOptions: {
+              email: this.source.id,
+              folders: this.otherFolders
+            },
+            componentEvents: {
+              success: (d, selectedFolder) => {
+                if (d.success) {
+                  if ((this.mainReader.currentSelected === this.webmail.selectedMail?.id)
+                    && (this.mainReader.currentSelected === this.source.id)
+                  ) {
+                    this.webmail.selectedMail = null;
+                  }
 
-                appui.success(bbn._('Email moved successfully'));
-              }
-              else {
+                  if ((this.webmail.currentFolder === this.source.id_folder)
+                    || (selectedFolder === this.webmail.currentFolder)
+                  ) {
+                    this.webmail.reloadTable();
+                  }
+
+                  appui.success(bbn._('Email moved successfully'));
+                }
+                else {
+                  appui.error(d.error || bbn._('An error occurred while moving the email'));
+                }
+              },
+              failure: d => {
                 appui.error(d.error || bbn._('An error occurred while moving the email'));
               }
-            },
-            failure: d => {
-              appui.error(d.error || bbn._('An error occurred while moving the email'));
             }
-          }
-        })
+          })
+        }
       },
       mailToTask(){
         if (this.source.id) {
