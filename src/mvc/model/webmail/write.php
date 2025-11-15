@@ -8,7 +8,7 @@ function createEmailListString(array $array): string {
   for ($i = 0; $i < count($array); $i++) {
     $res .= $array[$i]->mailbox  . '@' . $array[$i]->host . ' ';
   }
-  return substr($res, 0, -1);
+  return Str::sub($res, 0, -1);
 }
 
 $em = new bbn\User\Email($model->db);

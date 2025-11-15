@@ -7,14 +7,15 @@
  *
  * @var $ctrl \bbn\Mvc\Controller
  */
-if ( !empty($ctrl->arguments[0]) && \bbn\Str::isUid($ctrl->arguments[0]) ){
+use bbn\Str;
+if ( !empty($ctrl->arguments[0]) && Str::isUid($ctrl->arguments[0]) ){
   $ctrl->data = [
     'id' => $ctrl->arguments[0],
     'root' => APPUI_EMAIL_ROOT,
   ];
   if ( $model = $ctrl->getModel() ){
-    if ( !empty($model['title']) && (strlen($model['title']) > 20) ){
-      $model['title'] = substr($model['title'], 0, 20) . '...';
+    if ( !empty($model['title']) && (Str::len($model['title']) > 20) ){
+      $model['title'] = Str::sub($model['title'], 0, 20) . '...';
     }
     echo $ctrl
       ->setIcon('nf nf-fa-th_list')
