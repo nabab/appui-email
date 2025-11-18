@@ -120,16 +120,16 @@
         this.mainReader.currentSelected = this.source.id;
       },
       formatDate(date) {
-        const emailDate = dayjs(date);
-        const currentDate = dayjs();
+        const emailDate = bbn.date(date);
+        const currentDate = bbn.date();
         if (emailDate.year() !== currentDate.year()) {
-          return dayjs(date).format("lll");
+          return bbn.date(date).format("lll");
         }
         else if (emailDate.format('DDMMYYYY') === currentDate.format('DDMMYYYY')) {
-          return dayjs(date).format("LT");
+          return bbn.date(date).format("LT");
         }
         else {
-          return dayjs(date).format("lll");
+          return bbn.date(date).format("lll");
         }
       },
       reply(){

@@ -565,7 +565,7 @@
         this.closest('bbn-router').route('sent')
       },
       fixDate(d){
-        return dayjs(d).format('DD/MM/YYYY HH:mm:ss');
+        return bbn.date(d).format('DD/MM/YYYY HH:mm:ss');
       },
       setGetInfo(){
         this.info.getInfo = setInterval(() => {
