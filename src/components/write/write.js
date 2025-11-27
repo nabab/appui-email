@@ -158,7 +158,7 @@
             obj.email.references = this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`;
           }
 
-          this.post(this.rootUrl + 'actions/email/send', obj, d => {
+          this.post(this.rootUrl + 'webmail/actions/email/send', obj, d => {
             if (d.success) {
               appui.success(bbn._('Email sent successfully'));
               this.closest('bbn-container').close();
@@ -170,7 +170,31 @@
         }
       },
       saveDraft(){
+        const obj = {
+          id_account: this.currentAccount,
+          email: {
+            title: this.currentSubject,
+            text: this.message,
+            to: this.currentTo,
+            cc: this.currentCC,
+            bcc: this.currentCCI,
+            attachments: this.attachments.concat(bbn.fn.map(bbn.fn.clone(this.attachmentsModel), a => a.path)),
+            important: 0
+          }
+        };
 
+        if (this.replyTo?.length) {
+          obj.email.in_reply_to = `<${this.replyTo}>`;
+          obj.email.references = this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`;
+        }
+        this.post(this.rootUrl + 'webmail/actions/email/draft', obj, d => {
+          if (d.success) {
+            appui.success(bbn._('Email saved successfully'));
+          }
+          else {
+            appui.error(bbn._('Error saving email'));
+          }
+        });
       },
       openContacts(type) {
         this.getPopup({

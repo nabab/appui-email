@@ -8,7 +8,7 @@ if (!empty($ctrl->files['file'])
   && !empty($ctrl->post['timestamp'])
 ) {
   $f =& $ctrl->files['file'];
-  $path = $ctrl->userTmpPath() . $ctrl->data['timestamp'];
+  $path = $ctrl->userTmpPath() . $ctrl->post['timestamp'];
   $name = $_REQUEST['name'] ?? $f['name'];
   $new = Str::encodeFilename($name, Str::fileExt($name));
   $final = $path . '/' . $new;

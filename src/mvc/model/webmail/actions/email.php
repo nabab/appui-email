@@ -20,6 +20,48 @@ if ($model->hasData('action', true)) {
 
         }
       }
+
+      break;
+    case 'send':
+      if ($model->hasData(['id_account', 'email'], true)
+        && !empty($model->data['email']['to'])
+        && ( !empty($model->data['email']['title'])
+          || !empty($model->data['email']['text']))
+        && ($account = $em->getAccount($model->data['id_account']))
+      ) {
+        $model->data['email']['from'] = $account['login'];
+        return [
+          'data' => $model->data['email'],
+          'success' => $em->send(
+            $model->data['id_account'],
+            $model->data['email']
+          )
+        ];
+      }
+
+      break;
+    case 'draft':
+      if ($model->hasData(['id_account', 'email'], true)
+        && ($account = $em->getAccount($model->data['id_account']))
+      ) {
+        $model->data['email']['from'] = $account['login'];
+        try {
+          return [
+            'data' => $model->data['email'],
+            'success' => $em->saveDraft(
+              $model->data['id_account'],
+              $model->data['email']
+            )
+          ];
+        }
+        catch (\Exception $e) {
+          return [
+            'success' => false,
+            'error' => $e->getMessage()
+          ];
+        }
+      }
+
       break;
   }
 }
