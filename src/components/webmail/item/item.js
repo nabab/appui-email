@@ -17,13 +17,13 @@
     },
     methods: {
       formatDate(date) {
-        const emailDate = bbn.date(date);
-        const currentDate = bbn.date();
+        const emailDate = bbn.dt(date);
+        const currentDate = bbn.dt();
         if (emailDate.format('DDMMYYYY') === currentDate.format('DDMMYYYY')) {
-          return bbn.date(date).format("LT");
+          return bbn.dt(date).format("LT");
         }
         else {
-          return bbn.date(date).format("L");
+          return bbn.dt(date).format("L");
         }
       },
       select() {

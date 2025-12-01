@@ -138,16 +138,16 @@
     },
     methods: {
       formatDate(date) {
-        const emailDate = bbn.date(date);
-        const currentDate = bbn.date();
+        const emailDate = bbn.dt(date);
+        const currentDate = bbn.dt();
         if (emailDate.year() !== currentDate.year()) {
-          return bbn.date(date).format("lll");
+          return bbn.dt(date).format("lll");
         }
         else if (emailDate.format('DDMMYYYY') === currentDate.format('DDMMYYYY')) {
-          return bbn.date(date).format("LT");
+          return bbn.dt(date).format("LT");
         }
         else {
-          return bbn.date(date).format("lll");
+          return bbn.dt(date).format("lll");
         }
       },
       changeOrientation() {
