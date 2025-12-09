@@ -1,8 +1,5 @@
 <?php
-/**
- *  Describe what it does
- *
- **/
+/** @var bbn\Mvc\Controller $ctrl */
 $user = false;
 
 $mgr = $ctrl->inc->user->getManager();

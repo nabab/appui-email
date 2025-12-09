@@ -1,10 +1,5 @@
 <?php
-/*
- * Describe what it does!
- *
- * @var $ctrl \bbn\Mvc\Controller 
- *
- */
+/** @var bbn\Mvc\Controller $ctrl */
 use bbn\X;
 
 $em         = new bbn\User\Email($ctrl->db);
