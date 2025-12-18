@@ -142,7 +142,7 @@
         <bbn-pane :scrollable="!threads">
           <appui-email-webmail-reader bbn-if="selectedMail"
                                       :source="selectedMail"
-                                      :thread="threads"/>
+                                      :thread="threads && !!selectedMail?.thread?.length"/>
           <div bbn-else
                class="bbn-overlay bbn-middle">
             <div class="bbn-block bbn-spadding bbn-c"

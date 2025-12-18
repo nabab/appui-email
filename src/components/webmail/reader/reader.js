@@ -36,6 +36,17 @@
          && (this.mainReader.source.thread?.length > 1)
          && (this.mainReader.currentSelected === this.source.id);
       },
+      currentSelectedSource(){
+        if (this.mainReader?.currentSelected) {
+          if (this.mainReader.thread) {
+            return bbn.fn.getRow(this.mainReader.source.thread, {id: this.mainReader.currentSelected});
+          }
+
+          return this.mainReader.source;
+        }
+
+        return null;
+      },
       attachmentsSrc(){
         const src = [];
         if (this.source.attachments?.length) {
@@ -112,7 +123,7 @@
         return null;
       },
       otherFolders(){
-        return bbn.fn.filter(this.webmail.folders || [], f => f.value !== this.webmail.currentFolder)
+        return bbn.fn.filter(this.webmail?.folders || [], f => f.value !== this.webmail.currentFolder)
       }
     },
     methods: {
@@ -120,16 +131,11 @@
         this.mainReader.currentSelected = this.source.id;
       },
       formatDate(date) {
-        const emailDate = bbn.dt(date);
-        const currentDate = bbn.dt();
-        if (emailDate.year() !== currentDate.year()) {
-          return bbn.dt(date).format("lll");
-        }
-        else if (emailDate.format('DDMMYYYY') === currentDate.format('DDMMYYYY')) {
-          return bbn.dt(date).format("LT");
-        }
-        else {
-          return bbn.dt(date).format("lll");
+        return bbn.dt(date).calendar();
+      },
+      edit(){
+        if (this.mainReader.currentSelected) {
+          bbn.fn.link(this.root + "webmail/write/edit/" + this.mainReader.currentSelected);
         }
       },
       reply(){

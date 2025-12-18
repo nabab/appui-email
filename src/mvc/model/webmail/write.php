@@ -1,24 +1,11 @@
 <?php
 use bbn\X;
+use bbn\Str;
+use bbn\User\Email;
 
-$id_signatures = $model->inc->options->fromCode('signatures', 'email', 'appui');
-
-function createEmailListString(array $array): string {
-  $res = '';
-  for ($i = 0; $i < count($array); $i++) {
-    $res .= $array[$i]->mailbox  . '@' . $array[$i]->host . ' ';
-  }
-  return Str::sub($res, 0, -1);
-}
-
-$em = new bbn\User\Email($model->db);
-
+$em = new Email($model->db);
 $accounts = [];
-
 $emAccounts = $em->getAccounts();
-
-$isReply = false;
-
 for ($i = 0; $i < count($emAccounts); $i++) {
   array_push($accounts, [
     "text" => $emAccounts[$i]['login'],
@@ -26,53 +13,13 @@ for ($i = 0; $i < count($emAccounts); $i++) {
   ]);
 }
 
-
-if ($model->hasData('id', true)) {
-  $email =  $em->getEmail($model->data['id']);
-  $header =  _('From : ') . createEmailListString($email['from']) . PHP_EOL . _('Send : ') . $email['Date'] . PHP_EOL . _('To : ') . createEmailListString($email['to']) . PHP_EOL . _('Subject : ') . $email['Subject'] . PHP_EOL;
-  $email['plain'] = PHP_EOL. PHP_EOL . $header . $email['plain'];
-  if (!empty($email['html'])) {
-    $email['html'] = nl2br(PHP_EOL . PHP_EOL . '<hr>' . $header) . $email['html'];
-  } else {
-    $email['html'] = nl2br($email['plain']);
-  }
-  $to = "";
-  $subject = "";
-  if ($model->hasData('action', true)) {
-    if ($model->data['action'] == 'reply') {
-      $to = createEmailListString($email['from']);
-      $subject = 'RE : ' . $email['subject'];
-      $isReply = true;
-    }
-    if ($model->data['action'] == 'reply_all') {
-      $to = createEmailListString($email['from']) . " " . createEmailListString($email['to']);
-      $subject = 'RE : ' . $email['subject'];
-      $isReply = true;
-    }
-    if ($model->data['action'] == 'forward') {
-      $subject = 'TR : ' . $email['subject'];
-      X::ddump($email);
-    }
-  }
-
-  $email['login'] = $em->getLoginByEmailId($model->data['id'])['login'];
-
-  return [
-    'reply_to' => $email['msg_unique_id'],
-    'references' => $email['references'],
-    'signatures' => $model->inc->pref->getAll($id_signatures, true)?: [],
-    'success' => true,
-    'isReply' => $isReply,
-    'email' => $email,
-    'subject' => quoted_printable_decode($subject),
-    'to' => $to,
-    'accounts' => $accounts,
-    'attachment' => $model->data['action'] == 'forward' ? $email['attachment'] : []
-  ];
+$signatures = [];
+if ($idSignatures = $model->inc->options->fromCode('signatures', 'email', 'appui')) {
+  $signatures = $model->inc->pref->getAll($idSignatures, true) ?: [];
 }
 
-return [
-  'signatures' => $model->inc->pref->getAll($id_signatures, true) ?: [],
+$res = [
+  'signatures' => $signatures,
   'success' => true,
   'isReply' => false,
   'email' => new stdClass(),
@@ -81,3 +28,65 @@ return [
   'accounts' => $accounts,
   'attachment' => []
 ];
+
+if ($model->hasData('id', true)) {
+  function createEmailListString(array $array): string {
+    $res = '';
+    for ($i = 0; $i < count($array); $i++) {
+      $res .= $array[$i]->mailbox  . '@' . $array[$i]->host . ' ';
+    }
+    return Str::sub($res, 0, -1);
+  }
+
+  $email =  $em->getEmail($model->data['id']);
+  $email['login'] = $em->getLoginByEmailId($model->data['id'])['login'];
+  $header =  _('From : ') . createEmailListString($email['from']) . PHP_EOL . _('Send : ') . $email['Date'] . PHP_EOL . _('To : ') . createEmailListString($email['to']) . PHP_EOL . _('Subject : ') . $email['Subject'] . PHP_EOL;
+  $email['plain'] = PHP_EOL. PHP_EOL . $header . $email['plain'];
+  if (!empty($email['html'])) {
+    $email['html'] = nl2br(PHP_EOL . PHP_EOL . '<hr>' . $header) . $email['html'];
+  }
+  else {
+    $email['html'] = nl2br($email['plain']);
+  }
+
+  $to = "";
+  $subject = "";
+  $isReply = false;
+  $attachment = [];
+  if ($model->hasData('action', true)) {
+    switch ($model->data['action']) {
+      case 'edit':
+        $res['to'] = createEmailListString($email['to']);
+        $res['subject'] = $email['subject'];
+        $res['attachment'] = $email['attachment'] ?: [];
+        break;
+      case 'reply':
+        $res['to'] = createEmailListString($email['from']);
+        $res['subject'] = quoted_printable_decode('RE : ' . $email['subject']);
+        $res['isReply'] = true;
+        $res['reply_to'] = $email['msg_unique_id'];
+        break;
+      case 'reply_all':
+        $res['to'] = createEmailListString($email['from']) . " " . createEmailListString($email['to']);
+        $res['subject'] = quoted_printable_decode('RE : ' . $email['subject']);
+        $res['isReply'] = true;
+        $res['reply_to'] = $email['msg_unique_id'];
+        break;
+      case 'forward':
+        $res['subject'] = quoted_printable_decode('TR : ' . $email['subject']);
+        $res['attachment'] = $email['attachment'] ?: [];
+        X::ddump($email);
+        break;
+      default:
+        return [
+          'success' => false,
+          'error' => _('Unknown action')
+        ];
+    }
+  }
+
+  $res['email'] = $email;
+  $res['references'] = $email['references'];
+}
+
+return $res;

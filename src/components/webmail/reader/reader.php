@@ -5,16 +5,24 @@
     <bbn-toolbar class="bbn-m bbn-no-border bbn-radius">
       <div class="bbn-flex-fill bbn-vmiddle bbn-xspadding"
           style="gap: var(--xsspace)">
-        <bbn-button icon="nf nf-fa-mail_reply"
+        <bbn-button bbn-if="currentSelectedSource?.is_draft"
+                    icon="nf nf-md-text_box_edit"
+                    :label="_('Edit')"
+                    :notext="true"
+                    @click="edit"
+                    :disabled="!currentSelectedSource"/>
+        <bbn-button bbn-if="!currentSelectedSource?.is_draft"
+                    icon="nf nf-fa-mail_reply"
                     :label="_('Reply')"
                     :notext="true"
                     @click="reply"
-                    :disabled="!currentSelected"/>
-        <bbn-button icon="nf nf-fa-mail_reply_all"
+                    :disabled="!currentSelectedSource || !!currentSelectedSource.is_draft"/>
+        <bbn-button bbn-if="!currentSelectedSource?.is_draft"
+              icon="nf nf-fa-mail_reply_all"
                     :label="_('Reply All')"
                     :notext="true"
                     @click="replyAll"
-                    :disabled="!currentSelected"/>
+                    :disabled="!currentSelectedSource || !!currentSelectedSource.is_draft"/>
         <bbn-button icon="nf nf-fa-mail_forward"
                     :label="_('Forward')"
                     :notext="true"
@@ -30,34 +38,35 @@
                     :notext="true"
                     @click="openWindow"
                     :disabled="!currentSelected"/>
-        <bbn-button bbn-if="archiveFolderId"
+        <bbn-button bbn-if="archiveFolderId && !currentSelectedSource?.is_draft"
                     icon="nf nf-fa-archive"
                     :label="_('Archive')"
                     :notext="true"
                     @click="archive"
-                    :disabled="!currentSelected"/>
-        <bbn-button bbn-if="spamFolderId"
+                    :disabled="!currentSelectedSource || !!currentSelectedSource.is_draft"/>
+        <bbn-button bbn-if="spamFolderId && !currentSelectedSource?.is_draft"
                     icon="nf nf-weather-fire"
                     :label="_('Mark as spam')"
                     :notext="true"
                     @click="moveToSpam"
-                    :disabled="!currentSelected"/>
+                    :disabled="!currentSelectedSource || !!currentSelectedSource.is_draft"/>
         <bbn-button icon="nf nf-md-delete"
                     :label="_('Delete')"
                     :notext="true"
                     @click="deleteMail"
                     :disabled="!currentSelected"/>
-        <bbn-button icon="nf nf-fa-bug"
+        <bbn-button bbn-if="!currentSelectedSource?.is_draft"
+                    icon="nf nf-fa-bug"
                     :label="_('Transform in task')"
                     :notext="true"
                     @click="mailToTask"
-                    :disabled="!currentSelected"/>
-        <bbn-button bbn-if="otherFolders?.length"
+                    :disabled="!currentSelectedSource || !!currentSelectedSource.is_draft"/>
+        <bbn-button bbn-if="otherFolders?.length && !currentSelectedSource?.is_draft"
                     icon="nf nf-md-folder_move"
                     :label="_('Move')"
                     :notext="true"
                     @click="moveFolder"
-                    :disabled="!currentSelected"/>
+                    :disabled="!currentSelectedSource || !!currentSelectedSource.is_draft"/>
       </div>
     </bbn-toolbar>
   </div>
@@ -78,7 +87,8 @@
     <div :class="['bbn-padding', 'bbn-radius', 'bbn-no-border', {
            'bbn-header': !isSelected,
            'bbn-background-secondary bbn-secondary-text': isSelected,
-           'bbn-noradius-bottom': isSelected
+           'bbn-noradius-bottom': isSelected,
+           'bbn-hsmargin': !thread
          }]">
       <div class="bbn-flex-width bbn-bottom-xsmargin">
         <div class="bbn-flex-fill bbn-blue">

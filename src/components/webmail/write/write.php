@@ -1,5 +1,5 @@
 <!-- HTML Document -->
-<div class="bbn-overlay">
+<div class="appui-email-webmail-write bbn-overlay">
   <bbn-toolbar class="bbn-no-border bbn-radius bbn-smargin bbn-spadding">
     <bbn-button label="<?= _('Send') ?>"
                 @click="send"

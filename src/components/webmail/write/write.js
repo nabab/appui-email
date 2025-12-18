@@ -172,6 +172,8 @@
       saveDraft(){
         const obj = {
           id_account: this.currentAccount,
+          id: this.source?.id || null,
+          uid: this.source?.msg_unique_uid || null,
           email: {
             title: this.currentSubject,
             text: this.message,
@@ -189,6 +191,14 @@
         }
         this.post(this.rootUrl + 'webmail/actions/email/draft', obj, d => {
           if (d.success) {
+            if (d.id) {
+              this.source.id = d.id;
+            }
+
+            if (d.uid) {
+              this.source.msg_unique_uid = d.uid;
+            }
+
             appui.success(bbn._('Email saved successfully'));
           }
           else {

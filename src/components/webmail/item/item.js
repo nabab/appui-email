@@ -17,14 +17,7 @@
     },
     methods: {
       formatDate(date) {
-        const emailDate = bbn.dt(date);
-        const currentDate = bbn.dt();
-        if (emailDate.format('DDMMYYYY') === currentDate.format('DDMMYYYY')) {
-          return bbn.dt(date).format("LT");
-        }
-        else {
-          return bbn.dt(date).format("L");
-        }
+        return bbn.dt(date).calendar();
       },
       select() {
         let webmail = this.closest('appui-email-webmail');
@@ -42,7 +35,7 @@
           const [, name, email] = nameMatch;
           return { name, email };
         } else {
-          const emailRegex = /([^\s@]+@[^\s@]+\.[^\s@]+)/;
+          const emailRegex = /([^\s@<]+@[^\s@]+\.[^\s@>]+)/;
           const emailMatch = str.match(emailRegex);
           if (emailMatch) {
             const email = emailMatch[0];

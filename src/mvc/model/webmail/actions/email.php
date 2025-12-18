@@ -1,5 +1,6 @@
 <?php
 use bbn\User\Email;
+use bbn\X;
 
 if ($model->hasData('action', true)) {
   $em = new Email($model->db);
@@ -45,14 +46,47 @@ if ($model->hasData('action', true)) {
         && ($account = $em->getAccount($model->data['id_account']))
       ) {
         $model->data['email']['from'] = $account['login'];
+        $idDraftsFolder = null;
+        if (!empty($account['rules']['drafts'])) {
+          $idDraftsFolder = X::getField($account['folders'], ['uid' => $account['rules']['drafts']], 'id');
+        }
+
         try {
-          return [
-            'data' => $model->data['email'],
-            'success' => $em->saveDraft(
-              $model->data['id_account'],
-              $model->data['email']
-            )
-          ];
+          if ($model->hasData('id', true)) {
+            $em->deleteEmail($model->data['id']);
+          }
+          else if ($model->hasData('uid', true)
+            && !empty($idDraftsFolder)
+          ) {
+            $em->deleteEmail($em->getEmailIdByUniqueId($model->data['uid'], $idDraftsFolder));
+          }
+
+          if ($mailUid = $em->saveDraft(
+            $model->data['id_account'],
+            $model->data['email']
+          )) {
+            $id = null;
+            if (!empty($idDraftsFolder)) {
+              $sync = $em->syncEmails($idDraftsFolder, 0, true);
+              $synchronized = 0;
+              if (is_object($sync)) {
+                foreach ($sync as $s) {
+                  $synchronized++;
+                }
+              }
+              else {
+                $synchronized = $sync;
+              }
+
+              $id = $em->getEmailIdByUniqueId($mailUid, $idDraftsFolder);
+            }
+
+            return [
+              'id' => $id,
+              'uid' => $mailUid,
+              'success' => true
+            ];
+          }
         }
         catch (\Exception $e) {
           return [
