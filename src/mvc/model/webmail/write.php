@@ -40,18 +40,9 @@ if ($model->hasData('id', true)) {
 
   $email =  $em->getEmail($model->data['id']);
   $email['login'] = $em->getLoginByEmailId($model->data['id'])['login'];
-  $header =  _('From : ') . createEmailListString($email['from']) . PHP_EOL . _('Send : ') . $email['Date'] . PHP_EOL . _('To : ') . createEmailListString($email['to']) . PHP_EOL . _('Subject : ') . $email['Subject'] . PHP_EOL;
-  $email['plain'] = PHP_EOL. PHP_EOL . $header . $email['plain'];
-  if (!empty($email['html'])) {
-    $email['html'] = nl2br(PHP_EOL . PHP_EOL . '<hr>' . $header) . $email['html'];
-  }
-  else {
-    $email['html'] = nl2br($email['plain']);
-  }
-
   $to = "";
   $subject = "";
-  $isReply = false;
+  $originalMail = false;
   $attachment = [];
   if ($model->hasData('action', true)) {
     switch ($model->data['action']) {
@@ -65,16 +56,19 @@ if ($model->hasData('id', true)) {
         $res['subject'] = quoted_printable_decode('RE : ' . $email['subject']);
         $res['isReply'] = true;
         $res['reply_to'] = $email['msg_unique_id'];
+        $originalMail = true;
         break;
       case 'reply_all':
         $res['to'] = createEmailListString($email['from']) . " " . createEmailListString($email['to']);
         $res['subject'] = quoted_printable_decode('RE : ' . $email['subject']);
         $res['isReply'] = true;
         $res['reply_to'] = $email['msg_unique_id'];
+        $originalMail = true;
         break;
       case 'forward':
         $res['subject'] = quoted_printable_decode('TR : ' . $email['subject']);
         $res['attachment'] = $email['attachment'] ?: [];
+        $originalMail = true;
         X::ddump($email);
         break;
       default:
@@ -82,6 +76,17 @@ if ($model->hasData('id', true)) {
           'success' => false,
           'error' => _('Unknown action')
         ];
+    }
+
+    if ($originalMail) {
+      $header =  _('From : ') . createEmailListString($email['from']) . PHP_EOL . _('Send : ') . $email['Date'] . PHP_EOL . _('To : ') . createEmailListString($email['to']) . PHP_EOL . _('Subject : ') . $email['Subject'] . PHP_EOL;
+      $email['plain'] = PHP_EOL. PHP_EOL . $header . $email['plain'];
+      if (!empty($email['html'])) {
+        $email['html'] = nl2br(PHP_EOL . PHP_EOL . '<hr>' . $header) . $email['html'];
+      }
+      else {
+        $email['html'] = nl2br($email['plain']);
+      }
     }
   }
 
