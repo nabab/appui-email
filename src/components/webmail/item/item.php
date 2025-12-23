@@ -9,9 +9,11 @@
     <div class="bbn-w-100 bbn-flex-width menu">
       <div class="bbn-flex-fill">
         <span class="bbn-small bbn-blue from">
-          <a bbn-if="extractedFrom && extractedFrom.name && extractedFrom.email && extractedFrom.email !== extractedFrom.name" :href="'mailto:' + extractedFrom.email" :title="extractedFrom.email">{{extractedFrom.name}}</a>
-          <a bbn-else-if="extractedFrom" :href="'mailto:' + extractedFrom.email" >{{extractedFrom.email}}</a>
-          <span bbn-else>{{source.to}}</span>
+          <a bbn-if="extractedFrom?.length && extractedFrom[0].email" 
+             :href="'mailto:' + extractedFrom[0].email"
+             :title="(extractedFrom[0].name ? extractedFrom[0].name + ' ' : '') + extractedFrom[0].email"
+             bbn-text="extractedFrom[0].name || extractedFrom[0].email"/>
+          <span bbn-else>{{source.from}}</span>
         </span>
       </div>
       <div class="bbn-small icons">
@@ -39,9 +41,14 @@
       </span>
       <span class="bbn-xs owner"
             style="margin-left: auto">
-        <a bbn-if="extractedTo && extractedTo.name && extractedTo.email && extractedTo.email !== extractedTo.name" :href="'mailto:' + extractedTo.email" :title="extractedTo.email" class="to">{{extractedTo.name}}</a>
-        <a bbn-else-if="extractedTo" :href="'mailto:' + extractedTo.email" class="to">{{extractedTo.email}}</a>
-        <span bbn-else class="to">{{source.to}}</span>
+        <a bbn-if="extractedTo?.length && extractedTo[0].email"
+           :href="'mailto:' + extractedTo[0].email"
+           :title="toTitle"
+           class="to"
+           bbn-text="toText"/>
+        <span bbn-else
+              class="to"
+              bbn-text="source.to"/>
       </span>
     </div>
   </div>

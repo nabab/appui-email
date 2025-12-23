@@ -130,10 +130,10 @@
       },
       createEmailListString(array) {
         let res = "";
-        for (let i = 0; i < array.length;i++) {
-          res += array[i].mailbox + '@' +array[i].host + ' ';
-        }
-        return res;
+        bbn.fn.each(array, a => {
+          res += a.mailbox + '@' + a.host + ' ';
+        });
+        return bbn.fn.substr(res, 0, -1);
       },
       send() {
         if (this.currentTo?.length

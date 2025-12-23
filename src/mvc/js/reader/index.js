@@ -16,7 +16,7 @@
       }
     },
     mounted() {
-      bbn.fn.log(this.source);
+      bbn.fn.log('AAAAAAAAA', this.source);
     },
     methods: {
       

@@ -7,15 +7,16 @@
        :title="item">
     <span bbn-text="item"/>
     <i class="nf nf-fa-close bbn-xs bbn-left-sspace bbn-p"
-       @click="close(item)"/>
+       @click="removeItem(item)"/>
   </div>
-  <bbn-autocomplete class="bbn-alt-background"
+  <bbn-autocomplete class="bbn-alt-background bbn-flex-fill"
                     :source="source"
                     :autobind="false"
-                    style="max-height: 2.5rem;"
                     :source-text="sourceText"
-                    @keydown.delete="onPressBackspace"
+                    @keyup="onAutocompleteKeyup"
                     @change="select"
+                    @blur="onAutocompleteBlur"
                     bbn-model="currentText"
-                    ref="autocomplete"/>
+                    ref="autocomplete"
+                    :limit="100"/>
 </div>

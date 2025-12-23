@@ -27,7 +27,8 @@
         isInThread,
         mainReader: isInThread ? this.closest('appui-email-webmail-reader') : this,
         currentSelected: this.thread ? this.source.thread?.[0]?.id : this.source.id,
-        webmail: appui.getRegistered('appui-email-webmail')
+        webmail: appui.getRegistered('appui-email-webmail'),
+        frameHeight: ''
       }
     },
     computed: {
@@ -287,9 +288,27 @@
 
         }
       },
+      toggleQuote(){
+        const f = this.getRef('frame');
+        const doc = f.contentWindow.document;
+        const quoteContainer = doc.getElementById('_bbn_quote_container');
+        const showQuote = doc.getElementById('_bbn_show_quote');
+        const hideQuote = doc.getElementById('_bbn_hide_quote');
+        const isShowQuoteVisible = showQuote.style.display !== 'none';
+        showQuote.style.display = isShowQuoteVisible ? 'none' : 'block';
+        hideQuote.style.display = isShowQuoteVisible ? 'block' : 'none';
+        quoteContainer.style.display = isShowQuoteVisible ? 'block' : 'none';
+        setTimeout(() => {
+          if (!this.overlay) {
+            const currentFrameHeight = doc.documentElement.scrollHeight + 'px';
+            f.style.height = isShowQuoteVisible ? currentFrameHeight : this.frameHeight;
+          }
+        }, 0);
+      },
       onFrameLoaded(){
         const f = this.getRef('frame');
-        f.contentWindow.document.addEventListener('click', e => {
+        const doc = f.contentWindow.document;
+        doc.addEventListener('click', e => {
           this.onSelect();
           if ((e.target?.tagName === 'A')
             && e.target?.attributes?.cid
@@ -297,11 +316,13 @@
             this.download({name: e.target.getAttribute('cid')});
           }
         });
-
+        doc.getElementById('_bbn_show_quote')?.addEventListener('click', this.toggleQuote);
+        doc.getElementById('_bbn_hide_quote')?.addEventListener('click', this.toggleQuote);
         if (f?.src) {
           setTimeout(() => {
             if (!this.overlay) {
-              f.style.height = f.contentWindow.document.documentElement.scrollHeight + 'px';
+              this.frameHeight = doc.documentElement.scrollHeight + 'px';
+              f.style.height = this.frameHeight;
             }
 
             this.isFrameLoading = false;

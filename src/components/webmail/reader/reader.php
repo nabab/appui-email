@@ -88,7 +88,7 @@
            'bbn-header': !isSelected,
            'bbn-background-secondary bbn-secondary-text': isSelected,
            'bbn-noradius-bottom': isSelected,
-           'bbn-hsmargin': !thread
+           'bbn-hsmargin': !isInThread
          }]">
       <div class="bbn-flex-width bbn-bottom-xsmargin">
         <div class="bbn-flex-fill bbn-blue">

@@ -31,11 +31,12 @@ $res = [
 
 if ($model->hasData('id', true)) {
   function createEmailListString(array $array): string {
-    $res = '';
-    for ($i = 0; $i < count($array); $i++) {
-      $res .= $array[$i]->mailbox  . '@' . $array[$i]->host . ' ';
+    $r = '';
+    foreach ($array as $a) {
+      $r .= $a['mailbox']  . '@' . $a['host'] . ' ';
     }
-    return Str::sub($res, 0, -1);
+
+    return Str::sub($r, 0, -1);
   }
 
   $email =  $em->getEmail($model->data['id']);

@@ -19,7 +19,7 @@
       if (bbn.fn.isString(this.value)
         && this.value.length
       ) {
-        items = this.value.split(',');
+        items = this.value.split(this.value.includes(';') ? ';' : ',');
       }
       else if (bbn.fn.isArray(this.value)) {
         items.push(...this.value);
@@ -32,21 +32,38 @@
     },
     methods: {
       isEmail: bbn.fn.isEmail,
-      setEvent() {
-        let element = this.getRef('autocomplete').getRef('element');
-        bbn.fn.log("EVENT", element);
+      onAutocompleteKeyup(e) {
+        bbn.fn.log('keyup', e.keyCode, e.key, e.code, e);
+        switch (e.key) {
+          case ',':
+          case ';':
+            if (e.target.value?.length) {
+              this.select({email: e.target.value});
+            }
+
+            break;
+          case 'Backspace':
+            if (!e.target.value && this.items.length) {
+              this.items.pop();
+            }
+
+            break;
+        }
       },
-      onPressBackspace(e) {
-        bbn.fn.log("BACKSPACE", e.target);
-        if (!e.target.value && this.items.length) {
-          this.items.pop();
+      onAutocompleteBlur(e){
+        if (e.target.value) {
+          this.select({email: e.target.value});
         }
       },
       select(data) {
-        bbn.fn.log("SELECT", data, this.items.includes(data.email));
-        if (!this.items.includes(data.email)) {
-          this.items.push(data.email);
-          this.emitInput(this.asArray ? this.items : this.items.join(','));
+        if (data?.email?.length) {
+          let email = data.email.trim().replace(',', '').replace(';', '');
+          if (this.isEmail(email)
+            && !this.items.includes(email)
+          ) {
+            this.items.push(email);
+            this.emitInput(this.asArray ? this.items : this.items.join(';'));
+          }
         }
 
         this.$nextTick(() => {
@@ -54,28 +71,30 @@
         });
       },
       unselect(data) {
-        bbn.fn.log("UNSELECT", data, this.items.includes(data.email));
-        if (this.items.includes(data.email)) {
-          const idx = this.items.indexOf(data.email);
-          this.items.splice(idx, 1);
-          this.emitInput(this.asArray ? this.items : this.items.join(','));
+        if (data?.email?.length) {
+          let email = data.email.trim().replace(',', '').replace(';', '');
+          if (this.items.includes(email)) {
+            const idx = this.items.indexOf(email);
+            this.items.splice(idx, 1);
+            this.emitInput(this.asArray ? this.items : this.items.join(';'));
+          }
         }
 
         this.$nextTick(() => {
           this.getRef('autocomplete').resetDropdown();
         });
       },
-      close(item) {
+      removeItem(item) {
         const idx = this.items.indexOf(item);
         if (idx > -1) {
           this.items.splice(idx, 1);
-          this.emitInput(this.asArray ? this.items : this.items.join(','));
+          this.emitInput(this.asArray ? this.items : this.items.join(';'));
         }
       },
       clickContainer() {
         const autocomplete = this.getRef('autocomplete');
         if (autocomplete) {
-          autocomplete.$refs.input.$refs.element.focus();
+          autocomplete.getRef('input').getRef('element').focus();
         }
       }
     }
