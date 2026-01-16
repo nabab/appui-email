@@ -14,15 +14,13 @@
     </div>
     <div/>
     <div>
-      <bbn-dropdown bbn-model="type"
-                    :source="types"/>
-    </div>
-    <div/>
-    <div>
       <bbn-dropdown bbn-model="currentSignature"
                     :source="signatures"
                     source-text="name"
-                    source-value="id"/>
+                    source-value="id"
+                    ref="signatures"
+                    placeholder="<?= _("Signature") ?>"
+                    :nullable="true"/>
     </div>
     <div>
       <bbn-button class="bbn-iblock"
@@ -30,14 +28,6 @@
                   title="<?= _('Signatures Editor') ?>"
                   icon="nf nf-fa-pencil"
                   @click="openSignatureEditor()"/>
-    </div>
-    <div>
-      <bbn-button class="bbn-iblock"
-                  :notext="true"
-                  title="<?= _('Add signature') ?>"
-                  icon="nf nf-md-sign_text"
-                  @click="addSignature()"
-                  :disabled="!currentSignature"/>
     </div>
   </bbn-toolbar>
   <div class="bbn-hlpadding bbn-vpadding container__top">
@@ -99,14 +89,8 @@
                     }"/>
       </div>
     </div>
-    <bbn-rte bbn-if="type === 'bbn-rte'"
-             bbn-model="message"
-             style="width: 100%; min-height: 40rem; height: 40rem"/>
-    <bbn-markdown bbn-elseif="type === 'bbn-markdown'"
-             bbn-model="message"
-             style="width: 100%; height: 40rem"/>
-    <bbn-textarea bbn-elseif="type === 'bbn-textarea'"
-             bbn-model="message"
-             style="width: 100%; height: 40rem"/>
+    <bbn-rte bbn-model="message"
+             style="width: 100%; min-height: 40rem; height: 40rem"
+             ref="editor"/>
   </div>
 </div>

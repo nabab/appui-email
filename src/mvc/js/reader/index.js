@@ -1,7 +1,3 @@
-// Javascript Document
-
-// Javascript Document
-
 (() => {
   return {
     props: {
@@ -9,17 +5,6 @@
         type: Object,
         required: true,
       }
-    },
-    data() {
-      return {
-
-      }
-    },
-    mounted() {
-      bbn.fn.log('AAAAAAAAA', this.source);
-    },
-    methods: {
-      
     }
   }
 })();

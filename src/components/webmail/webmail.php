@@ -72,8 +72,11 @@
                               :notext="true"
                               :label="_('Write new mail')"
                               icon="nf nf-fa-edit"/>
-                  <bbn-input button-left="nf nf-fa-search"
-                             :disabled="true"/>
+                  <bbn-input :button-right="isSearching ? 'nf nf-fa-times' : 'nf nf-fa-search'"
+                             bbn-model="currentSearch"
+                             @keydown.enter.escape="onSearchKeydown"
+                             @clickrightbutton="isSearching ? searchClear() : search()"
+                             :disabled="!currentFolder"/>
                 </div>
               </bbn-toolbar>
             </div>
@@ -90,7 +93,8 @@
                                 ref="table"
                                 :sortable="true"
                                 :showable="true"
-                                :order="[{field: 'date', dir: 'DESC'}]"/>
+                                :order="[{field: 'date', dir: 'DESC'}]"
+                                :filters="currentSearchObj"/>
             <!--<bbn-table bbn-else
                        :source="root + 'webmail'"
                        storage-full-name="appui-email-webmail-table"

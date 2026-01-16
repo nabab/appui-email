@@ -26,7 +26,13 @@
         syncId: false,
         syncMessage: '',
         threads: true,
-        accountsIdle: {}
+        accountsIdle: {},
+        currentSearch: '',
+        currentSearchObj: {
+          logic: 'OR',
+          conditions: []
+        },
+        isSearching: false
       };
     },
     computed: {
@@ -298,31 +304,31 @@
         }
 
         this.post(this.root + 'webmail/actions/folder/move', {
-          to: dest.data,
+          to: dest.data.id,
           id_account: source.data.id_account,
           folders: this.getAllFolderChild(source.data)
         }, d => {
-          let tree = this.getRef('tree');
-          let idx = bbn.fn.search(this.source.accounts, { id: source.data.id})
+          const tree = this.getRef('tree');
+          const accountIdx = bbn.fn.search(this.source.accounts, {id: source.data.id});
           if (d.success) {
-            appui.success(bbn._(`${source.data.text} folder and subfolders ar successfuly moved to ${dest.data.text}`));
-            this.source.accounts.splice(idx, 1, d.account);
-          } else {
-            for (let idx in d.res) {
-              if (d.res[idx].success) {
-                appui.success(bbn._(`${d.res[idx].text} successfuly deleted`))
-              } else {
-                appui.success(bbn._(`${d.res[idx].text} impossible to delete`))
-              }
-            }
+            appui.success(bbn._("%s folder and subfolders ar successfuly moved to %s", source.data.text, dest.data.text));
+            this.source.accounts.splice(accountIdx, 1, d.account);
+          }
+          else if (d.failed?.length) {
+            appui.eror(bbn._("Impossibile to move the folders:<br>%s", bbn.fn.map(d.failed, f => f.text).join('<br>')));
+          }
+          else {
+            appui.eror(bbn._("Impossibile to move the %s folder into %s folder", source.data.text, dest.data.text));
           }
 
-          this.$nextTick(() => {
-            tree.updateData().then( () => {
-              tree.reload()
-            })
-          })
-        })
+          if (d.success || d.failed?.length) {
+            this.$nextTick(() => {
+              tree.updateData().then(() => {
+                tree.reload();
+              });
+            });
+          }
+        });
         event.preventDefault();
         return true;
       },
@@ -470,17 +476,26 @@
 
         return res;
       },
-      getAllFolderChild(folder) {
+      getAllFolderChild(folder, onlyId = false) {
         const res = [];
-        res.push({id: folder.id, text: folder.text, id_parent: folder.id_parent || null})
+        res.push(onlyId ? folder.id : {
+          id: folder.id,
+          text: folder.text,
+          id_parent: folder.id_parent || null
+        })
         if (folder.items) {
-          for (let idx in folder.items) {
-            if (folder.items[idx].items) {
-              res = res.concat(this.getAllFolderChild(folder.items[idx]));
-            } else {
-              res.push({id: folder.items[idx].id, text: folder.items[idx].text, id_parent: folder.items[idx].id_parent || null})
+          bbn.fn.each(folder.items, i => {
+            if (i.items?.length) {
+              res = res.concat(this.getAllFolderChild(i, onlyId));
             }
-          }
+            else {
+              res.push(onlyId ? i.id : {
+                id: i.id,
+                text: i.text,
+                id_parent: i.id_parent || null
+              });
+            }
+          });
         }
         return res;
       },
@@ -850,10 +865,60 @@
         if (table?.updateData) {
           table.updateData();
         }
+      },
+      onSearchKeydown(ev){
+        switch (ev.key) {
+          case 'Enter':
+            this.search();
+            break;
+          case 'Escape':
+            this.searchClear();
+            break;
+        }
+      },
+      search(){
+        if (this.currentSearch) {
+          this.isSearching = true;
+          this.currentSearchObj.conditions = [
+            {
+              field: 'subject',
+              operator: 'contains',
+              value: this.currentSearch
+            },
+            {
+              field: 'excerpt',
+              operator: 'contains',
+              value: this.currentSearch
+            },
+            {
+              field: 'from',
+              operator: 'contains',
+              value: this.currentSearch
+            },
+            {
+              field: 'toname.name',
+              operator: 'contains',
+              value: this.currentSearch
+            },
+            {
+              field: 'tolink.value',
+              operator: 'contains',
+              value: this.currentSearch
+            }
+          ];
+        }
+      },
+      searchClear(){
+        this.isSearching = false;
+        this.currentSearch = '';
+        if (this.currentSearchObj.conditions.length) {
+          this.currentSearchObj.conditions = [];
+        }
       }
     },
     watch: {
       currentFolder(){
+        this.searchClear();
         this.$nextTick(() => {
           this.reloadTable();
         })

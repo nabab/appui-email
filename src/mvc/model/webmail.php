@@ -31,5 +31,6 @@ else {
     'contacts' => $em->getContacts(),
     'folder_types' => bbn\User\Email::getFolderTypes(),
     'hash' => $em->getHashes(),
+    'slots' => $model->data['slots']
   ];
 }

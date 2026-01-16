@@ -14,7 +14,9 @@ if ($model->hasData(['action', 'id_account'], true)) {
           'account' => $em->getAccount($model->data['id_account'])
         ];
       }
+
       break;
+
     case 'create':
       if ($model->hasData('name', true)) {
         return [
@@ -26,69 +28,52 @@ if ($model->hasData(['action', 'id_account'], true)) {
           'account' => $em->getAccount($model->data['id_account'])
         ];
       }
+
       return [
         'success' => false,
         'error' => _("Folder's name not given")
       ];
-      break;
+
     case 'rename':
       if ($model->hasData(['id', 'name'], true)) {
         return [
           'success' => $em->renameFolder($model->data['id'], $model->data['name']),
           'account' => $em->getAccount($model->data['id_account'])
         ];
-        $folders = $model->data['folders'];
-        $success = true;
-        $res = [];
-        $success = $em->renameFolder($model->data['id'], $model->data['name'], $model->data['id_account'], $folders[0]['id_parent']);
-        for ($i = 1; $i < count($folders); $i++){
-          $tmp = $em->renameFolderDb($folders[$i]['id'],  $folders[$i]['text'], $model->data['id_account'], $folders[$i]['id_parent']);
-          if ($success && !$tmp) {
-            $success = false;
-          }
-          array_push($res, [
-            'success' => $tmp,
-            'text' => $folders[$i]['text']
-          ]);
-        }
-        return [
-          'success' => $success,
-          'res' => $res,
-          'account' => $em->getAccount($model->data['id_account'])
-        ];
       }
+
+      break;
+
     case 'move':
-      if ($model->hasData(['to', 'folders'])) {
-        $to = $model->data['to'];
+      if ($model->hasData(['to', 'folders'], true)) {
         $folders = $model->data['folders'];
-        $success = true;
-        $res = [];
-        $success = $em->renameFolder($folders[0]['id'], $folders[0]['text'], $to['id'] ?? null);
-        for ($i = 1; $i < count($folders); $i++){
-          $tmp = $em->renameFolderDb($folders[$i]['id'],  $folders[$i]['text'], $folders[$i]['id_parent']);
-          if ($success && !$tmp) {
-            $success = false;
+        $err = [];
+        $f = array_shift($folders);
+        if ($success = $em->renameFolder($f['id'], $f['text'], $model->data['to'])) {
+          foreach ($folders as $f) {
+            if (!$em->renameFolderDb($f['id'],  $f['text'], $f['id_parent'])) {
+              $err[] = $f;
+            }
           }
-          array_push($res, [
-            'success' => $tmp,
-            'text' => $folders[$i]['text']
-          ]);
         }
         return [
-          'success' => $success,
-          'res' => $res,
+          'success' => $success && empty($err),
+          'failed' => $err,
           'account' => $em->getAccount($model->data['id_account'])
         ];
       }
+
+      break;
+
     default:
       return [
         'success' => false,
-        'error' => 'Action given not exist'
+        'error' => _('Action given not exist')
       ];
   }
 }
 
 return [
   'success' => false,
-  'error' => 'No action given in the data request'
+  'error' => _('No action given in the data request')
 ];

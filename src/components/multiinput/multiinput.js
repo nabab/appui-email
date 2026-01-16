@@ -26,7 +26,7 @@
       }
 
       return {
-        items,
+        items: bbn.fn.unique(bbn.fn.filter(items, v => v.length)),
         currentText: "",
       }
     },

@@ -33,7 +33,7 @@ if ($model->hasData('id', true)) {
   function createEmailListString(array $array): string {
     $r = '';
     foreach ($array as $a) {
-      $r .= $a['mailbox']  . '@' . $a['host'] . ' ';
+      $r .= $a['mailbox']  . '@' . $a['host'] . ';';
     }
 
     return Str::sub($r, 0, -1);
@@ -60,7 +60,7 @@ if ($model->hasData('id', true)) {
         $originalMail = true;
         break;
       case 'reply_all':
-        $res['to'] = createEmailListString($email['from']) . " " . createEmailListString($email['to']);
+        $res['to'] = createEmailListString(X::mergeArrays($email['from'], $email['to']));
         $res['subject'] = quoted_printable_decode('RE : ' . $email['subject']);
         $res['isReply'] = true;
         $res['reply_to'] = $email['msg_unique_id'];
@@ -80,14 +80,12 @@ if ($model->hasData('id', true)) {
     }
 
     if ($originalMail) {
-      $header =  _('From : ') . createEmailListString($email['from']) . PHP_EOL . _('Send : ') . $email['Date'] . PHP_EOL . _('To : ') . createEmailListString($email['to']) . PHP_EOL . _('Subject : ') . $email['Subject'] . PHP_EOL;
+      $header =  _('From : ') . createEmailListString($email['from']) . PHP_EOL
+        . _('Send : ') . $email['Date'] . PHP_EOL
+        . _('To : ') . createEmailListString($email['to']) . PHP_EOL
+        . _('Subject : ') . $email['Subject'] . PHP_EOL;
       $email['plain'] = PHP_EOL. PHP_EOL . $header . $email['plain'];
-      if (!empty($email['html'])) {
-        $email['html'] = nl2br(PHP_EOL . PHP_EOL . '<hr>' . $header) . $email['html'];
-      }
-      else {
-        $email['html'] = nl2br($email['plain']);
-      }
+      $email['html'] = '<br><br><div class="__bbn__signature"></div><br><hr><blockquote type="cite">' . nl2br($header) . ($email['html'] ?: nl2br($email['plain'])) . '</blockquote>';
     }
   }
 

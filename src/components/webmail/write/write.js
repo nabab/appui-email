@@ -69,72 +69,16 @@
         currentCC: this.CC?.length ? bbn.fn.clone(this.CC) : '',
         currentCCI: this.CCI?.length ? bbn.fn.clone(this.CCI) : '',
         currentAccount: currentAccount || this.accounts[0]?.value || '',
-        currentSignature: this.signatures.length ?
-          this.signatures[0].id :
-          null,
-        type: "bbn-rte",
-        types: [
-          {value: "bbn-rte", text: bbn._('Rich text editor')},
-          {value: "bbn-markdown", text: bbn._('Markdown')},
-          {value: "bbn-textarea", text: bbn._('Text')}
-        ],
+        currentSignature: null,
         currentSubject: this.subject,
         message: this.source.html?.length ?
           bbn.fn.clone(this.source.html) :
           bbn.fn.clone(this.source.plain),
         originalMessage: this.message || "",
-        messageTypeIcon: "nf nf-seti-html",
-        messageTypeText: 'html',
         timestamp: bbn.fn.microtimestamp()
       };
     },
     methods: {
-      // try to find the original mail if is found add the signature beetween original mail and new mail otherwise add the signature at the front
-      addSignature() {
-        if (this.currentSignature) {
-          const signature = bbn.fn.getRow(this.signatures, {id: this.currentSignature});
-          // check if message is a response from an email
-          if (this.originalMessage) {
-            // trying to replace the email responded
-            let canAddAtEnd = false;
-            this.message.replace(this.originalMessage, (token) => {
-              canAddAtEnd = true;
-              return "";
-            })
-            // if email found replace it by the signature and place it after the signature
-            if (canAddAtEnd) {
-              this.message = this.message.replace(this.originalMessage, '\n\n\n' + signature.signature + '\n') + this.originalMessage;
-            // else put the signature at the top of the email
-            } else {
-              this.message = '\n\n\n' + signature.signature + '\n' + this.message
-            }
-          // if is a new email
-          } else {
-            // check if user have writed email and place tha signature at the end
-            if (this.message) {
-            	this.message = this.message + '\n\n\n' + signature.signature + '\n'
-            // otherwise place it directly because the email is empty
-            } else {
-              this.message = '\n\n\n' + signature.signature + '\n'
-            }
-          }
-        }
-      },
-      setType(type) {
-        this.type = type;
-        if (type == "bbn-textarea") {
-          this.message = this.source.plain;
-        } else {
-          this.message = this.source.html;
-        }
-      },
-      createEmailListString(array) {
-        let res = "";
-        bbn.fn.each(array, a => {
-          res += a.mailbox + '@' + a.host + ' ';
-        });
-        return bbn.fn.substr(res, 0, -1);
-      },
       send() {
         if (this.currentTo?.length
           && (this.currentSubject.length
@@ -218,24 +162,14 @@
         });
       },
       openSignatureEditor(action) {
-        bbn.fn.log('idx', this.currentSignature);
         this.getPopup({
-          component: 'appui-email-popup-editsignatures',
+          component: 'appui-email-webmail-write-signatures',
           label: bbn._('Signature Editor'),
           width: '60vw',
           height: '60vh',
           componentOptions: {
-            signatures: this.signatures,
+            source: this.signatures,
             selected: this.currentSignature
-          }
-        })
-      },
-      updateSign() {
-        bbn.fn.post(appui.plugins['appui-email'] + '/actions/signatures/get', {}, (d) => {
-          if (d.success) {
-            this.signature = d.res;
-          } else {
-            appui.error(bbn._('Impossible to update signatures'))
           }
         })
       },
@@ -247,6 +181,22 @@
       },
       currentCCISetter(newValue) {
         this.currentCCI = newValue;
+      }
+    },
+    watch: {
+      signatures(){
+        this.getRef('signatures').updateData();
+      },
+      currentSignature(newVal){
+        const ele = this.getRef('editor').querySelector('.bbn-rte-element > .__bbn__signature');
+        if (ele) {
+          let signature = '';
+          if (newVal) {
+            signature = bbn.fn.getField(this.signatures, 'signature', {id: this.currentSignature}) || '';
+          }
+
+          ele.innerHTML = signature.length ? signature + '<br>' : signature;
+        }
       }
     }
   }
