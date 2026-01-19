@@ -1,6 +1,7 @@
 <?php
 use bbn\User\Email;
 use bbn\X;
+use bbn\Appui\Task;
 
 if ($model->hasData('action', true)) {
   $em = new Email($model->db);
@@ -96,6 +97,34 @@ if ($model->hasData('action', true)) {
         }
       }
 
+      break;
+    case 'task':
+      if ($model->hasData(['id_email', 'id_task'], true)
+        && ($email = $em->getEmail($model->data['id_email']))
+        && ($taskCls = new Task($model->db))
+      ) {
+        $taskCfg = $taskCls->getCfg($model->data['id_task']);
+        if (!isset($taskCfg['email'])) {
+          $taskCfg['email'] = [];
+        }
+
+        if (!in_array($email['msg_unique_id'], $taskCfg['email'])) {
+          $taskCfg['email'][] = $email['msg_unique_id'];
+        }
+
+        $taskCls->setCfg($model->data['id_task'], $taskCfg);
+        return [
+          'success' => $taskCls->update(
+            $model->data['id_task'],
+            'content',
+            $email['html']
+          )
+        ];
+      }
+      break;
+    case 'subtask':
+      break;
+    case 'tasknote':
       break;
   }
 }

@@ -16,29 +16,36 @@ if (isset($ctrl->post['limit'])) {
 else {
   $routes = $ctrl->getRoutes();
   $slots = [
-    'toolbar' => []
+    'reader' => [
+      'toolbar' => []
+    ],
   ];
   foreach ($routes as $r) {
     if ($elements = $ctrl->getSubpluginModelGroup('webmail', $r['name'], 'appui-email')) {
-      foreach ($elements as $obj) {
-        foreach ($obj as $slot => $data) {
-          if (isset($slots[$slot])) {
-            array_push($slots[$slot], ...(X::isAssoc($data) ? [$data] : $data));
+      foreach ($elements as $name => $obj) {
+        $n = explode('/', $name);
+        $n = end($n);
+        if (isset($slots[$n])) {
+          foreach ($obj as $slot => $data) {
+            if (isset($slots[$n][$slot])) {
+              array_push($slots[$n][$slot], ...(X::isAssoc($data) ? [$data] : $data));
+            }
           }
         }
       }
     }
   }
 
-  foreach ($slots as &$s) {
-    foreach ($s as &$m) {
-      if (!isset($m['priority'])) {
-        $m['priority'] = 5;
+  foreach ($slots as $name => $slot) {
+    foreach ($slot as $n => $s) {
+      foreach ($s as $k => $v) {
+        if (!isset($slots[$name][$n][$k]['priority'])) {
+          $slots[$name][$n][$k]['priority'] = 5;
+        }
       }
-    }
 
-    unset($m);
-    X::sortBy($s, 'priority');
+      X::sortBy($slots[$name][$n], 'priority');
+    }
   }
 
   $ctrl->addData([

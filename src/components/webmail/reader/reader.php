@@ -55,18 +55,17 @@
                     :notext="true"
                     @click="deleteMail"
                     :disabled="!currentSelected"/>
-        <bbn-button bbn-if="!currentSelectedSource?.is_draft"
-                    icon="nf nf-fa-bug"
-                    :label="_('Transform in task')"
-                    :notext="true"
-                    @click="mailToTask"
-                    :disabled="!currentSelectedSource || !!currentSelectedSource.is_draft"/>
         <bbn-button bbn-if="otherFolders?.length && !currentSelectedSource?.is_draft"
                     icon="nf nf-md-folder_move"
                     :label="_('Move')"
                     :notext="true"
                     @click="moveFolder"
                     :disabled="!currentSelectedSource || !!currentSelectedSource.is_draft"/>
+        <component bbn-if="webmail?.pluginsSlots?.reader?.toolbar?.length"
+                   bbn-for="(slot, idx) in webmail.pluginsSlots.reader.toolbar"
+                   :key="'toolbar-' + idx"
+                   :is="slot.cp"
+                   :source="slot.data"/>
       </div>
     </bbn-toolbar>
   </div>

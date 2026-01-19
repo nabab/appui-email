@@ -1,5 +1,6 @@
 // Javascript Document
 (() => {
+  const slots = bbn.fn.createObject();
   return {
     mixins: [
       bbn.cp.mixins.basic
@@ -32,7 +33,8 @@
           logic: 'OR',
           conditions: []
         },
-        isSearching: false
+        isSearching: false,
+        pluginsSlots: slots
       };
     },
     computed: {
@@ -916,12 +918,32 @@
         }
       }
     },
-    watch: {
-      currentFolder(){
-        this.searchClear();
-        this.$nextTick(() => {
-          this.reloadTable();
-        })
+    beforeCreate() {
+      if (this.source.slots) {
+        bbn.fn.iterate(this.source.slots, (slot, comp) => {
+          slots[comp] = {};
+          bbn.fn.iterate(slot, (arr, s) => {
+            slots[comp][s] = [];
+            bbn.fn.iterate(arr, a => {
+              try {
+                let tmp = eval(a.script);
+                if (bbn.fn.isObject(tmp)) {
+                  if (a.content) {
+                    tmp.template = a.content;
+                  }
+                  slots[comp][s].push({
+                    cp: bbn.cp.immunizeValue(tmp),
+                    data: a.data || {}
+                  });
+                }
+              }
+              catch (e) {
+                console.log([a, slot, e]);
+                bbn.fn.error(bbn._("Impossible to read the slot %s in %s", slot, a.name));
+              }
+            });
+          });
+        });
       }
     },
     created(){
@@ -945,6 +967,14 @@
       }
 
       bbn.fn.iterate(this.accountsIdle, (val, idAccount) => this.stopAccountIdle(idAccount));
+    },
+    watch: {
+      currentFolder(){
+        this.searchClear();
+        this.$nextTick(() => {
+          this.reloadTable();
+        })
+      }
     }
   };
 })()
