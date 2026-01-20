@@ -2,6 +2,7 @@
 use bbn\User\Email;
 use bbn\X;
 use bbn\Appui\Task;
+use bbn\Appui\Note;
 
 if ($model->hasData('action', true)) {
   $em = new Email($model->db);
@@ -121,10 +122,35 @@ if ($model->hasData('action', true)) {
           )
         ];
       }
-      break;
-    case 'subtask':
+
       break;
     case 'tasknote':
+      if ($model->hasData(['id_email', 'id_task', 'id_note'], true)
+        && ($email = $em->getEmail($model->data['id_email']))
+        && $model->db->selectOne('bbn_tasks_notes', 'id', [
+            'id_task' => $model->data['id_task'],
+            'id_note' => $model->data['id_note']
+          ])
+        && ($noteCls = new Note($model->db))
+      ) {
+        $noteCfg = $noteCls->getClassCfg();
+        $noteFields = $noteCfg['arch']['versions'];
+        $latest = $noteCls->latest($model->data['id_note']);
+        return [
+          'success' => $model->db->update(
+            $noteCfg['tables']['versions'],
+            [
+              $noteFields['content'] => $email['html'],
+              $noteFields['excerpt'] => $noteCls->getExcerpt($email['subject'], $email['html'])
+            ],
+            [
+              $noteFields['id_note'] => $model->data['id_note'],
+              $noteFields['version'] => $latest
+            ]
+          )
+        ];
+      }
+
       break;
   }
 }
