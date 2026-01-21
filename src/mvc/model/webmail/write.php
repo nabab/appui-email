@@ -70,7 +70,6 @@ if ($model->hasData('id', true)) {
         $res['subject'] = quoted_printable_decode('TR : ' . $email['subject']);
         $res['attachment'] = $email['attachment'] ?: [];
         $originalMail = true;
-        X::ddump($email);
         break;
       default:
         return [
@@ -91,6 +90,11 @@ if ($model->hasData('id', true)) {
 
   $res['email'] = $email;
   $res['references'] = $email['references'];
+}
+else {
+  $res['email'] = [
+    'html' => '<br><br><div class="__bbn__signature"></div>'
+  ];
 }
 
 return $res;

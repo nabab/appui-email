@@ -74,7 +74,6 @@
         message: this.source.html?.length ?
           bbn.fn.clone(this.source.html) :
           bbn.fn.clone(this.source.plain),
-        originalMessage: this.message || "",
         timestamp: bbn.fn.microtimestamp()
       };
     },

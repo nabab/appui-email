@@ -11,7 +11,7 @@
             pass: '',
             encryption: 'starttls',
             port: 587,
-            validatecert: 1,
+            validatecert: 0,
           }
         }
       },

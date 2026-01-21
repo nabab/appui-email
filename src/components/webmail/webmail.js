@@ -757,14 +757,32 @@
           id_folder: bbn.fn.isString(idFolder) ? idFolder : false
         };
         let numMsg = 0;
-        if (this.currentFolderObj && (data.id_folder || data.id_account)) {
-          numMsg = this.currentFolderObj.num_msg - this.currentFolderObj.db_num_msg;
+        const fromItems = function(items) {
+          bbn.fn.each(items, f => {
+            numMsg += Math.abs(f.num_msg - f.db_num_msg);
+            if (f.items?.length) {
+              fromItems(f.items);
+            }
+          });
+        };
+        if (data.id_folder && data.id_account) {
+          const acc = bbn.fn.getRow(this.source.accounts, {id: data.id_account});
+          if (acc) {
+            const folder = bbn.fn.getRow(acc.folders, {id: data.id_folder});
+            if (folder) {
+              numMsg = Math.abs(folder.num_msg - folder.db_num_msg);
+            }
+          }
+        }
+        else if (data.id_account) {
+          const acc = bbn.fn.getRow(this.source.accounts, {id: data.id_account});
+          if (acc) {
+            fromItems(acc.folders);
+          }
         }
         else {
           bbn.fn.each(this.source.accounts, a => {
-            bbn.fn.each(a.folders, f => {
-              numMsg += f.num_msg - f.db_num_msg;
-            });
+            fromItems(a.folders);
           });
         }
 
@@ -834,7 +852,6 @@
         return '-';
       },
       startAccountIdle(idAccount){
-        return;
         if (!this.accountsIdle[idAccount]) {
           const url = this.root + 'webmail/idle';
           const data = {account: idAccount};
@@ -956,7 +973,7 @@
       appui.poll();
 
       if (this.source.accounts?.length) {
-        bbn.fn.each(this.source.accounts, a => this.startAccountIdle(a.id));
+        //bbn.fn.each(this.source.accounts, a => this.startAccountIdle(a.id));
       }
     },
     beforeDestroy(){

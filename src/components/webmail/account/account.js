@@ -10,7 +10,7 @@
     host: '',
     encryption: 1,
     port: 993,
-    validatecert: 1,
+    validatecert: 0,
     smtp: '',
     locale: true
   };

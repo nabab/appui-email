@@ -13,7 +13,7 @@ function addFolders($list, &$folders){
       unset($l['items']);
       $folders[] = $l;
       addFolders($items, $folders);
-      return;
+      continue;
     }
 
     $folders[] = $l;
@@ -27,13 +27,13 @@ if (!empty($ctrl->post['id_folder'])) {
 }
 else if (!empty($ctrl->post['id_account'])) {
   if ($accountFolders = $emailClass->getFolders($ctrl->post['id_account'])) {
-    addFolders(array_values($accountFolders), $folders);
+    addFolders($accountFolders, $folders);
   }
 }
 else if ($accounts = $emailClass->getAccountsIds()) {
   foreach ($accounts as $a) {
     if ($accountFolders = $emailClass->getFolders($a)) {
-      addFolders(array_values($accountFolders), $folders);
+      addFolders($accountFolders, $folders);
     }
   }
 }
