@@ -23,7 +23,8 @@
               <bbn-button @click="onSyncClick"
                           :notext="true"
                           :label="_('Synchronize')"
-                          icon="nf nf-oct-sync"/>
+                          icon="nf nf-oct-sync"
+                          :disabled="!!syncId"/>
             </div>
           </bbn-toolbar>
         </div>

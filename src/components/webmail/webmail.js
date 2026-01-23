@@ -455,7 +455,8 @@
                 this.synchronize(false, false);
                 break;
             }
-          }
+          },
+          disabled: !!this.syncId
         });
 
         if (node.data.type === "account") {
@@ -751,82 +752,84 @@
         this.synchronize(this.currentAccount, this.currentFolder);
       },
       synchronize(idAccount, idFolder){
-        const url = this.root + 'webmail/actions/sync';
-        const data = {
-          id_account: bbn.fn.isString(idAccount) ? idAccount : false,
-          id_folder: bbn.fn.isString(idFolder) ? idFolder : false
-        };
-        let numMsg = 0;
-        const fromItems = function(items) {
-          bbn.fn.each(items, f => {
-            numMsg += Math.abs(f.num_msg - f.db_num_msg);
-            if (f.items?.length) {
-              fromItems(f.items);
-            }
-          });
-        };
-        if (data.id_folder && data.id_account) {
-          const acc = bbn.fn.getRow(this.source.accounts, {id: data.id_account});
-          if (acc) {
-            const folder = bbn.fn.getRow(acc.folders, {id: data.id_folder});
-            if (folder) {
-              numMsg = Math.abs(folder.num_msg - folder.db_num_msg);
-            }
-          }
-        }
-        else if (data.id_account) {
-          const acc = bbn.fn.getRow(this.source.accounts, {id: data.id_account});
-          if (acc) {
-            fromItems(acc.folders);
-          }
-        }
-        else {
-          bbn.fn.each(this.source.accounts, a => {
-            fromItems(a.folders);
-          });
-        }
-
-        this.syncId = bbn.fn.getRequestId(url, data);
-        this.syncMessage = '<span>' + bbn._('Synchronizing %d/%d', 0, numMsg) + '</span>';
-        bbn.fn.stream(
-          url,
-          d => {
-            if (!d) {
-              bbn.fn.log('stream', d);
-            }
-            if (!d.success && d.data?.error) {
-              bbn.fn.warning(d.data.error);
-              appui.error(bbn._('Failed synchronization'));
-              this.syncMessage = '<span class="bbn-red">' + bbn._('Failed synchronization') + '</span>';
-              setTimeout(() => {
-                this.syncId = false;
-              }, 3000);
-            }
-            else if (d.isSynchronizing) {
-              this.syncMessage = '<span>' + bbn._('Synchronizing %d/%d', d.synchronized, numMsg) + '</span>';
-            }
-            else if (d.success) {
-              this.syncMessage = '<span class="bbn-green">' + bbn._('Synchronization successful') + '</span>';
-              if (this.currentFolder
-                && (this.currentFolder === data.id_folder)
-              ) {
-                this.reloadTable();
+        if (!this.syncId) {
+          const url = this.root + 'webmail/actions/sync';
+          const data = {
+            id_account: bbn.fn.isString(idAccount) ? idAccount : false,
+            id_folder: bbn.fn.isString(idFolder) ? idFolder : false
+          };
+          let numMsg = 0;
+          const fromItems = function(items) {
+            bbn.fn.each(items, f => {
+              numMsg += Math.abs(f.num_msg - f.db_num_msg);
+              if (f.items?.length) {
+                fromItems(f.items);
               }
-
-              setTimeout(() => {
-                this.syncId = false;
-              }, 3000);
+            });
+          };
+          if (data.id_folder && data.id_account) {
+            const acc = bbn.fn.getRow(this.source.accounts, {id: data.id_account});
+            if (acc) {
+              const folder = bbn.fn.getRow(acc.folders, {id: data.id_folder});
+              if (folder) {
+                numMsg = Math.abs(folder.num_msg - folder.db_num_msg);
+              }
             }
-          },
-          data,
-          f => {
-            appui.error(bbn._('An error occured during the synchronization'));
-          },
-          a => {
-            bbn.fn.log('abort', a);
-            this.syncId = false;
           }
-        )
+          else if (data.id_account) {
+            const acc = bbn.fn.getRow(this.source.accounts, {id: data.id_account});
+            if (acc) {
+              fromItems(acc.folders);
+            }
+          }
+          else {
+            bbn.fn.each(this.source.accounts, a => {
+              fromItems(a.folders);
+            });
+          }
+
+          this.syncId = bbn.fn.getRequestId(url, data);
+          this.syncMessage = '<span>' + bbn._('Synchronizing %d/%d', 0, numMsg) + '</span>';
+          bbn.fn.stream(
+            url,
+            d => {
+              if (!d) {
+                bbn.fn.log('stream', d);
+              }
+              if (!d.success && d.data?.error) {
+                bbn.fn.warning(d.data.error);
+                appui.error(bbn._('Failed synchronization'));
+                this.syncMessage = '<span class="bbn-red">' + bbn._('Failed synchronization') + '</span>';
+                setTimeout(() => {
+                  this.syncId = false;
+                }, 3000);
+              }
+              else if (d.isSynchronizing) {
+                this.syncMessage = '<span>' + bbn._('Synchronizing %d/%d', d.synchronized, numMsg) + '</span>';
+              }
+              else if (d.success) {
+                this.syncMessage = '<span class="bbn-green">' + bbn._('Synchronization successful') + '</span>';
+                if (this.currentFolder
+                  && (this.currentFolder === data.id_folder)
+                ) {
+                  this.reloadTable();
+                }
+
+                setTimeout(() => {
+                  this.syncId = false;
+                }, 3000);
+              }
+            },
+            data,
+            f => {
+              appui.error(bbn._('An error occured during the synchronization'));
+            },
+            a => {
+              bbn.fn.log('abort', a);
+              this.syncId = false;
+            }
+          )
+        }
       },
       abortSync(){
         if (this.syncId) {
