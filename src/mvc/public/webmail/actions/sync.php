@@ -39,6 +39,7 @@ else if ($accounts = $emailClass->getAccountsIds()) {
 }
 
 if (!empty($folders)) {
+  set_time_limit(0);
   $total = 0;
   foreach ($folders as $folder) {
     try {
