@@ -717,7 +717,7 @@
             }*/);
           }
           //only mailings without emails sent can be deleted
-          if (((row.state === 'ready') || (row.state === 'cancelled')) && ( row.total === 0 )) {
+          if ((row.state === 'ready') || (row.state === 'cancelled')) {
             res.push({
               text: bbn._("Delete"),
               icon: "nf nf-oct-trash",
