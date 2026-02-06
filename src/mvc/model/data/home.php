@@ -73,7 +73,7 @@ if ( isset($model->data['start']) && !empty($model->data['limit']) ){
       'bbn_notes_versions.title'
     ],
     'query' => "
-      SELECT bbn_emailings.*, bbn_notes_versions.title, bbn_notes_versions.id_user,
+      SELECT bbn_emailings.*, bbn_notes_versions.title, bbn_notes_versions.id_user, IF(bbn_emailings.version > 1, 1, 0) AS hasVersions,
         (
           SELECT COUNT(bbn_emails.id)
           FROM bbn_emails

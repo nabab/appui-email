@@ -77,7 +77,8 @@
                       field: 'sent',
                       dir: 'DESC'
                     }]"
-                    :tr-class="r => r.priority < 5 ? 'bbn-bg-light-red' : ''">
+                    :tr-class="r => r.priority < 5 ? 'bbn-bg-light-red' : ''"
+                    button-mode="menu">
           <bbns-column label="<?= _("ID") ?>"
                         field="id"
                         :filterable="false"
@@ -166,10 +167,9 @@
                         type="number"
                         :editable="false"
                         :sortable="false"/>
-          <bbns-column width="100"
-                        label="<?= _("Action") ?>"
-                        :component="$options.components.menu"
-                        :source="sourceMenu"/>
+          <bbns-column :width="40"
+                       :buttons="renderButtons"
+                       cls="bbn-c"/>
           </bbns-column>
         </bbn-table>
       </div>

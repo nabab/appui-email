@@ -16,28 +16,25 @@
         prefilled: false,
         priority: 0,
         isNumLoading: false,
-        numRecipients: 0, 
+        numRecipients: 0,
         root: appui.plugins['appui-email'] + '/'
       }
     },
     methods: {
       getVersion(d){
-        bbn.fn.log('before',this.source)
-        this.$set(this.source.row, 'id_note', d.id);
-        this.$set(this.source.row, 'id_type', d.id_type);
-        this.$set(this.source.row, 'title', d.title);
-        this.$set(this.source.row, 'content', d.content);
-        this.$set(this.source.row, 'creation', d.creation);
-        //this.$set(this.source.row, 'version', d.version);
-        this.$set(this.source.row, 'creator', d.id_user);
-        this.$set(this.source.row, 'sender', d.sender);
-        this.$set(this.source.row, 'recipients', d.recipients);
-        this.$set(this.source.row, 'attachments', d.files);
-        this.$nextTick(() => {
+        this.source.row.id_note = d.id;
+        this.source.row.id_type = d.id_type;
+        this.source.row.title = d.title;
+        this.source.row.content = d.content;
+        this.source.row.creation = d.creation;
+        //this.source.row.version = d.version;
+        this.source.row.creator = d.id_user;
+        this.source.row.sender = d.sender;
+        this.source.row.recipients = d.recipients;
+        this.source.row.attachments = d.files;
+        /*this.$nextTick(() => {
           this.getRef('editor').onload();
-        });
-        bbn.fn.log('after',this.source)
-        bbn.fn.log('version',d)
+        });*/
       },
       /*
       changeDate(){
@@ -129,6 +126,7 @@
         this.prefilled = true;
         this.dataToSend.id_parent = fl.data.id_parent;
       }
+
       this.setRecipientsNum();
     },
     watch: {

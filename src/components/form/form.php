@@ -1,6 +1,6 @@
-<bbn-form :source="source.row"
+<bbn-form bbn-if="dataToSend && emails"
+          :source="source.row"
           :data="dataToSend"
-          v-if="dataToSend && emails"
           ref="form"
           confirm-leave="<?= _("Are you sure you want to leave this form without saving your changes?") ?>"
           :action="emails.source.root + 'actions/' + (source.row.id ? 'update' : 'insert')"
@@ -9,101 +9,95 @@
           @failure="failure"
           :disabled="isNumLoading"
           @cancel="onFormCancel">
-  <appui-note-toolbar-version :source="source.row" 
-                               :data="{id: source.row.id_note}" 
-                               @version="getVersion" 
-                               v-if="source.row.hasVersions" 
-                               :actionUrl="root + 'data/mailing_version'"/>
+  <appui-note-toolbar-version bbn-show="source.row.hasVersions"
+                              :source="source.row"
+                              :data="{id: source.row.id_note}"
+                              @version="getVersion"
+                              :actionUrl="root + 'data/mailing_version'"
+                              ref="version"
+                              @hook:mounted="getRef('version').getVersion(source.row.version)"/>
   <div class="bbn-padding bbn-grid-fields">
-
-    <div v-if="emails.source.senders.length === 2" class="bbn-grid-full bbn-middle">
-      <span v-text="emails.source.senders[0].text"
+    <div bbn-if="emails.source.senders.length === 2"
+         class="bbn-grid-full bbn-middle">
+      <span bbn-text="emails.source.senders[0].text"
             :title="emails.source.senders[0].desc"
-            class="bbn-iblock bbn-h-100 bbn-spadding bbn-m bbn-b">
-      </span>
+            class="bbn-iblock bbn-h-100 bbn-spadding bbn-m bbn-b"/>
       <bbn-switch :value="emails.source.senders[1].value"
                   :novalue="emails.source.senders[0].value"
-                  v-model="source.row.sender">
-      </bbn-switch>
-      <span v-text="emails.source.senders[1].text"
+                  bbn-model="source.row.sender"/>
+      <span bbn-text="emails.source.senders[1].text"
             :title="emails.source.senders[1].desc"
-            class="bbn-iblock bbn-h-100 bbn-spadding bbn-m bbn-b">
-      </span>
+            class="bbn-iblock bbn-h-100 bbn-spadding bbn-m bbn-b"/>
     </div>
 
-    <label v-if="emails.source.senders.length > 2"><?= _("Sender email") ?></label>
-    <bbn-dropdown v-if="emails.source.senders.length > 2"
+    <label bbn-if="emails.source.senders.length > 2"><?= _("Sender email") ?></label>
+    <bbn-dropdown bbn-if="emails.source.senders.length > 2"
                   placeholder="<?= _("Choose") ?>"
-                  v-model="source.row.sender"
+                  bbn-model="source.row.sender"
                   :source="emails.source.senders"
-                  :required="true"
-    ></bbn-dropdown>
+                  :required="true"/>
 
     <label><?= _("Recipients") ?></label>
     <div class="bbn-vmiddle">
       <bbn-dropdown placeholder="<?= _("Choose") ?>"
-                    v-model="source.row.recipients"
+                    bbn-model="source.row.recipients"
                     :source="emails.source.recipients"
                     :required="true"
-                    class="bbn-wide"
-      ></bbn-dropdown>
-      <div class="bbn-iblock bbn-m bbn-left-space" v-if="source.row.recipients">
-        <span class="bbn-anim-blink" v-if="isNumLoading">
+                    class="bbn-wide"/>
+      <div bbn-if="source.row.recipients"
+           class="bbn-iblock bbn-m bbn-left-space">
+        <span bbn-if="isNumLoading"
+              class="bbn-anim-blink">
           <?= _("Retrieving list...") ?>
         </span>
-        <span class="bbn-i" v-else>
-          <span v-text="numRecipients"></span> <?= _('recipients') ?>
+        <span bbn-else
+              class="bbn-i">
+          <span bbn-text="numRecipients"/> <?= _('recipients') ?>
         </span>
       </div>
     </div>
 
     <label><?= _("Sending time") ?></label>
     <div>
-      <bbn-datetimepicker v-model="source.row.sent"
+      <bbn-datetimepicker bbn-model="source.row.sent"
                           :min="today"
                           class="bbn-wide"
                           :autosize="false"
-                          value-format="YYYY-MM-DD HH:mm:00"
-      ></bbn-datetimepicker>
+                          value-format="YYYY-MM-DD HH:mm:00"/>
     </div>
 
-    <label v-if="source.row.sent"><?= _("Priority") ?></label>
-    <div v-if="source.row.sent" class="bbn-vmiddle">
-      <span v-text="_('Normal')"
-            class="bbn-iblock bbn-hmargin">
-      </span>
-      <bbn-switch v-model="source.row.priority"
+    <label bbn-if="source.row.sent"><?= _("Priority") ?></label>
+    <div bbn-if="source.row.sent"
+         class="bbn-vmiddle">
+      <span bbn-text="_('Normal')"
+            class="bbn-iblock bbn-hmargin"/>
+      <bbn-switch bbn-model="source.row.priority"
                   :value="4"
-                  :novalue="5"
-                  ></bbn-switch>
-      <span v-text="_('High')"
-            class="bbn-iblock bbn-hmargin">
-      </span>
+                  :novalue="5"/>
+      <span bbn-text="_('High')"
+            class="bbn-iblock bbn-hmargin"/>
     </div>
 
-    <!--label><?= _("Letter type") ?></label>
+    <!--<label><?= _("Letter type") ?></label>
     <bbn-dropdown placeholder="<?= _("Choose") ?>"
-                  v-model="source.row.lettre_type"
+                  bbn-model="source.row.lettre_type"
                   :source="emails.source.types"
                   source-value="id"
-                  @change="loadLettre"
-    ></bbn-dropdown-->
+                  @change="loadLettre"/>-->
 
     <label><?= _("Object") ?></label>
     <bbn-input required="required"
-               v-model="source.row.title"
-               maxlength="128"
-    ></bbn-input>
+               bbn-model="source.row.title"
+               maxlength="128"/>
 
     <label><?= _("Attachments") ?></label>
     <bbn-upload :save-url="'file/save/' + ref"
                 :multiple="true"
-                v-model="source.row.attachments"
-                :paste="true"
-    ></bbn-upload>
+                bbn-model="source.row.attachments"
+                :paste="true"/>
 
     <label><?= _("Text") ?></label>
-    <bbn-rte v-model="source.row.content"
+    <bbn-rte bbn-model="source.row.content"
              :required="true"
              :clean-paste="true"
              ref="editor"

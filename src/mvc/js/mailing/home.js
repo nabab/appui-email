@@ -213,7 +213,6 @@
           let text = bbn.fn.getField(this.source.recipients, 'text', 'value', row.recipients);
           return '<a href="listes/liste/' + row.recipients+'">'+text+'</a>'
         }
-        
       },
       renderFiles(row){
         return row.attachments ?
@@ -228,34 +227,28 @@
       renderButtons(row){
         let res = [{
           text: bbn._("See"),
-          notext: true,
           icon: "nf nf-fa-eye",
           action: this.see
-        },{
-          text: bbn._('Send this email to') + ' ' + appui.user.name,
-          notext: true,
+        }, {
+          text: bbn._('Send to myself'),
           icon: "nf nf-fa-envelope",
           action: this.selfSend
-        },{
-            text: bbn._("Duplicate"),
-            notext: true,
-            icon: "nf nf-fa-copy",
-            action: this.duplicate
-          }];
-        if ( ['sent', 'sending', 'suspended', 'cancelled'].includes(row.state) && (row.num_accuses > 0)){
+        }, {
+          text: bbn._("Duplicate"),
+          icon: "nf nf-fa-copy",
+          action: this.duplicate
+        }];
+        if (['sent', 'sending', 'suspended', 'cancelled'].includes(row.state) && (row.num_accuses > 0)) {
           res.push({
             text: bbn._("Open"),
-            notext: true,
             icon: "nf nf-fa-th_list",
             action: this.open
           });
         }
-        
-        
-        if ( (row.state === 'ready') ){
+
+        if (row.state === 'ready') {
           res.push({
             text: bbn._("Edit"),
-            notext: true,
             icon: "nf nf-fa-edit",
             action: this.edit
           }/*,{
@@ -265,35 +258,33 @@
             action: this.send
           }*/);
         }
-        if ( (row.state === 'ready') || (row.state === 'cancelled') ){
+
+        //only mailings without emails sent can be deleted
+        if (((row.state === 'ready') || (row.state === 'cancelled')) && (row.success === 0)) {
           res.push({
             text: bbn._("Delete"),
-            notext: true,
             icon: "nf nf-oct-trash",
             action: this.removeItem
           })
         }
-        
-        if( (row.state === 'ready') && (row.sent === null) ){
+
+        if ((row.state === 'ready') && (row.sent === null)) {
           res.push({
             text: bbn._("Send"),
-            notext: true,
             icon: "nf nf-fa-paper_plane",
             action: this.send
           });
         }
-        if ( row.state === 'suspended' ){
+        if (row.state === 'suspended') {
           res.push({
             text: bbn._("Reactivate mailing"),
-            notext: true,
             icon: "nf nf-fa-play_circle_o",
             action: this.play
           });
         }
-        if ( row.state !== 'sending' ){
+        if (row.state !== 'sending') {
           res.push({
             text: bbn._("Test"),
-            notext: true,
             icon: "nf nf-fa-magic",
             action: this.test
           });
@@ -301,12 +292,10 @@
         else {
           res.push({
             icon: 'nf nf-md-close',
-            title: 'Cancel mailing',
-            action: this.cancelMailing,
-            notext: true
-          },{
-            title: bbn._("Suspend"),
-            notext: true,
+            text: bbn._('Cancel mailing'),
+            action: this.cancelMailing
+          }, {
+            text: bbn._("Suspend"),
             icon: "nf nf-fa-stop_circle_o",
             action: this.stop
           })
@@ -343,14 +332,13 @@
         })
       },
       insert(){
-        this.$refs.table.insert({}, {
+        this.getRef('table').insert({}, {
           label: bbn._("New mailing"),
           width: '80%'
         });
       },
       edit(row, col, idx){
-        return this.$refs.table.edit(
-          bbn.fn.extend(row, {hasVersions: row.version > 1} ), {
+        return this.getRef('table').edit(row, {
           label: bbn._("Mailing edit"),
           width: '80%'
         }, idx);
@@ -673,105 +661,6 @@
 		beforeDestroy(){
 			this.clearGetInfo();
       appui.unregister('appui-email-mailing');
-    },
-    components: {
-      menu: {
-        template: `<bbn-dropdown :source="menu"
-                                 :template="tpl"
-                                 @input="select"
-                                 :placeholder="_('Choose')"
-                                 ref="dropdown"/>`,
-        props: ['source'],
-        data(){
-          let row = this.source;
-          let res = [{
-            text: bbn._("See"),
-            icon: "nf nf-fa-eye",
-            value: 'see'
-          },{
-            text: bbn._('Send to myself'),
-            icon: "nf nf-fa-envelope",
-            value: 'selfSend'
-          },{
-            text: bbn._("Duplicate"),
-            icon: "nf nf-fa-copy",
-            value: 'duplicate'
-          }];
-          if ( ['sent', 'sending', 'suspended', 'cancelled'].includes(row.state) && (row.num_accuses > 0)){
-            res.push({
-              text: bbn._("Open"),
-              icon: "nf nf-fa-th_list",
-              value: 'open'
-            });
-          }
-          if ( (row.state === 'ready') ){
-            res.push({
-              text: bbn._("Edit"),
-              icon: "nf nf-fa-edit",
-              value: 'edit'
-            }/*,{
-              text: bbn._("Send"),
-              notext: true,
-              icon: "nf nf-fa-paper_plane",
-              action: this.send
-            }*/);
-          }
-          //only mailings without emails sent can be deleted
-          if ((row.state === 'ready') || (row.state === 'cancelled')) {
-            res.push({
-              text: bbn._("Delete"),
-              icon: "nf nf-oct-trash",
-              value: 'removeItem'
-            })
-          }
-          
-          if( (row.state === 'ready') && (row.sent === null) ){
-            res.push({
-              text: bbn._("Send"),
-              icon: "nf nf-fa-paper_plane",
-              value: 'send'
-            });
-          }
-          if ( row.state === 'suspended' ){
-            res.push({
-              text: bbn._("Reactivate mailing"),
-              icon: "nf nf-fa-play_circle_o",
-              value: 'play'
-            });
-          }
-          if ( row.state !== 'sending' ){
-            res.push({
-              text: bbn._("Test"),
-              icon: "nf nf-fa-magic",
-              value: 'test'
-            });
-          }
-          else {
-            res.push({
-              icon: 'nf nf-md-close',
-              label: 'Cancel mailing',
-              value: 'cancelMailing'
-            },{
-              text: bbn._("Suspend"),
-              icon: "nf nf-fa-stop_circle_o",
-              value: 'stop'
-            })  
-          }
-          return {
-            menu: res,
-            tpl: `<div class="bbn-w-100 bbn-vxspadding bbn-hspadding"><i :class="'bbn-m bbn-right-space ' + source.icon"></i><div class="bbn-iblock" v-text="source.text"></div></div>` 
-          };
-  
-        },
-        methods: {
-          select(action){
-            this.getRef('dropdown').currentSelectValue = '';
-            if (mailings && bbn.fn.isFunction(mailings[action])) {
-              mailings[action](this.source);
-            }
-          }
-        }
-      }
     }
   }
 })();

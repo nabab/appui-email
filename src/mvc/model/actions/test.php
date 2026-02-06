@@ -1,20 +1,11 @@
 <?php
-/**
- * Created by BBN Solutions.
- * User: Mirko Argentino
- * Date: 15/06/2018
- * Time: 17:32
- *
- * @var $model \bbn\Mvc\Model
- */
+use bbn\Appui\Mailing;
 
-if (
-  !empty($model->data['id']) 
+if (!empty($model->data['id'])
   && !empty($model->data['users'])
-  && ($mailings = new \bbn\Appui\Mailing($model->db))
+  && ($mailings = new Mailing($model->db))
   && ($mail = $mailings->getMailing($model->data['id']))
-){
- 
+) {
   $num = 0;
   $cfg = [
     'subject' => $mail['title'],
@@ -26,14 +17,18 @@ if (
       $cfg['attachments'][$media['name']] = $media['file'];
     }
   }
-  if (is_string($model->data['users'])) {
+
+  if (!is_array($model->data['users'])) {
     $model->data['users'] = [$model->data['users']];
   }
+
   foreach ($model->data['users'] as $u) {
     if ($cfg['to'] = $model->db->selectOne('bbn_users', 'email', ['id' => $u])) {
       $num += (int)$mailings->send($cfg, $mail['sender']);
     }
   }
+
   return ['success' => true, 'num' => $num];
 }
+
 return ['success' => false];
