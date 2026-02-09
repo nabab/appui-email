@@ -21,20 +21,13 @@
       }
     },
     methods: {
-      getVersion(d){
+      setVersionContent(d){
         this.source.row.id_note = d.id;
-        this.source.row.id_type = d.id_type;
         this.source.row.title = d.title;
         this.source.row.content = d.content;
-        this.source.row.creation = d.creation;
         //this.source.row.version = d.version;
         this.source.row.creator = d.id_user;
-        this.source.row.sender = d.sender;
-        this.source.row.recipients = d.recipients;
         this.source.row.attachments = d.files;
-        /*this.$nextTick(() => {
-          this.getRef('editor').onload();
-        });*/
       },
       /*
       changeDate(){

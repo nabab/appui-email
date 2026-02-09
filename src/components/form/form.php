@@ -12,7 +12,7 @@
   <appui-note-toolbar-version bbn-show="source.row.hasVersions"
                               :source="source.row"
                               :data="{id: source.row.id_note}"
-                              @version="getVersion"
+                              @version="setVersionContent"
                               :actionUrl="root + 'data/mailing_version'"
                               ref="version"
                               @hook:mounted="getRef('version').getVersion(source.row.version)"/>
