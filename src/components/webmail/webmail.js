@@ -69,10 +69,11 @@
             r.push({
               id: a.id,
               uid: a.id,
-              text: a.login,
+              text: a.email,
               type: 'account',
               items: getItems(a.folders),
-              originalData: a
+              originalData: a,
+              cls: !this.accountsIdle[a.id]?.connected ? 'idle_disconnected' : ''
             });
           });
         }
@@ -860,9 +861,26 @@
           const data = {account: idAccount};
           this.accountsIdle[idAccount] = {
             id: bbn.fn.getRequestId(url, data, 'json'),
+            connected: false,
             stream: bbn.fn.stream(
               url,
-              d => bbn.fn.log('STREAAAAAAM:', d),
+              d => {
+                if (d.success) {
+                  delete this.accountsIdle[idAccount];
+                }
+                else if (d.start) {
+                  this.accountsIdle[idAccount].connected = true;
+                }
+                else if (d.exists) {
+                  bbn.fn.log(['New messages for account ' + idAccount, d.exists]);
+                }
+                else if (d.expunge) {
+                  bbn.fn.log(['Messages expunged for account ' + idAccount, d.expunge]);
+                }
+                else if (d.flags) {
+                  bbn.fn.log(['Flagged messages for account ' + idAccount, d.flags]);
+                }
+              },
               data,
               d => bbn.fn.log('STREAM FAILURE:', d),
               d => bbn.fn.log('STREAM ABORT:', d),
@@ -873,6 +891,7 @@
       },
       stopAccountIdle(idAccount){
         if (this.accountsIdle[idAccount]) {
+          this.accountsIdle[idAccount].connected = false;
           bbn.fn.abort(this.accountsIdle[idAccount].id);
           try {
             this.accountsIdle[idAccount].aborter.abort();

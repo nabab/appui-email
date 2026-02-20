@@ -8,11 +8,11 @@ if (!empty($ctrl->post['account'])
   && ($mailbox = $email->getMailbox($ctrl->post['account']))
 ) {
   try {
-    $idle = $mailbox->idle(function($message) use ($ctrl) {
-      $ctrl->stream([
-        'message' => $message
-      ]);
-    }, null, $ctrl);
+    $idle = $mailbox->idle(
+      fn($m) => $ctrl->stream($m),
+      null,
+      $ctrl
+    );
   }
   catch (Exception $e) {
     bbn\X::log($e->getMessage(), 'mirko_idle');
