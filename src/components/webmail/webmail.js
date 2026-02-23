@@ -872,13 +872,32 @@
                   this.accountsIdle[idAccount].connected = true;
                 }
                 else if (d.exists) {
-                  bbn.fn.log(['New messages for account ' + idAccount, d.exists]);
+                  appui.info(bbn._('New email received'));
+                  bbn.fn.log(['New messages for account ' + idAccount, d.exists.email, d.folder]);
+                  if (d.exists.folder?.id
+                    && d.exists.folder?.id_account
+                  ) {
+                    const account = bbn.fn.getRow(this.source.accounts, {id: d.exists.folder.id_account});
+                    if (account) {
+                      const folder = bbn.fn.getRow(account.folders, {id: d.exists.folder.id});
+                      if (folder) {
+                        bbn.fn.iterate(d.exists.folder, (val, key) => folder[key] = val);
+                        if (this.currentFolder === folder.id) {
+                          this.reloadTable();
+                        }
+                      }
+                    }
+                  }
                 }
                 else if (d.expunge) {
                   bbn.fn.log(['Messages expunged for account ' + idAccount, d.expunge]);
                 }
                 else if (d.flags) {
                   bbn.fn.log(['Flagged messages for account ' + idAccount, d.flags]);
+                }
+                else if (d.error) {
+                  appui.error(d.error);
+                  this.stopAccountIdle(idAccount);
                 }
               },
               data,
