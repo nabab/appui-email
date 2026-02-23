@@ -5,17 +5,16 @@ use bbn\User\Email;
 $ctrl->setStream();
 if (!empty($ctrl->post['account'])
   && ($email = new Email($ctrl->db))
-  && ($mailbox = $email->getMailbox($ctrl->post['account']))
 ) {
   try {
-    $idle = $mailbox->idle(
+    $email->idle(
+      $ctrl->post['account'],
       fn($m) => $ctrl->stream($m),
-      null,
       $ctrl
     );
   }
   catch (Exception $e) {
-    bbn\X::log($e->getMessage(), 'mirko_idle');
+    bbn\X::log($e->getMessage(), 'webmail_idle');
     $ctrl->stream([
       'success' => false,
       'error' => $e->getMessage(),
@@ -23,9 +22,7 @@ if (!empty($ctrl->post['account'])
     ]);
   }
 
-  if ($mailbox->getIdleStream()) {
-    $mailbox->stopIdle();
-  }
+  $email->stopIdle($ctrl->post['account']);
 }
 
 $ctrl->stream([
