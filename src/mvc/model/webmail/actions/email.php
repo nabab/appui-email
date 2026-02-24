@@ -69,9 +69,9 @@ if ($model->hasData('action', true)) {
           )) {
             $id = null;
             if (!empty($idDraftsFolder)) {
-              $sync = $em->syncEmails($idDraftsFolder, 0, true);
+              $sync = $em->syncEmails($idDraftsFolder);
               $synchronized = 0;
-              if (is_object($sync)) {
+              if ($sync instanceof Generator) {
                 foreach ($sync as $s) {
                   $synchronized++;
                 }

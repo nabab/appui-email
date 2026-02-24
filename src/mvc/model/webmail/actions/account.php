@@ -10,11 +10,12 @@ if ($model->hasData('action')) {
   {
     case 'test':
     case 'insert':
-      if ($model->hasData(['type', 'login', 'pass', 'email'], true)
+      if ($model->hasData(['text', 'type', 'login', 'pass', 'email'], true)
         && $model->hasData(['port', 'smtp', 'encryption', 'locale', 'validatecert'])
         && ($code = $model->inc->options->code($model->data['type']))
       ) {
         $cfg = [
+          'text' => $model->data['text'],
           'type' => $code,
           'login' => $model->data['login'],
           'host' => $model->data['host'] ?? null,
@@ -140,13 +141,14 @@ if ($model->hasData('action')) {
       break;
 
     case 'update':
-      if ($model->hasData(['id', 'type', 'login', 'pass', 'email', 'folders', 'rules'], true)
+      if ($model->hasData(['id', 'text', 'type', 'login', 'pass', 'email', 'folders', 'rules'], true)
         && $model->hasData(['smtp', 'port', 'encryption', 'locale', 'validatecert'])
         && ($code = $model->inc->options->code($model->data['type']))
         && is_array($model->data['folders'])
       ) {
         $cfg = [
           'type' => $code,
+          'text' => $model->data['text'],
           'login' => $model->data['login'],
           'host' => $model->data['host'] ?? null,
           'pass' => $model->data['pass'],

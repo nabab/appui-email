@@ -1,5 +1,6 @@
 <bbn-form :source="source"
           @success="success"
+          @failure="failure"
           :data="{
             action: source.id ? 'update' : 'insert'
           }"
@@ -24,6 +25,9 @@
                   bbn-model="source.locale"
                   :value="true"
                   :novalue="false"/>
+      <div class="bbn-label"><?= _("Name") ?></div>
+      <bbn-input bbn-model="source.text"
+                 :required="true"/>
       <div class="bbn-label"><?= _("eMail address") ?></div>
       <bbn-input bbn-model="source.email"
                 type="email"

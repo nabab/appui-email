@@ -69,7 +69,7 @@
             r.push({
               id: a.id,
               uid: a.id,
-              text: a.email,
+              text: a.text || a.email,
               type: 'account',
               items: getItems(a.folders),
               originalData: a,
@@ -733,6 +733,12 @@
                   }
                 })
               }
+              else {
+                appui.error(d.error?.length ? d.error : bbn._("An error occurred while saving the account"));
+              }
+            },
+            failure: d => {
+              appui.error(d.error?.length ? d.error : bbn._("An error occurred while saving the account"));
             }
           }
         });

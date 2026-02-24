@@ -43,8 +43,8 @@ if (!empty($folders)) {
   $total = 0;
   foreach ($folders as $folder) {
     try {
-      $sync = $emailClass->syncEmails($folder, 0, true);
-      if (is_object($sync)) {
+      $sync = $emailClass->syncEmails($folder);
+      if ($sync instanceof Generator) {
         foreach ($sync as $s) {
           $total++;
           //if ($s % 5 === 0) {

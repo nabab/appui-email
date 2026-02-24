@@ -4,6 +4,7 @@
     folders: [],
     rules: rules.reduce((a, v) => ({...a, [v]: ''}), {}),
     type: null,
+    text: '',
     email: '',
     login: '',
     pass: '',
@@ -206,6 +207,9 @@
       },
       success(d){
         this.$emit('success', d);
+      },
+      failure(d){
+        this.$emit('failure', d);
       },
       checkUncheckAll(){
         if (this.isAllChecked) {

@@ -49,7 +49,15 @@ return [[
                 }
                 if ($check) {
                   try {
-                    $tot += $em->syncEmails($folder, 25);
+                    $sync = $this->syncEmails($folder, 25);
+                    if ($sync instanceof Generator) {
+                      foreach ($sync as $s) {
+                        $tot++;
+                      }
+                    }
+                    else {
+                      $tot += $sync;
+                    }
                   } catch (\Exception $e) {
                     X::log($e->getMessage(), "poller_email_error");
                     $error = $e->getMessage();
