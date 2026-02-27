@@ -710,7 +710,7 @@
         }
 
         this.getPopup({
-          label: bbn._("eMail account configuration"),
+          label: bbn._("Account configuration"),
           component: 'appui-email-webmail-account',
           componentOptions,
           componentEvents: {
@@ -874,32 +874,33 @@
                 if (d.success) {
                   delete this.accountsIdle[idAccount];
                 }
-                else if (d.start) {
-                  this.accountsIdle[idAccount].connected = true;
-                }
-                else if (d.exists) {
-                  appui.info(bbn._('New email received'));
-                  bbn.fn.log(['New messages for account ' + idAccount, d.exists.email, d.folder]);
-                  if (d.exists.folder?.id
-                    && d.exists.folder?.id_account
-                  ) {
-                    const account = bbn.fn.getRow(this.source.accounts, {id: d.exists.folder.id_account});
-                    if (account) {
-                      const folder = bbn.fn.getRow(account.folders, {id: d.exists.folder.id});
-                      if (folder) {
-                        bbn.fn.iterate(d.exists.folder, (val, key) => folder[key] = val);
-                        if (this.currentFolder === folder.id) {
-                          this.reloadTable();
-                        }
+                else if (d.action) {
+                  bbn.fn.log(['IDLE action "' + d.action + '" on account ' + idAccount, d.data]);
+                  switch (d.action) {
+                    case 'idleStarted':
+                      this.accountsIdle[idAccount].connected = true;
+                      break;
+                    case 'newMail':
+                      appui.info(bbn._('New email received'));
+                      if (d.data?.folder?.id
+                        && d.data.folder?.id_account
+                      ) {
+                        this.updateFolder(d.data.folder.id_account, d.data.folder.id, d.data.folder);
                       }
-                    }
+
+                      break;
+                    case 'mailDeleted':
+                    case 'mailFlagged':
+                    case 'syncSubscribedFolders':
+                      if (d.data?.folder?.id
+                        && d.data.folder?.id_account
+                      ) {
+                        this.updateFolder(d.data.folder.id_account, d.data.folder.id, d.data.folder);
+                      }
+
+                      break;
+
                   }
-                }
-                else if (d.expunge) {
-                  bbn.fn.log(['Messages expunged for account ' + idAccount, d.expunge]);
-                }
-                else if (d.flags) {
-                  bbn.fn.log(['Flagged messages for account ' + idAccount, d.flags]);
                 }
                 else if (d.error) {
                   appui.error(d.error);
@@ -907,23 +908,44 @@
                 }
               },
               data,
-              d => bbn.fn.log('STREAM FAILURE:', d),
-              d => bbn.fn.log('STREAM ABORT:', d),
-              d => bbn.fn.log('STREAM FINISH:', d)
+              () => this.stopAccountIdle(idAccount, false),
+              () => this.stopAccountIdle(idAccount, false),
+              () => this.stopAccountIdle(idAccount, false)
             )
           };
         }
       },
-      stopAccountIdle(idAccount){
+      stopAccountIdle(idAccount, abort = true){
         if (this.accountsIdle[idAccount]) {
-          this.accountsIdle[idAccount].connected = false;
-          bbn.fn.abort(this.accountsIdle[idAccount].id);
-          try {
-            this.accountsIdle[idAccount].aborter.abort();
+          if (abort) {
+            try {
+              bbn.fn.abort(this.accountsIdle[idAccount].id);
+              this.accountsIdle[idAccount].aborter.abort();
+              bbn.fn._deleteLoader(this.accountsIdle[idAccount].id, {account: idAccount}, true)
+            }
+            catch (e) {}
           }
-          catch (e) {}
-          bbn.fn._deleteLoader(this.accountsIdle[idAccount].id, {account: idAccount}, true)
+
           delete this.accountsIdle[idAccount];
+        }
+      },
+      updateFolder(idAccount, idFolder, data){
+        if (idAccount?.length
+          && idFolder?.length
+          && (d.data?.folder?.id === idFolder)
+          && (d.data.folder?.id_account === idAccount)
+          && this.source.accounts?.length
+        ) {
+          const account = bbn.fn.getRow(this.source.accounts, {id: idAccount});
+          if (account) {
+            const folder = bbn.fn.getRow(account.folders, {id: idFolder});
+            if (folder) {
+              bbn.fn.iterate(data, (val, key) => folder[key] = val);
+              if (this.currentFolder === idFolder) {
+                this.reloadTable();
+              }
+            }
+          }
         }
       },
       reloadTable(){

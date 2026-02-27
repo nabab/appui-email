@@ -6,6 +6,6 @@ use bbn\User\Email;
 if ($model->hasData('id', true)) {
   $em = new Email($model->db);
   $email = $em->getEmail($model->data['id'], true);
-  $em->updateRead($model->data['id']);
+  $em->setSeen($model->data['id']);
   return $email;
 }
