@@ -12,7 +12,8 @@
       return {
         extractedTo: this.extractNameAndEmail(this.source.to),
         extractedFrom: this.extractNameAndEmail(this.source.from),
-        excerpt: this.source.excerpt.replaceAll(/\[cid\:.*\]/g, '')
+        excerpt: this.source.excerpt.replaceAll(/\[cid\:.*\]/g, ''),
+        webmail: appui.getRegistered('appui-email-webmail')
       }
     },
     computed: {
@@ -40,6 +41,16 @@
         }
 
         return res;
+      },
+      priorityText(){
+        return this.source.priority ?
+          bbn.fn.getField(this.webmail.priorityList, 'text', 'value', this.source.priority) :
+          bbn.fn.getField(this.webmail.priorityList, 'text', 'value', 3);
+      },
+      priorityColor(){
+        return this.source.priority ?
+          bbn.fn.getField(this.webmail.priorityList, 'class', 'value', this.source.priority) :
+          '';
       }
     },
     methods: {
@@ -47,8 +58,7 @@
         return bbn.dt(date).calendar();
       },
       select() {
-        let webmail = this.closest('appui-email-webmail');
-        webmail.selectMessage(this.source);
+        this.webmail.selectMessage(this.source);
         this.source.is_read = 1;
       },
       extractNameAndEmail(str) {

@@ -34,11 +34,38 @@
           conditions: []
         },
         isSearching: false,
-        pluginsSlots: slots
-      };
+        pluginsSlots: slots,
+        priorityList: [{
+          value: 1,
+          text: bbn._('Highest'),
+          color: 'red',
+          cls: 'bbn-red'
+        }, {
+          value: 2,
+          text: bbn._('High'),
+          color: 'orange',
+          cls: 'bbn-orange'
+        }, {
+          value: 3,
+          text: bbn._('Normal'),
+          color: 'green',
+          cls: 'bbn-green'
+        }, {
+          value: 4,
+          text: bbn._('Low'),
+          color: 'blue',
+          cls: 'bbn-blue'
+        }, {
+          value: 5,
+          text: bbn._('Lowest'),
+          color: 'grey',
+          cls: 'bbn-grey'
+        }],
+        treeSource: []
+      }
     },
     computed: {
-      treeSource(){
+      /* treeSource(){
         const r = [];
         const getItems = items => {
           return bbn.fn.map(items || [], a => {
@@ -79,7 +106,7 @@
         }
 
         return r;
-      },
+      }, */
       dataObj(){
         let idFolder = this.currentFolder;
         if (this.currentAccount && !idFolder) {
@@ -549,90 +576,6 @@
           })
         })
       },
-      setTreeData(){
-        let icon = {
-          Trash: "nf nf-fa-trash",
-          INBOX: "nf nf-fa-inbox",
-          spam: "nf nf-md-fire",
-          Sent: "nf nf-md-inbox_arrow_up",
-          Drafts: "nf nf-md-file_document"
-        }
-        const r = [];
-        /* const fn = (ar, id_account) => {
-          let res = [];
-          bbn.fn.each(this.source.folder_types, ft => {
-            bbn.fn.each(ar, a => {
-              a.type = "folder";
-              a.icon = icon[a.text] || "";
-              if (ft.names && ft.names.indexOf(a.uid) > -1) {
-                res.push(bbn.fn.extend({
-                  id_account: id_account,
-                }, a))
-              }
-            })
-          });
-          let commonFolder = bbn.fn.getRow(this.source.folder_types, {code: 'folders'});
-          bbn.fn.each(ar, a => {
-            if (!bbn.fn.getRow(res, {uid: a.uid})) {
-              let tmp = bbn.fn.extend({
-                id_account: id_account,
-              }, a);
-              let folder = commonFolder;
-              bbn.fn.each(this.source.folder_types, ft => {
-                if (ft.names && ft.names.indexOf(a.uid) > -1) {
-                  folder = ft;
-                  return false;
-                }
-              });
-              tmp.icon = folder.icon;
-              if (tmp.items) {
-                tmp.items = fn(tmp.items, id_account)
-              }
-              tmp.type = "folders"
-              res.push(tmp);
-            }
-          })
-          return res;
-        }; */
-        const fn = (items) => {
-          let res = [];
-          bbn.fn.each(items, a => {
-            res.push({
-              id_account: a.id_account,
-              uid: a.uid,
-              text: a.text,
-              icon: a.icon,
-              type: a.type !== 'folders' ? 'folder' : 'folders',
-              items: fn(a.items || []),
-              data: a
-            });
-          });
-          return res;
-        };
-        bbn.fn.each(this.source.folder_types, a => {
-          r.push({
-            text: a.text,
-            uid: a.code,
-            names: a.names,
-            icon: a.icon,
-            id: a.id,
-            type: "folder_types"
-          });
-        })
-        if (this.source.accounts?.length) {
-          bbn.fn.each(this.source.accounts, a => {
-            const folders = bbn.fn.clone(a.folders.filter(el => el.subscribed !== false));
-            r.push({
-              text: a.login,
-              id: a.id,
-              uid: a.id,
-              items: fn(folders),
-              type: "account"
-            });
-          });
-        }
-        this.treeData = r;
-      },
       getFolders() {
         if (this.selectedMail) {
           this.post(this.root + 'webmail/data/folders', {
@@ -929,22 +872,31 @@
           delete this.accountsIdle[idAccount];
         }
       },
-      updateFolder(idAccount, idFolder, data){
+      updateFolder(idAccount, idFolder, folderData){
         if (idAccount?.length
           && idFolder?.length
-          && (d.data?.folder?.id === idFolder)
-          && (d.data.folder?.id_account === idAccount)
+          && (folderData?.id === idFolder)
+          && (folderData?.id_account === idAccount)
           && this.source.accounts?.length
         ) {
           const account = bbn.fn.getRow(this.source.accounts, {id: idAccount});
           if (account) {
             const folder = bbn.fn.getRow(account.folders, {id: idFolder});
             if (folder) {
-              bbn.fn.iterate(data, (val, key) => folder[key] = val);
-              if (this.currentFolder === idFolder) {
-                this.reloadTable();
-              }
+              bbn.fn.iterate(folderData, (val, key) => folder[key] = val);
             }
+          }
+
+          const treeAccount = bbn.fn.getRow(this.treeSource, {id: idAccount});
+          if (treeAccount) {
+            const treeFolder = bbn.fn.getRow(treeAccount.folders, {id: idFolder});
+            if (treeFolder) {
+              bbn.fn.iterate(this.normalizeFolder(folderData), (val, key) => treeFolder[key] = val);
+            }
+          }
+
+          if (this.currentFolder === idFolder) {
+            this.reloadTable();
           }
         }
       },
@@ -1002,7 +954,62 @@
         if (this.currentSearchObj.conditions.length) {
           this.currentSearchObj.conditions = [];
         }
-      }
+      },
+      updateTree(){
+        const r = [];
+        bbn.fn.each(this.source.folder_types, a => {
+          r.push({
+            id: a.id,
+            uid: a.code,
+            text: a.text,
+            icon: a.icon,
+            type: 'folder_types',
+            originalData: a
+          });
+        })
+        if (this.source.accounts?.length) {
+          bbn.fn.each(this.source.accounts, a => {
+            r.push(this.normalizeAccount(a));
+          });
+        }
+
+        this.treeSource = r;
+        //this.getRef('tree')?.updateData()
+      },
+      normalizeAccount(account){
+        return {
+          id: account.id,
+          uid: account.id,
+          text: account.text || account.email,
+          type: 'account',
+          items: bbn.fn.map(account.folders, f => this.normalizeFolder(f)),
+          originalData: account,
+          connected: !!this.accountsIdle[account.id]?.connected,
+          cls: 'bbn-top-sspace'
+        };
+      },
+      normalizeFolder(folder){
+        const countUnseen = f => {
+          let s = f.db_num_unseen_msg || 0;
+          if (f?.items?.length) {
+            bbn.fn.each(f.items, i => {
+              s += countUnseen(i);
+            });
+          }
+          return s;
+        };
+        return {
+          id_account: folder.id_account,
+          id: folder.id,
+          uid: folder.uid,
+          text: folder.text,
+          icon: folder.icon,
+          type: folder.type !== 'folders' ? 'folder' : 'folders',
+          items: bbn.fn.map(folder.items || [], f => this.normalizeFolder(f)),
+          originalData: folder,
+          unseen: countUnseen(folder),
+        }
+      },
     },
     beforeCreate() {
       if (this.source.slots) {
@@ -1034,6 +1041,7 @@
     },
     created(){
       appui.register('appui-email-webmail', this);
+      this.updateTree();
     },
     mounted(){
       this.$set(appui.pollerObject, 'appui-email', {
@@ -1060,6 +1068,38 @@
         this.$nextTick(() => {
           this.reloadTable();
         })
+      }
+    },
+    components: {
+      treeItem: {
+        template: `
+          <div class="appui-email-webmail-tree-item bbn-grid bbn-vmiddle bbn-right-spadding"
+               :style="currentStyle">
+            <i :class="source.data.icon"/>
+            <span :class="{'bbn-b bbn-secondary-text-alt': isAccount}"
+                  bbn-html="source.data.text"/>
+            <span bbn-if="!isAccount"
+                  bbn-text="source.data.unseen || ''"/>
+            <i bbn-if="isAccount && !source.data.connected"
+               class="nf nf-md-sync_off"
+               style="color: var(--error-text)"/>
+          </div>`,
+        props: ['source'],
+        data(){
+          return {
+            isAccount: this.source.data.type === 'account'
+          }
+        },
+        computed: {
+          currentStyle(){
+            return {
+              'grid-template-columns': this.isAccount ?
+                'max-content auto' + (this.source.data.connected ? '' : ' max-content') :
+                '1.2rem auto max-content',
+              'column-gap': 'var(--xsspace)'
+            }
+          }
+        }
       }
     }
   };

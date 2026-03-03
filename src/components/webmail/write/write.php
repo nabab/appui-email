@@ -8,12 +8,32 @@
                 @click="saveDraft"
                 icon="nf nf-fa-save"/>
     <div/>
-    <div>
+    <div class="bbn-flex"
+         title="<?= _('Account') ?>">
+      <span class="bbn-leftlabel">
+        <i class="nf nf-md-card_account_mail bbn-lg"/>
+      </span>
       <bbn-dropdown bbn-model="currentAccount"
                     :source="accounts"/>
     </div>
     <div/>
-    <div>
+    <div class="bbn-flex"
+         title="<?= _('Priority') ?>">
+      <span class="bbn-leftlabel">
+        <i class="nf nf-fa-exclamation bbn-m"/>
+      </span>
+      <bbn-dropdown bbn-model="currentPriority"
+                    :source="priorityList"
+                    placeholder="<?= _("Priority") ?>"
+                    class="bbn-narrow"
+                    :clear-html="true"/>
+    </div>
+    <div/>
+    <div class="bbn-flex"
+         title="<?= _('Signature') ?>">
+      <span class="bbn-leftlabel">
+        <i class="nf nf-fa-signature bbn-lg"/>
+      </span>
       <bbn-dropdown bbn-model="currentSignature"
                     :source="signatures"
                     source-text="name"

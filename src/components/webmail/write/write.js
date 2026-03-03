@@ -74,7 +74,24 @@
         message: this.source.html?.length ?
           bbn.fn.clone(this.source.html) :
           bbn.fn.clone(this.source.plain),
-        timestamp: bbn.fn.microtimestamp()
+        timestamp: bbn.fn.microtimestamp(),
+        currentPriority: this.source.priority || 3,
+        priorityList: [{
+          value: 1,
+          text: '<span class="bbn-red">' + bbn._('Highest') + '</span>'
+        }, {
+          value: 2,
+          text: '<span class="bbn-orange">' + bbn._('High') + '</span>'
+        }, {
+          value: 3,
+          text: '<span class="bbn-green">' + bbn._('Normal') + '</span>'
+        }, {
+          value: 4,
+          text: '<span class="bbn-blue">' + bbn._('Low') + '</span>'
+        }, {
+          value: 5,
+          text: '<span class="bbn-grey">' + bbn._('Lowest') + '</span>'
+        }]
       };
     },
     methods: {
@@ -93,7 +110,7 @@
               cc: this.currentCC,
               bcc: this.currentCCI,
               attachments: this.attachments.concat(bbn.fn.map(bbn.fn.clone(this.attachmentsModel), a => a.path)),
-              important: 0
+              priority: this.currentPriority
             }
           };
           if (this.replyTo?.length) {
@@ -124,7 +141,7 @@
             cc: this.currentCC,
             bcc: this.currentCCI,
             attachments: this.attachments.concat(bbn.fn.map(bbn.fn.clone(this.attachmentsModel), a => a.path)),
-            important: 0
+            priority: this.currentPriority
           }
         };
 

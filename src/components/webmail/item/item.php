@@ -17,10 +17,9 @@
         </span>
       </div>
       <div class="bbn-small icons">
-        <i bbn-if="source.flags.includes('Highest')"
-           class="bbn-red nf nf-fa-exclamation"/>
-        <i bbn-if="source.flags.includes('High') && !source.flags.includes('Highest')"
-           class="bbn-orange nf nf-fa-exclamation"/>
+        <i bbn-if="source.priority && (source.priority !== 3)"
+           :class="['nf nf-fa-exclamation', priorityColor]"
+           :title="priorityText"/>
         <i bbn-if="source.attachments?.length"
            class="nf nf nf-md-paperclip"/>
         <i bbn-if="source.thread?.length > 1"

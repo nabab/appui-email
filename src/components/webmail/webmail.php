@@ -39,7 +39,8 @@
                     @move="onMove"
                     @dragstart="onMoveStart"
                     :selectable="item => item.data.type !== 'account'"
-                    class="appui-email-webmail-tree"/>
+                    class="appui-email-webmail-tree"
+                    :item-component="$options.components.treeItem"/>
         </div>
         <div class="bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin"
              style="min-height: 2.5rem">

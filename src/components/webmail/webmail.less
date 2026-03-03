@@ -61,9 +61,23 @@
     flex-direction: column;
   }
   .appui-email-webmail-tree {
-    .bbn-tree-node-block.idle_disconnected {
-      .bbn-tree-node-block-icon {
-        color: var(--red);
+    .bbn-tree-node {
+      span.bbn-tree-node-block {
+        display: inline-flex !important;
+        width: 100%;
+        align-items: center;
+        .bbn-context {
+          display: inline-flex;
+          width: 100%;
+          > span.bbn-node-clicker {
+            width: 100%;
+          }
+        }
+      }
+      .bbn-tree .bbn-tree-node span.bbn-tree-node-block {
+        .bbn-context {
+          margin-left: var(--xsspace);
+        }
       }
     }
   }
