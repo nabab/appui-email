@@ -58,8 +58,7 @@
         return bbn.dt(date).calendar();
       },
       select() {
-        this.webmail.selectMessage(this.source);
-        this.source.is_read = 1;
+        this.$emit('select', this.source);
       },
       extractNameAndEmail(str) {
         let res = [];

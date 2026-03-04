@@ -11,10 +11,10 @@
         currentAccount: null,
         currentFolder: null,
         selectedMail: null,
+        selectedMails: [],
         treeData: [],
         folders: [],
         foldersData: [],
-        selectedMails: [],
         alreadySendUpdateError: false,
         moveTo: "",
         root: appui.plugins['appui-email'] + '/',
@@ -61,52 +61,13 @@
           color: 'grey',
           cls: 'bbn-grey'
         }],
-        treeSource: []
+        treeSource: [],
+        itemEvents: {
+          select: item => this.selectMail(item)
+        }
       }
     },
     computed: {
-      /* treeSource(){
-        const r = [];
-        const getItems = items => {
-          return bbn.fn.map(items || [], a => {
-            return {
-              id_account: a.id_account,
-              id: a.id,
-              uid: a.uid,
-              text: a.text,
-              icon: a.icon,
-              type: a.type !== 'folders' ? 'folder' : 'folders',
-              items: getItems(a.items || []),
-              originalData: a
-            }
-          });
-        };
-        bbn.fn.each(this.source.folder_types, a => {
-          r.push({
-            id: a.id,
-            uid: a.code,
-            text: a.text,
-            icon: a.icon,
-            type: 'folder_types',
-            originalData: a
-          });
-        })
-        if (this.source.accounts?.length) {
-          bbn.fn.each(this.source.accounts, a => {
-            r.push({
-              id: a.id,
-              uid: a.id,
-              text: a.text || a.email,
-              type: 'account',
-              items: getItems(a.folders),
-              originalData: a,
-              cls: !this.accountsIdle[a.id]?.connected ? 'idle_disconnected' : ''
-            });
-          });
-        }
-
-        return r;
-      }, */
       dataObj(){
         let idFolder = this.currentFolder;
         if (this.currentAccount && !idFolder) {
@@ -255,7 +216,7 @@
             if (this.hash[key] && d[key].hash !== this.hash[key].hash) {
               if (d[key].folders[this.currentFolder] && d[key].folders[this.currentFolder] !== this.hash[key].folders[this.currentFolder]) {
                 if (!this.selectedMails.length) {
-                  this.reloadTable();
+                  this.reloadMailList();
                   if (this.alreadySendUpdateError) {
                     this.alreadySendUpdateError = false;
                   }
@@ -296,12 +257,6 @@
           });
           appui.poll();
         }
-      },
-      tableSelect(col) {
-        this.selectedMails.push(col.id);
-      },
-      tableUnselect(col) {
-        this.selectedMails.splice(col.id);
       },
       onMoveStart(source, event) {
         if (source.data.type === 'account') {
@@ -576,6 +531,35 @@
           })
         })
       },
+      getFolder(idFolder, folders) {
+        let res = null;
+        if (folders === undefined) {
+          bbn.fn.each(this.source.accounts, a => {
+            const f = this.getFolder(idFolder, a.folders);
+            if (f) {
+              res = f;
+              return false;
+            }
+          });
+        }
+        else if (bbn.fn.isArray(folders)) {
+          bbn.fn.each(folders, f => {
+            if (f.id === idFolder) {
+              res = f;
+              return false;
+            }
+            else if (f.items?.length) {
+              const sf = this.getFolder(idFolder, f.items);
+              if (sf) {
+                res = sf;
+                return false;
+              }
+            }
+          });
+        }
+
+        return res;
+      },
       getFolders() {
         if (this.selectedMail) {
           this.post(this.root + 'webmail/data/folders', {
@@ -621,12 +605,21 @@
         }
         return st;
       },
-      selectMessage(row) {
-        if (!this.selectedMail || this.selectedMail.id !== row.id) {
+      selectMail(item) {
+        const idx = this.selectedMails.indexOf(item.id);
+        if (idx === -1) {
+          this.selectedMails.push(item.id);
+        }
+        else if (this.selectedMail?.id !== item.id) {
+          this.selectedMails.splice(idx, 1)
+        }
+
+        if (!this.selectedMail || this.selectedMail.id !== item.id) {
           this.selectedMail = null;
           this.$nextTick(() => {
             setTimeout(() => {
-              this.selectedMail = row;
+              item.is_read = 1;
+              this.selectedMail = item;
               this.getFolders();
             }, 100);
           });
@@ -762,7 +755,7 @@
                 if (this.currentFolder
                   && (this.currentFolder === data.id_folder)
                 ) {
-                  this.reloadTable();
+                  this.reloadMailList();
                 }
 
                 setTimeout(() => {
@@ -788,11 +781,12 @@
         }
       },
       getAccountByFolder(idFolder){
-        return bbn.fn.getRow(this.source.accounts, a => {
-          return bbn.fn.getRow(a.folders, f => {
-            return f.id === idFolder;
-          });
-        });
+        const folder = this.getFolder(idFolder);
+        if (folder) {
+          return bbn.fn.getRow(this.source.accounts, {id: folder.id_account});
+        }
+
+        return null;
       },
       getAccountIdByFolder(idFolder){
         return this.getAccountByFolder(idFolder)?.id || null;
@@ -822,13 +816,19 @@
                   switch (d.action) {
                     case 'idleStarted':
                       this.accountsIdle[idAccount].connected = true;
+                      const treeAccount = bbn.fn.getRow(this.treeSource, {id: idAccount});
+                      if (treeAccount) {
+                        treeAccount.connected = true;
+                      }
+
                       break;
                     case 'newMail':
-                      appui.info(bbn._('New email received'));
                       if (d.data?.folder?.id
                         && d.data.folder?.id_account
                       ) {
-                        this.updateFolder(d.data.folder.id_account, d.data.folder.id, d.data.folder);
+                        this.updateFolder(d.data.folder.id_account, d.data.folder.id, d.data.folder).then(() => {
+                          appui.info(bbn._('New email received'));
+                        });
                       }
 
                       break;
@@ -872,39 +872,27 @@
           delete this.accountsIdle[idAccount];
         }
       },
-      updateFolder(idAccount, idFolder, folderData){
-        if (idAccount?.length
-          && idFolder?.length
-          && (folderData?.id === idFolder)
-          && (folderData?.id_account === idAccount)
-          && this.source.accounts?.length
-        ) {
-          const account = bbn.fn.getRow(this.source.accounts, {id: idAccount});
-          if (account) {
-            const folder = bbn.fn.getRow(account.folders, {id: idFolder});
-            if (folder) {
-              bbn.fn.iterate(folderData, (val, key) => folder[key] = val);
-            }
+      reloadMailList(){
+        return new Promise(resolve => {
+          const list = this.getRef('mailList');
+          if (list?.updateData) {
+            list.updateData().then(() => resolve());
           }
-
-          const treeAccount = bbn.fn.getRow(this.treeSource, {id: idAccount});
-          if (treeAccount) {
-            const treeFolder = bbn.fn.getRow(treeAccount.folders, {id: idFolder});
-            if (treeFolder) {
-              bbn.fn.iterate(this.normalizeFolder(folderData), (val, key) => treeFolder[key] = val);
-            }
+          else {
+            resolve();
           }
-
-          if (this.currentFolder === idFolder) {
-            this.reloadTable();
-          }
-        }
+        });
       },
-      reloadTable(){
-        const table = this.getRef('table');
-        if (table?.updateData) {
-          table.updateData();
-        }
+      reloadMailListBackground(){
+        return new Promise(resolve => {
+          const list = this.getRef('mailList');
+          if (list?.updateDataBackground) {
+            list.updateDataBackground().then(() => resolve());
+          }
+          else {
+            resolve();
+          }
+        });
       },
       onSearchKeydown(ev){
         switch (ev.key) {
@@ -973,8 +961,89 @@
           });
         }
 
-        this.treeSource = r;
-        //this.getRef('tree')?.updateData()
+        if (!this.treeSource.length) {
+          this.treeSource = r;
+        }
+        else {
+          const syncNodeProps = (target, source) => {
+            bbn.fn.iterate(source, (val, k) => {
+              if (k !== 'items') {
+                target[k] = val;
+              }
+            });
+          };
+          const syncLevel = (targetArr, sourceArr) => {
+            if (!bbn.fn.isArray(targetArr)) {
+              return;
+            }
+
+            sourceArr = bbn.fn.isArray(sourceArr) ? sourceArr : [];
+            const nodeById = Object.fromEntries(targetArr.map(b => [b.id, b]));
+            const findIndexFrom = (arr, id, start) => {
+              for (let j = start; j < arr.length; j++) {
+                if (arr[j].id === id) {
+                  return j;
+                }
+              }
+              return -1;
+            };
+
+            let i = 0;
+            for (const s of sourceArr) {
+              let t = nodeById[s.id] || null;
+              if (!t) {
+                t = {};
+                syncNodeProps(t, s);
+
+                if (bbn.fn.isArray(s.items)) {
+                  t.items = [];
+                  syncLevel(t.items, s.items);
+                }
+                else {
+                  t.items = [];
+                }
+
+                targetArr.splice(i, 0, t);
+                nodeById[s.id] = t;
+                i++;
+                continue;
+              }
+
+              if (targetArr[i] !== t) {
+                const currIdx = findIndexFrom(targetArr, id, i + 1);
+                if (currIdx > -1) {
+                  targetArr.splice(currIdx, 1);
+                  targetArr.splice(i, 0, t);
+                }
+                else {
+                  targetArr.splice(i, 0, t);
+                }
+              }
+
+              syncNodeProps(t, s);
+              if (bbn.fn.isArray(s.items)) {
+                if (!bbn.fn.isArray(t.items)) {
+                  t.items = [];
+                }
+                syncLevel(t.items, s.items);
+              }
+              else if (bbn.fn.isArray(t.items) && t.items.length) {
+                t.items.splice(0, t.items.length);
+              }
+              else if (!bbn.fn.isArray(t.items)) {
+                t.items = [];
+              }
+
+              i++;
+            }
+
+            if (targetArr.length > i) {
+              targetArr.splice(i, targetArr.length - i);
+            }
+          };
+
+          syncLevel(this.treeSource, r);
+        }
       },
       normalizeAccount(account){
         return {
@@ -1010,6 +1079,32 @@
           unseen: countUnseen(folder),
         }
       },
+      updateFolder(idAccount, idFolder, folderData){
+        return new Promise(resolve => {
+          if (idAccount?.length
+            && idFolder?.length
+            && (!folderData?.id || (folderData.id === idFolder))
+            && (!folderData?.id_account || (folderData.id_account === idAccount))
+            && this.source.accounts?.length
+          ) {
+            const account = bbn.fn.getRow(this.source.accounts, {id: idAccount});
+            if (account) {
+              const folder = this.getFolder(idFolder, account.folders);
+              if (folder) {
+                bbn.fn.iterate(folderData, (val, key) => folder[key] = val);
+                this.updateTree();
+              }
+            }
+
+            if (this.currentFolder === idFolder) {
+              this.reloadMailListBackground().then(() => resolve());
+            }
+            else {
+              resolve();
+            }
+          }
+        });
+      }
     },
     beforeCreate() {
       if (this.source.slots) {
@@ -1050,7 +1145,7 @@
       appui.poll();
 
       if (this.source.accounts?.length) {
-        //bbn.fn.each(this.source.accounts, a => this.startAccountIdle(a.id));
+        bbn.fn.each(this.source.accounts, a => this.startAccountIdle(a.id));
       }
     },
     beforeDestroy(){
@@ -1066,7 +1161,7 @@
       currentFolder(){
         this.searchClear();
         this.$nextTick(() => {
-          this.reloadTable();
+          this.reloadMailList();
         })
       }
     },
@@ -1081,7 +1176,7 @@
             <span bbn-if="!isAccount"
                   bbn-text="source.data.unseen || ''"/>
             <i bbn-if="isAccount && !source.data.connected"
-               class="nf nf-md-sync_off"
+               class="nf nf-md-sync_off bbn-s"
                style="color: var(--error-text)"/>
           </div>`,
         props: ['source'],

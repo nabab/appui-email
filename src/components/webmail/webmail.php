@@ -86,64 +86,17 @@
             <bbn-kanban-element class="appui-email-webmail-list bbn-noradius bbn-flex-fill"
                                 :source="root + 'webmail'"
                                 component="appui-email-webmail-item"
+                                :component-events="itemEvents"
                                 :pageable="true"
                                 :filterable="true"
                                 :selection="true"
-                                @select="tableSelect"
-                                @unselect="tableUnselect"
                                 :multifilter="true"
                                 :data="dataObj"
-                                ref="table"
+                                ref="mailList"
                                 :sortable="true"
                                 :showable="true"
                                 :order="[{field: 'date', dir: 'DESC'}]"
                                 :filters="currentSearchObj"/>
-            <!--<bbn-table bbn-else
-                       :source="root + 'webmail'"
-                       storage-full-name="appui-email-webmail-table"
-                       :filterable="true"
-                       :selection="true"
-                       :expander="expanderComponent"
-                       :expandable="hasExpander"
-                       @focus="selectMessage"
-                       @select="tableSelect"
-                       @unselect="tableUnselect"
-                       :multifilter="true"
-                       :data="dataObj"
-                       ref="table"
-                       :sortable="true"
-                       :showable="true"
-                       :order="[{field: 'date', dir: 'DESC'}]"
-                       :pageable="true"
-                       class="bbn-flex-fill">
-              <bbns-column label="<i class='nf nf-eye'></i>"
-                           :flabel="_('Read')"
-                           type="boolean"
-                           :width="30"
-                           field="read"/>
-              <bbns-column label="<i class='nf nf-md-paperclip'></i>"
-                           :flabel="_('Attachments')"
-                           :width="30"
-                           type="number"
-                           field="attachments"
-                           :render="showAttachments"/>
-              <bbns-column :label="_('Date')"
-                           type="datetime"
-                           :width="120"
-                           field="date"/>
-              <bbns-column :label="_('From')"
-                           editor="bbn-autocomplete"
-                           :width="200"
-                           :source="source.contacts"
-                           field="id_sender"/>
-              <bbns-column :label="_('Subject')"
-                           :render="showSubject"
-                           field="subject"/>
-              <bbns-column :label="_('Size')"
-                           :width="100"
-                           field="size"
-                           :invisible="true"/>
-            </bbn-table>-->
           </div>
         </bbn-pane>
         <bbn-pane :scrollable="!threads">
