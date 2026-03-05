@@ -193,11 +193,7 @@
                 } , d => {
                   if (d.account) {
                     this.source.accounts.push(d.account);
-                    this.$nextTick(() => {
-                      tree.updateData().then(() => {
-                        tree.reload()
-                      });
-                    });
+                    this.updateTree();
                   }
                 });
               }
@@ -235,11 +231,7 @@
                     let idx = bbn.fn.search(this.source.accounts, {id: d.account.id});
                     if (idx >= 0) {
                       this.source.accounts[idx] = d.account;
-                      this.$nextTick(() => {
-                        tree.updateData().then(() => {
-                          tree.reload()
-                        });
-                      });
+                      this.updateTree();
                     }
                   }
                 });
@@ -247,9 +239,8 @@
             }
           }
           this.$nextTick(() => {
-            tree.updateData().then(() => {
-              tree.reload()
-            });
+            this.updateTree();
+            this.getRef('tree').updateData(false, false);
           });
           this.hash = d;
           this.$set(appui.pollerObject, 'appui-email', {
@@ -293,7 +284,6 @@
           id_account: source.data.id_account,
           folders: this.getAllFolderChild(source.data)
         }, d => {
-          const tree = this.getRef('tree');
           const accountIdx = bbn.fn.search(this.source.accounts, {id: source.data.id});
           if (d.success) {
             appui.success(bbn._("%s folder and subfolders ar successfuly moved to %s", source.data.text, dest.data.text));
@@ -308,9 +298,7 @@
 
           if (d.success || d.failed?.length) {
             this.$nextTick(() => {
-              tree.updateData().then(() => {
-                tree.reload();
-              });
+              this.updateTree();
             });
           }
         });
@@ -344,13 +332,7 @@
                       }
 
                       this.$nextTick(() => {
-                        const tree = this.getRef('tree');
-                        if (tree) {
-                          tree.updateData().then(() => {
-                            tree.reload()
-                          });
-                        }
-
+                        this.updateTree();
                         appui.success(bbn._("Folder created with success"));
                       });
                     }
@@ -401,13 +383,7 @@
                       }
 
                       this.$nextTick(() => {
-                        const tree = this.getRef('tree');
-                        if (tree) {
-                          tree.updateData().then(() => {
-                            tree.reload()
-                          });
-                        }
-
+                        this.updateTree();
                         appui.success(bbn._("Folder renamed with success"));
                       });
                     }
@@ -491,15 +467,12 @@
             id: idFolder,
             id_account: idAccount
           }, d => {
-            const tree = this.getRef('tree');
             const idx = bbn.fn.search(this.source.accounts, {id: idAccount})
             if (d.success) {
               appui.success(bbn._(`${folderTitle} folder and subfolders ar successfuly deleted`));
               this.source.accounts.splice(idx, 1, d.account);
               this.$nextTick(() => {
-                tree.updateData().then(() => {
-                  tree.reload()
-                })
+                this.updateTree();
               })
             }
             else {
@@ -516,13 +489,10 @@
           }, d => {
             if (d.success) {
               appui.success(bbn._("Account deleted with success"));
-              let tree = this.getRef('tree');
-              let idx = bbn.fn.search(this.source.accounts, {id})
+              const idx = bbn.fn.search(this.source.accounts, {id})
               this.source.accounts.splice(idx, 1)
               this.$nextTick(() => {
-                tree.updateData().then(() => {
-                  tree.reload()
-                });
+                this.updateTree();
               });
             }
             else {
@@ -661,12 +631,7 @@
                 }
 
                 this.$nextTick(() => {
-                  const tree = this.getRef('tree');
-                  if (tree) {
-                    tree.updateData().then(() => {
-                      tree.reload();
-                    });
-                  }
+                  this.updateTree();
                 })
               }
               else {
