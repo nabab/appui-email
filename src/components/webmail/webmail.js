@@ -347,7 +347,7 @@
           })
         }
 
-        if (!['account', 'folder_types'].includes(node.data.type)) {
+        if (node.data.type === 'folders') {
           res.push({
             text: bbn._('Remove folder'),
             icon: "nf nf-md-folder_remove",
@@ -355,7 +355,11 @@
               this.removeFolder(node.data.id, node.data.id_account, node.data.text);
               appui.poll();
             }
-          }, {
+          });
+        }
+
+        if (!['account', 'folder_types'].includes(node.data.type)) {
+          res.push({
             text: bbn._('Rename folder'),
             icon: "nf nf-md-rename_box",
             action: () => {
@@ -406,12 +410,11 @@
               case "account":
                 this.synchronize(node.data.id, false);
                 break;
-              case "folder":
-              case "folders":
-                this.synchronize(node.data.id_account, node.data.id);
-                break;
               case "folder_types":
                 this.synchronize(false, false);
+                break;
+              default:
+                this.synchronize(node.data.id_account, node.data.id);
                 break;
             }
           },
@@ -1038,7 +1041,8 @@
           uid: folder.uid,
           text: folder.text,
           icon: folder.icon,
-          type: folder.type !== 'folders' ? 'folder' : 'folders',
+          //type: folder.type !== 'folders' ? 'folder' : 'folders',
+          type: folder.type,
           items: bbn.fn.map(folder.items || [], f => this.normalizeFolder(f)),
           originalData: folder,
           unseen: countUnseen(folder),
@@ -1139,7 +1143,7 @@
             <span :class="{'bbn-b bbn-secondary-text-alt': isAccount}"
                   bbn-html="source.data.text"/>
             <span bbn-if="!isAccount"
-                  bbn-text="source.data.unseen || ''"/>
+                  bbn-text="num"/>
             <i bbn-if="isAccount && !source.data.connected"
                class="nf nf-md-sync_off bbn-s"
                style="color: var(--error-text)"/>
@@ -1158,6 +1162,9 @@
                 '1.2rem auto max-content',
               'column-gap': 'var(--xsspace)'
             }
+          },
+          num(){
+            return this.source.data.unseen || '';
           }
         }
       }
