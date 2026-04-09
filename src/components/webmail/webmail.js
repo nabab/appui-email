@@ -90,7 +90,7 @@
         if (this.currentAccount && this.currentFolder) {
           const account = bbn.fn.getRow(this.source.accounts, {id: this.currentAccount});
           if (account) {
-            return bbn.fn.getRow(account.folders, {id: this.currentFolder}) || false;
+            return this.getFolder(this.currentFolder, account.folders) || false;
           }
         }
         else if (this.currentAccount) {
@@ -560,14 +560,16 @@
             this.currentFolder = null;
             this.currentAccount = node.data.id;
             break;
-          case 'folder':
-          case 'folders':
-            this.currentFolder = node.data.id;
-            this.currentAccount = node.data.id_account;
-            break;
           case 'folder_types':
             this.currentFolder = node.data.id;
             this.currentAccount = null;
+            break;
+          default:
+            if (bbn.fn.getRow(this.source.folder_types, 'code', node.data.type)) {
+              this.currentFolder = node.data.id;
+              this.currentAccount = node.data.id_account;
+            }
+
             break;
         }
       },
@@ -1038,6 +1040,7 @@
         return {
           id_account: folder.id_account,
           id: folder.id,
+          id_parent: folder.id_parent || null,
           uid: folder.uid,
           text: folder.text,
           icon: folder.icon,

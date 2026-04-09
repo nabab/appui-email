@@ -158,12 +158,20 @@
               bbn.fn.extend({action: 'test'}, this.source),
               d => {
                 if (d.data) {
-                  let checked = [];
-                  bbn.fn.each(d.data, a => {
-                    if (a.subscribed) {
-                      checked.push(a.uid);
+                  const checked = [];
+                  const checkSubscribed = item => {
+                    if (item.subscribed) {
+                      checked.push(item.uid);
                     }
 
+                    if (item.items?.length) {
+                      bbn.fn.each(item.items, a => {
+                        checkSubscribed(a);
+                      })
+                    }
+                  };
+                  bbn.fn.each(d.data, a => {
+                    checkSubscribed(a);
                     a.icon = "nf nf-md-folder";
                     this.tree.push(a);
                   });
