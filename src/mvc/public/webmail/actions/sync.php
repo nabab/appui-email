@@ -2,6 +2,7 @@
 use bbn\User\Email;
 use bbn\X;
 
+/** @var bbn\Mvc\Controller $ctrl */
 $ctrl->setStream();
 $emailClass = new Email($ctrl->db);
 $folders = [];
@@ -44,19 +45,12 @@ if (!empty($folders)) {
   foreach ($folders as $folder) {
     try {
       $sync = $emailClass->syncEmails($folder);
-      if ($sync instanceof Generator) {
-        foreach ($sync as $s) {
-          $total++;
-          //if ($s % 5 === 0) {
-            $ctrl->stream([
-              'isSynchronizing' => true,
-              'synchronized' => $total
-            ]);
-          //}
-        }
-      }
-      else {
-        $total = $sync;
+      foreach ($sync as $s) {
+        $total++;
+        $ctrl->stream([
+          'isSynchronizing' => true,
+          'synchronized' => $total
+        ]);
       }
     }
     catch (\Exception $e) {
