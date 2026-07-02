@@ -6,7 +6,7 @@ if (!empty($ctrl->post['id'])
 ) {
   $ctrl->obj->success = true;
   $ctrl->obj->id = $ctrl->post['id'];
-  $ctrl->obj->entities = $ctrl->getPluginModel('data/entities', $ctrl->post) ?: [];
+  $ctrl->obj->data = $ctrl->getPluginModel('data/entities', $ctrl->post) ?: [];
 }
 else if (!empty($ctrl->post['id'])
   && !empty($ctrl->post['mailbox'])
@@ -18,5 +18,5 @@ else if (!empty($ctrl->post['id'])
 }
 else {
   $ctrl->obj->success = false;
-  $ctrl->obj->entities = [];
+  $ctrl->obj->data = [];
 }

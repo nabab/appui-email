@@ -48,6 +48,12 @@
       attachment: {
         type: Array,
         defaut: [],
+      },
+      ai: {
+        type: Boolean,
+        default(){
+          return !!appui.plugins['appui-ai'];
+        }
       }
     },
     data() {
@@ -91,6 +97,25 @@
         }, {
           value: 5,
           text: '<span class="bbn-grey">' + bbn._('Lowest') + '</span>'
+        }],
+        aiRewriteSource: [{
+          text: bbn._("Friendly"),
+          icon: "nf nf-md-emoticon_happy_outline",
+          action: () => {
+            this.aiRewrite('friendly');
+          }
+        }, {
+          text: bbn._("Professional"),
+          icon: "nf nf-md-briefcase_outline",
+          action: () => {
+            this.aiRewrite('professional');
+          }
+        }, {
+          text: bbn._("Concise"),
+          icon: "nf nf-md-format_line_spacing",
+          action: () => {
+            this.aiRewrite('concise');
+          }
         }]
       };
     },
@@ -197,6 +222,41 @@
       },
       currentCCISetter(newValue) {
         this.currentCCI = newValue;
+      },
+      aiCorrect(){
+        if (this.ai) {
+          this.post(this.rootUrl + 'webmail/actions/ai/correct', {
+            text: this.message
+          }, d => {
+            if (d.success && d.data?.length) {
+              this.oldMessage = this.message;
+              this.message = d.data;
+            }
+            else {
+              appui.error();
+            }
+          }, () => {
+            appui.error();
+          });
+        }
+      },
+      aiRewrite(style){
+        if (this.ai) {
+          this.post(this.rootUrl + 'webmail/actions/ai/rewrite', {
+            text: this.message,
+            style: style
+          }, d => {
+            if (d.success && d.data?.length) {
+              this.oldMessage = this.message;
+              this.message = d.data;
+            }
+            else {
+              appui.error();
+            }
+          }, () => {
+            appui.error();
+          });
+        }
       }
     },
     watch: {

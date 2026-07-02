@@ -3,10 +3,12 @@
   <bbn-toolbar class="bbn-no-border bbn-radius bbn-smargin bbn-spadding">
     <bbn-button label="<?= _('Send') ?>"
                 @click="send"
-                icon="nf nf-fa-send"/>
+                icon="nf nf-fa-send"
+                :notext="true"/>
     <bbn-button label="<?= _('Save draft') ?>"
                 @click="saveDraft"
-                icon="nf nf-fa-save"/>
+                icon="nf nf-fa-save"
+                :notext="true"/>
     <div/>
     <div class="bbn-flex"
          title="<?= _('Account') ?>">
@@ -48,6 +50,33 @@
                   title="<?= _('Signatures Editor') ?>"
                   icon="nf nf-fa-pencil"
                   @click="openSignatureEditor()"/>
+    </div>
+    <div bbn-if="ai"/>
+    <div bbn-if="ai"
+         class="bbn-vmiddle"
+         style="align-items: stretch">
+      <span class="bbn-leftlabel"
+            title="<?= _('AI') ?>">
+        <i class="nf nf-md-robot_outline bbn-lg"/>
+      </span>
+      <span class="bbn-border bbn-radius bbn-vmiddle">
+        <bbn-button label="<?= _('AI Correct') ?>"
+                    @click="aiCorrect"
+                    icon="nf nf-md-auto_fix"
+                    :notext="true"
+                    class="bbn-noborder"
+                    style="border-radius: 0"/>
+        <bbn-context :source="aiRewriteSource"
+                     :context="false"
+                     ref="aiRewriteContext">
+          <bbn-button label="<?= _('AI Rewrite') ?>"
+                      icon="nf nf-md-refresh_auto"
+                      @click="$refs.aiRewriteContext.click()"
+                      :notext="true"
+                      class="bbn-noborder"
+                      style="border-top-left-radius: 0; border-bottom-left-radius: 0;"/>
+        </bbn-context>
+      </span>
     </div>
   </bbn-toolbar>
   <div class="bbn-hlpadding bbn-vpadding container__top">
