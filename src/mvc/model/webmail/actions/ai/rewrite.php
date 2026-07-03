@@ -23,13 +23,14 @@ if ($model->hasData(['text', 'style'], true)
   if (!empty($res['success'])
     && !empty($res['result']['content'])
   ) {
+    $res['result']['content'] = trim($res["result"]["content"], "\n\r\t *");
     if (str_starts_with($res['result']['content'], '```html')) {
       $res['result']['content'] = substr($res['result']['content'], 7, -3);
     }
 
     return [
       'success' => true,
-      'data' => $res['result']['content']
+      'data' => trim($res["result"]["content"], "\n\r\t *")
     ];
   }
 }
