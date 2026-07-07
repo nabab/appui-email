@@ -2,6 +2,7 @@
 use bbn\X;
 use bbn\Str;
 use bbn\User\Email;
+/** @var bbn\Mvc\Model $model */
 
 $em = new Email($model->db);
 $accounts = [];
@@ -33,7 +34,12 @@ if ($model->hasData('id', true)) {
   function createEmailListString(array $array): string {
     $r = '';
     foreach ($array as $a) {
-      $r .= $a['mailbox']  . '@' . $a['host'] . ';';
+      if (!empty($a['email'])) {
+        $r .= $a['email'] . ';';
+      }
+      else if (!empty($a['mailbox']) && !empty($a['host'])) {
+        $r .= $a['mailbox']  . '@' . $a['host'] . ';';
+      }
     }
 
     return Str::sub($r, 0, -1);
@@ -44,27 +50,30 @@ if ($model->hasData('id', true)) {
   $to = "";
   $subject = "";
   $originalMail = false;
+  $entities = false;
   $attachment = [];
   if ($model->hasData('action', true)) {
     switch ($model->data['action']) {
       case 'edit':
-        $res['to'] = createEmailListString($email['to']);
+        $res['to'] = createEmailListString($email['to'] ?: []);
         $res['subject'] = $email['subject'];
         $res['attachment'] = $email['attachment'] ?: [];
         break;
       case 'reply':
-        $res['to'] = createEmailListString($email['from']);
+        $res['to'] = createEmailListString($email['from'] ?: []);
         $res['subject'] = quoted_printable_decode('RE : ' . $email['subject']);
         $res['isReply'] = true;
         $res['reply_to'] = $email['msg_unique_id'];
         $originalMail = true;
+        $entities = true;
         break;
       case 'reply_all':
-        $res['to'] = createEmailListString(X::mergeArrays($email['from'], $email['to']));
+        $res['to'] = createEmailListString(X::mergeArrays($email['from'] ?: [], $email['to'] ?: []));
         $res['subject'] = quoted_printable_decode('RE : ' . $email['subject']);
         $res['isReply'] = true;
         $res['reply_to'] = $email['msg_unique_id'];
         $originalMail = true;
+        $entities = true;
         break;
       case 'forward':
         $res['subject'] = quoted_printable_decode('TR : ' . $email['subject']);
@@ -79,12 +88,28 @@ if ($model->hasData('id', true)) {
     }
 
     if ($originalMail) {
-      $header =  _('From : ') . createEmailListString($email['from']) . PHP_EOL
-        . _('Send : ') . $email['Date'] . PHP_EOL
-        . _('To : ') . createEmailListString($email['to']) . PHP_EOL
-        . _('Subject : ') . $email['Subject'] . PHP_EOL;
+      $header =  _('From : ') . createEmailListString($email['from'] ?: []) . PHP_EOL
+        . _('Send : ') . $email['date'] . PHP_EOL
+        . _('To : ') . createEmailListString($email['to'] ?: []) . PHP_EOL
+        . _('Subject : ') . $email['subject'] . PHP_EOL;
       $email['plain'] = PHP_EOL. PHP_EOL . $header . $email['plain'];
       $email['html'] = '<br><br><div class="__bbn__signature"></div><br><hr><blockquote type="cite">' . nl2br($header) . ($email['html'] ?: nl2br($email['plain'])) . '</blockquote>';
+    }
+
+    if (!empty($entities)
+      && $model->hasData('id', true)
+      && !empty($email['from'])
+      && !empty($email['from'][0]['email'])
+      && !empty($email['msg_unique_id'])
+      && !empty($email['id_account'])
+      && ($m = $model->getPluginModel('data/entities', [
+        'id' => $model->data['id'],
+        'uid' => $email['msg_unique_id'],
+        'mailbox' => $email['id_account'],
+        'mail' => $email['from'][0]['email']
+      ]))
+    ) {
+      $res['entities'] = $m['entities'] ?? [];
     }
   }
 

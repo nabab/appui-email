@@ -11,7 +11,10 @@
         type: String
       },
       references: {
-        type: String
+        type: Array,
+        default() {
+          return [];
+        }
       },
       isReply: {
         required: true,
@@ -39,20 +42,32 @@
       },
       accounts: {
         type: Array,
-        default: [],
+        default() {
+          return [];
+        }
       },
       signatures: {
         type: Array,
-        default: [],
+        default() {
+          return [];
+        }
       },
       attachment: {
         type: Array,
-        defaut: [],
+        default() {
+          return [];
+        }
       },
       ai: {
         type: Boolean,
         default(){
           return !!appui.plugins['appui-ai'];
+        }
+      },
+      entities: {
+        type: Array,
+        default() {
+          return [];
         }
       }
     },
@@ -119,6 +134,19 @@
         }]
       };
     },
+    computed: {
+      aiEntityReplySource(){
+        return bbn.fn.map(this.entities, e => {
+          return {
+            text: e.text,
+            icon: "nf nf-md-message_arrow_right_outline",
+            action: () => {
+              this.aiEntityReply(e.value);
+            }
+          };
+        });
+      }
+    },
     methods: {
       send() {
         if (this.currentTo?.length
@@ -140,7 +168,7 @@
           };
           if (this.replyTo?.length) {
             obj.email.in_reply_to = `<${this.replyTo}>`;
-            obj.email.references = this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`;
+            obj.email.references = bbn.fn.map([...this.references, this.replyTo], r => `<${r}>`).join(' ');
           }
 
           this.post(this.rootUrl + 'webmail/actions/email/send', obj, d => {
@@ -172,7 +200,7 @@
 
         if (this.replyTo?.length) {
           obj.email.in_reply_to = `<${this.replyTo}>`;
-          obj.email.references = this.references ? this.references + ` <${this.replyTo}>` : `<${this.replyTo}>`;
+          obj.email.references = bbn.fn.map([...this.references, this.replyTo], r => `<${r}>`).join(' ');
         }
         this.post(this.rootUrl + 'webmail/actions/email/draft', obj, d => {
           if (d.success) {
@@ -225,37 +253,79 @@
       },
       aiCorrect(){
         if (this.ai) {
-          this.post(this.rootUrl + 'webmail/actions/ai/correct', {
-            text: this.message
-          }, d => {
-            if (d.success && d.data?.length) {
-              this.oldMessage = this.message;
-              this.message = d.data;
-            }
-            else {
-              appui.error();
-            }
-          }, () => {
-            appui.error();
+          this.getPopup({
+            label: false,
+            closable: false,
+            component: 'appui-email-webmail-write-ai',
+            componentOptions: {
+              mode: 'correct',
+              source: {
+                text: this.message
+              }
+            },
+            componentEvents: {
+              accept: message => {
+                this.aiOnAccept(message);
+              }
+            },
+            width: '85%',
+            height: '85%',
+            scrollable: false
           });
         }
       },
       aiRewrite(style){
         if (this.ai) {
-          this.post(this.rootUrl + 'webmail/actions/ai/rewrite', {
-            text: this.message,
-            style: style
-          }, d => {
-            if (d.success && d.data?.length) {
-              this.oldMessage = this.message;
-              this.message = d.data;
-            }
-            else {
-              appui.error();
-            }
-          }, () => {
-            appui.error();
+          this.getPopup({
+            label: false,
+            closable: false,
+            component: 'appui-email-webmail-write-ai',
+            componentOptions: {
+              mode: 'rewrite',
+              source: {
+                text: this.message,
+                style
+              }
+            },
+            componentEvents: {
+              accept: message => {
+                this.aiOnAccept(message);
+              }
+            },
+            width: '85%',
+            height: '85%',
+            scrollable: false
           });
+        }
+      },
+      aiEntityReply(idEntity){
+        if (this.ai && this.source?.id && bbn.fn.isUid(idEntity)) {
+          this.getPopup({
+            label: false,
+            closable: false,
+            component: 'appui-email-webmail-write-ai',
+            componentOptions: {
+              mode: 'entity_reply',
+              source: {
+                id: this.source.id,
+                id_entity: idEntity
+              }
+            },
+            componentEvents: {
+              accept: message => {
+                this.aiOnAccept(message);
+              }
+            },
+            width: '85%',
+            height: '85%',
+            scrollable: false
+          });
+        }
+      },
+      aiOnAccept(message){
+        if (this.ai && message?.length) {
+          this.oldMessage = this.message;
+          this.message = message;
         }
       }
     },

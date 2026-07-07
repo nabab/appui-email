@@ -1,6 +1,6 @@
 <!-- HTML Document -->
 <div class="appui-email-webmail-write bbn-overlay">
-  <bbn-toolbar class="bbn-no-border bbn-radius bbn-smargin bbn-spadding">
+  <bbn-toolbar class="appui-email-webmail-write-toolbar bbn-no-border bbn-radius bbn-smargin bbn-spadding">
     <bbn-button label="<?= _('Send') ?>"
                 @click="send"
                 icon="nf nf-fa-send"
@@ -56,10 +56,12 @@
          class="bbn-vmiddle"
          style="align-items: stretch">
       <span class="bbn-leftlabel"
-            title="<?= _('AI') ?>">
+            title="<?= _('AI') ?>"
+            style="border-color: var(--secondary-background) !important; background-color: var(--secondary-background) !important; color: var(--secondary-text) !important">
         <i class="nf nf-md-robot_outline bbn-lg"/>
       </span>
-      <span class="bbn-border bbn-radius bbn-vmiddle">
+      <span class="bbn-border bbn-radius bbn-vmiddle"
+            style="border-color: var(--secondary-background) !important">
         <bbn-button label="<?= _('AI Correct') ?>"
                     @click="aiCorrect"
                     icon="nf nf-md-auto_fix"
@@ -73,8 +75,20 @@
                       icon="nf nf-md-refresh_auto"
                       @click="$refs.aiRewriteContext.click()"
                       :notext="true"
-                      class="bbn-noborder"
-                      style="border-top-left-radius: 0; border-bottom-left-radius: 0;"/>
+                      :class="['bbn-noborder', {
+                        'appui-email-webmail-write-ailastbutton': !entities?.length
+                      }]"
+                      :style="entities?.length ? {borderRadius: '0'} : {}"/>
+        </bbn-context>
+        <bbn-context :source="aiEntityReplySource"
+                     :context="false"
+                     ref="aiEntityReplyContext">
+          <bbn-button bbn-if="entities?.length"
+                      label="<?= _('AI Reply') ?>"
+                      icon="nf nf-md-comment_processing_outline"
+                      :notext="true"
+                      class="bbn-noborder appui-email-webmail-write-ailastbutton"
+                      @click="$refs.aiEntityReplyContext.click()"/>
         </bbn-context>
       </span>
     </div>

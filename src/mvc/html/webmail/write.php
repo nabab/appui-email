@@ -8,5 +8,6 @@
                            :attachment="source.attachment"
                            :is-reply="source.isReply"
                            :reply-to="source.reply_to"
-                           :references="source.references"/>
+                           :references="source.references"
+                           :entities="source.entities"/>
 

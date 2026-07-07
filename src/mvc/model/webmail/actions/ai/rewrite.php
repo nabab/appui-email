@@ -1,5 +1,6 @@
 <?php
 use bbn\X;
+use bbn\Str;
 use bbn\Appui\Ai;
 /** @var bbn\Mvc\Model $model */
 
@@ -30,7 +31,13 @@ if ($model->hasData(['text', 'style'], true)
 
     return [
       'success' => true,
-      'data' => trim($res["result"]["content"], "\n\r\t *")
+      'data' => Str::text2html(trim($res["result"]["content"], "\n\r\t *"))
+    ];
+  }
+  else if (!empty($res['error'])) {
+    return [
+      'success' => false,
+      'error' => $res['error']
     ];
   }
 }
