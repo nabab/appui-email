@@ -1,5 +1,7 @@
 <?php
 use bbn\User\Email;
+use bbn\Mvc\Model;
+/** @var Model $model */
 
 $em = new Email($model->db);
 if ($model->hasData('limit')) {

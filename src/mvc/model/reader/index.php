@@ -5,7 +5,7 @@ use bbn\User\Email;
 /** @var bbn\Mvc\Model $model */
 if ($model->hasData('id', true)) {
   $em = new Email($model->db);
-  $email = $em->getEmail($model->data['id'], true);
+  $email = $em->getEmail($model->data['id']);
   $em->setSeen($model->data['id']);
   return $email;
 }
