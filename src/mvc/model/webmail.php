@@ -62,9 +62,9 @@ else {
     'root' => $model->data['root'],
     'accounts' => $em->getAccounts(),
     'smtps' => $em->getSmtps(),
-    'types' => bbn\User\Email::getAccountTypes(),
+    'types' => Email::getAccountTypes(),
     'contacts' => $em->getContacts(),
-    'folder_types' => bbn\User\Email::getFolderTypes(),
+    'folder_types' => Email::getFolderTypes(),
     'hash' => $em->getHashes(),
     'slots' => $model->data['slots']
   ];
