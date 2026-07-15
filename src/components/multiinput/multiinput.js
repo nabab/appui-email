@@ -32,19 +32,22 @@
     },
     methods: {
       isEmail: bbn.fn.isEmail,
+      onAutocompleteKeydown(e) {
+        switch (e.key) {
+          case 'Backspace':
+            if (!e.target.value && this.items.length) {
+              this.items.pop();
+            }
+
+            break;
+        }
+      },
       onAutocompleteKeyup(e) {
-        bbn.fn.log('keyup', e.keyCode, e.key, e.code, e);
         switch (e.key) {
           case ',':
           case ';':
             if (e.target.value?.length) {
               this.select({email: e.target.value});
-            }
-
-            break;
-          case 'Backspace':
-            if (!e.target.value && this.items.length) {
-              this.items.pop();
             }
 
             break;

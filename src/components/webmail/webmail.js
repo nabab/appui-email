@@ -581,6 +581,7 @@
         return st;
       },
       selectMail(item) {
+        bbn.fn.log('SELECTMAIL', item);
         const idx = this.selectedMails.indexOf(item.id);
         if (idx === -1) {
           this.selectedMails.push(item.id);
@@ -589,7 +590,7 @@
           this.selectedMails.splice(idx, 1)
         }
 
-        if (!this.selectedMail || this.selectedMail.id !== item.id) {
+        if (!this.selectedMail || (this.selectedMail.id !== item.id)) {
           this.selectedMail = null;
           this.$nextTick(() => {
             setTimeout(() => {

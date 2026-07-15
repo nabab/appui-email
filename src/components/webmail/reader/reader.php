@@ -90,7 +90,7 @@
            'bbn-hsmargin': !isInThread
          }]">
       <div class="bbn-flex-width bbn-bottom-xsmargin">
-        <div class="bbn-flex-fill bbn-blue">
+        <div class="bbn-flex-fill bbn-secondary-text-alt">
           <a bbn-if="source.from_name
               && source.from_email
               && (source.from_email !== source.from_name)"
@@ -143,7 +143,7 @@
                                            :mailbox="source.id_account"
                                            :mail="source.from_email"/>
     </div>
-    <div :class="['bbn-flex-fill', 'bbn-padding', {'bbn-secondary-border bbn-radius-bottom': isSelected}]">
+    <div :class="['bbn-flex-fill', 'bbn-top-padding', {'bbn-secondary-border bbn-radius-bottom': isSelected}]">
       <div class="bbn-100">
         <bbn-frame bbn-if="source.id"
                     :url="root + 'reader/' + source.id"

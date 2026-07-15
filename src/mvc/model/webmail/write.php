@@ -92,8 +92,8 @@ if ($model->hasData('id', true)) {
         . _('Send : ') . $email['date'] . PHP_EOL
         . _('To : ') . createEmailListString($email['to'] ?: []) . PHP_EOL
         . _('Subject : ') . $email['subject'] . PHP_EOL;
-      $email['plain'] = PHP_EOL. PHP_EOL . $header . $email['plain'];
-      $email['html'] = '<br><br><div class="__bbn__signature"></div><br><hr><blockquote type="cite">' . nl2br($header) . ($email['html'] ?: nl2br($email['plain'])) . '</blockquote>';
+      $email['plain'] = $header . $email['plain'];
+      $email['html'] = !empty($email['html']) ? (nl2br($header) . $email['html']) : $email['plain'];
     }
 
     if (!empty($entities)
@@ -115,11 +115,6 @@ if ($model->hasData('id', true)) {
 
   $res['email'] = $email;
   $res['references'] = $email['references'];
-}
-else {
-  $res['email'] = [
-    'html' => '<br><br><div class="__bbn__signature"></div>'
-  ];
 }
 
 return $res;

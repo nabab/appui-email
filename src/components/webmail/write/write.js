@@ -32,11 +32,11 @@
         type: String,
         default: "",
       },
-      CC: {
+      cc: {
         type: String,
         default: "",
       },
-      CCI: {
+      bcc: {
         type: String,
         default: "",
       },
@@ -83,18 +83,16 @@
       return {
         rootUrl: appui.plugins['appui-email'] + '/',
         ccButton: true,
-        cciButton: false,
+        bccButton: false,
         attachmentsModel: [],
         attachments: this.attachment,
         currentTo: this.to?.length ? bbn.fn.clone(this.to) : '',
-        currentCC: this.CC?.length ? bbn.fn.clone(this.CC) : '',
-        currentCCI: this.CCI?.length ? bbn.fn.clone(this.CCI) : '',
+        currentCc: this.cc?.length ? bbn.fn.clone(this.cc) : '',
+        currentBcc: this.bcc?.length ? bbn.fn.clone(this.bcc) : '',
         currentAccount: currentAccount || this.accounts[0]?.value || '',
         currentSignature: null,
         currentSubject: this.subject,
-        message: this.source.html?.length ?
-          bbn.fn.clone(this.source.html) :
-          bbn.fn.clone(this.source.plain),
+        message: "",
         timestamp: bbn.fn.microtimestamp(),
         currentPriority: this.source.priority || 3,
         priorityList: [{
@@ -131,7 +129,9 @@
           action: () => {
             this.aiRewrite('concise');
           }
-        }]
+        }],
+        tmpElement: document.createElement('div'),
+        includeQuote: this.isReply || !!this.source?.quote?.length
       };
     },
     computed: {
@@ -160,8 +160,8 @@
               title: this.currentSubject,
               text: this.message,
               to: this.currentTo,
-              cc: this.currentCC,
-              bcc: this.currentCCI,
+              cc: this.currentCc,
+              bcc: this.currentBcc,
               attachments: this.attachments.concat(bbn.fn.map(bbn.fn.clone(this.attachmentsModel), a => a.path)),
               priority: this.currentPriority
             }
@@ -185,14 +185,14 @@
       saveDraft(){
         const obj = {
           id_account: this.currentAccount,
-          id: this.source?.id || null,
-          uid: this.source?.msg_unique_uid || null,
+          id: this.source?.is_draft && this.source?.id ? this.source.id : null,
+          uid: this.source?.is_draft && this.source?.msg_unique_uid ? this.source.msg_unique_uid : null,
           email: {
             title: this.currentSubject,
             text: this.message,
             to: this.currentTo,
-            cc: this.currentCC,
-            bcc: this.currentCCI,
+            cc: this.currentCc,
+            bcc: this.currentBcc,
             attachments: this.attachments.concat(bbn.fn.map(bbn.fn.clone(this.attachmentsModel), a => a.path)),
             priority: this.currentPriority
           }
@@ -204,14 +204,14 @@
         }
         this.post(this.rootUrl + 'webmail/actions/email/draft', obj, d => {
           if (d.success) {
-            if (d.id) {
-              this.source.id = d.id;
+            if (!d.id || !d.uid) {
+              appui.error(bbn._('No draft id or uid returned'));
+              return;
             }
 
-            if (d.uid) {
-              this.source.msg_unique_uid = d.uid;
-            }
-
+            this.source.id = d.id;
+            this.source.msg_unique_uid = d.uid;
+            this.source.is_draft = 1;
             appui.success(bbn._('Email saved successfully'));
           }
           else {
@@ -245,14 +245,19 @@
       currentToSetter(newValue) {
         this.currentTo = newValue;
       },
-      currentCCSetter(newValue) {
-        this.currentCC = newValue;
+      currentCcSetter(newValue) {
+        this.currentCc = newValue;
       },
-      currentCCISetter(newValue) {
-        this.currentCCI = newValue;
+      currentBccSetter(newValue) {
+        this.currentBcc = newValue;
       },
       aiCorrect(){
         if (this.ai) {
+          const message = this.getClearMessage();
+          if (!message?.length) {
+            return;
+          }
+
           this.getPopup({
             label: false,
             closable: false,
@@ -260,7 +265,7 @@
             componentOptions: {
               mode: 'correct',
               source: {
-                text: this.message
+                text: message
               }
             },
             componentEvents: {
@@ -276,6 +281,11 @@
       },
       aiRewrite(style){
         if (this.ai) {
+          const message = this.getClearMessage();
+          if (!message?.length) {
+            return;
+          }
+
           this.getPopup({
             label: false,
             closable: false,
@@ -283,7 +293,7 @@
             componentOptions: {
               mode: 'rewrite',
               source: {
-                text: this.message,
+                text: message,
                 style
               }
             },
@@ -299,7 +309,10 @@
         }
       },
       aiEntityReply(idEntity){
-        if (this.ai && this.source?.id && bbn.fn.isUid(idEntity)) {
+        if (this.ai
+          && this.source?.id
+          && bbn.fn.isUid(idEntity)
+        ) {
           this.getPopup({
             label: false,
             closable: false,
@@ -325,7 +338,138 @@
       aiOnAccept(message){
         if (this.ai && message?.length) {
           this.oldMessage = this.message;
-          this.message = message;
+          this.tmpElement.innerHTML = message;
+          if (this.currentSignature) {
+            this.addSignature(this.currentSignature, true);
+          }
+
+          if (this.includeQuote) {
+            if ((this.isReply && (this.source?.html?.length || this.source?.plain?.length))
+              || (!this.isReply && this.source?.quote?.length)
+            ) {
+          }
+            if (this.isReply) {
+              const m = this.source.html?.length ? this.source.html : nl2br(this.source.plain);
+              this.addQuote(m, true);
+            }
+            else {
+              this.addQuote(this.source.quote, true);
+            }
+          }
+
+          this.message = this.tmpElement.innerHTML;
+        }
+      },
+      getClearMessage(){
+        this.tmpElement.innerHTML = this.message;
+        this.removeQuote(true);
+        this.removeSignature(true);
+        return this.tmpElement.innerHTML;
+      },
+      getEditorElement(){
+        return this.getRef('editor').getRef('element');
+      },
+      getSignatureElement(){
+        return this.getRef('editor').querySelector('.bbn-rte-element > div.__bbn__signature');
+      },
+      getSignatureBlock(content){
+        return `<div class="__bbn__signature" style="margin-top: 20px;"><div>${content}</div></div>`
+      },
+      addSignature(signature, tmp = false) {
+        if (signature?.length && bbn.fn.isUid(signature)) {
+          signature = bbn.fn.getField(this.signatures, 'signature', {id: signature}) || '';
+        }
+
+        if (signature?.length) {
+          if (!tmp) {
+            this.tmpElement.innerHTML = this.message;
+          }
+
+          const signatureElement = this.tmpElement.querySelector(':scope > div.__bbn__signature');
+          if (signatureElement) {
+            signatureElement.querySelector(':scope > div').innerHTML = signature;
+          }
+          else {
+            const quoteElement = this.tmpElement.querySelector(':scope > div.__bbn__quote');
+            const sign = this.getSignatureBlock(signature);
+            if (quoteElement) {
+              quoteElement.insertAdjacentHTML('beforebegin', sign);
+            }
+            else {
+              this.tmpElement.insertAdjacentHTML('beforeend', sign);
+            }
+          }
+
+          if (!tmp) {
+            this.message = (!this.message.length ? '<div><br></div>' : '') + this.tmpElement.innerHTML;
+          }
+        }
+      },
+      removeSignature(tmp = false) {
+        if (!tmp) {
+          this.tmpElement.innerHTML = this.message;
+        }
+
+        const signatureElement = this.tmpElement.querySelector(':scope > div.__bbn__signature');
+        if (signatureElement) {
+          signatureElement.remove();
+        }
+
+        if (!tmp) {
+          this.message = this.tmpElement.innerHTML;
+        }
+      },
+      getQuoteElement(){
+        return this.getRef('editor').querySelector('.bbn-rte-element > div.__bbn__quote');
+      },
+      getQuoteBlock(content){
+        return `<div class="__bbn__quote" style="margin-top: 20px;"><hr><blockquote type="cite">${content}</blockquote></div>`;
+      },
+      addQuote(quote, tmp = false) {
+        if (quote?.length) {
+          if (!tmp) {
+            this.tmpElement.innerHTML = this.message;
+          }
+
+          const quoteElement = this.tmpElement.querySelector(':scope > div.__bbn__quote');
+          if (quoteElement) {
+            quoteElement.querySelector(':scope > blockquote').innerHTML = quote;
+          }
+          else {
+            this.tmpElement.insertAdjacentHTML('beforeend', this.getQuoteBlock(quote));
+          }
+
+          if (!tmp) {
+            this.message = (!this.message.length ? '<div><br></div>' : '') + this.tmpElement.innerHTML;
+          }
+        }
+      },
+      removeQuote(tmp = false) {
+        if (!tmp) {
+          this.tmpElement.innerHTML = this.message;
+        }
+
+        const quoteElement = this.tmpElement.querySelector(':scope > div.__bbn__quote');
+        if (quoteElement) {
+          quoteElement.remove();
+        }
+
+        if (!tmp) {
+          this.message = this.tmpElement.innerHTML;
+        }
+      }
+    },
+    created() {
+      if (this.source?.html?.length || this.source?.plain?.length) {
+        const m = this.source.html?.length ? this.source.html : nl2br(this.source.plain);
+        if (this.isReply && this.includeQuote) {
+          this.addQuote(m);
+        }
+        else {
+          this.message = m;
+          if (this.source?.quote?.length) {
+            this.addQuote(this.source.quote);
+          }
         }
       }
     },
@@ -334,14 +478,29 @@
         this.getRef('signatures').updateData();
       },
       currentSignature(newVal){
-        const ele = this.getRef('editor').querySelector('.bbn-rte-element > .__bbn__signature');
-        if (ele) {
-          let signature = '';
-          if (newVal) {
-            signature = bbn.fn.getField(this.signatures, 'signature', {id: this.currentSignature}) || '';
+        if (newVal) {
+          const signature = bbn.fn.getField(this.signatures, 'signature', {id: this.currentSignature}) || '';
+          if (signature.length) {
+            this.addSignature(signature);
+          }
+          else {
+            this.removeSignature();
           }
 
-          ele.innerHTML = signature.length ? signature + '<br>' : signature;
+        }
+        else {
+          this.removeSignature();
+        }
+      },
+      includeQuote(newVal){
+        if (this.isReply) {
+          if (newVal && (this.source?.html?.length || this.source?.plain?.length)) {
+            const m = this.source.html?.length ? this.source.html : nl2br(this.source.plain);
+            this.addQuote(m);
+          }
+          else {
+            this.removeQuote();
+          }
         }
       }
     }

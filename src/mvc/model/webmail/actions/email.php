@@ -71,13 +71,8 @@ if ($model->hasData('action', true)) {
             if (!empty($idDraftsFolder)) {
               $sync = $em->syncEmails($idDraftsFolder);
               $synchronized = 0;
-              if ($sync instanceof Generator) {
-                foreach ($sync as $s) {
-                  $synchronized++;
-                }
-              }
-              else {
-                $synchronized = $sync;
+              foreach ($sync as $s) {
+                $synchronized++;
               }
 
               $id = $em->getEmailIdByUniqueId($mailUid, $idDraftsFolder);

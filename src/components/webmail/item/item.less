@@ -1,12 +1,7 @@
 /* LESS Document */
 
 .appui-email-webmail-item {
-  to {
-    text-align: right;
-  }
-  padding: 0 var(--sspace);
-  margin: 0 var(--sspace);
-  .text {
+  .appui-email-webmail-item-excerpt {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -15,33 +10,8 @@
     width: 100%;
   }
 
-  .subject {
-
-  }
-
-  .menu {
-    display: flex;
-    i::first-child {
-      margin-left: auto;
-    }
-  }
-
-  .footer {
-    display: flex;
-    .owner {
-      color: rgba(71, 71, 71, 1);
-    }
-    .date {
-      color: rgba(71, 71, 71, 1);
-    }
-  }
-  
-  .icons {
-    text-align: left;
-    i {
-      display: inline-block;
-      margin-left: var(--xsspace);
-    }
+  .appui-email-webmail-item-footer {
+    justify-content: space-between;
   }
 
 }
