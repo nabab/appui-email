@@ -90,7 +90,7 @@
         currentCc: this.cc?.length ? bbn.fn.clone(this.cc) : '',
         currentBcc: this.bcc?.length ? bbn.fn.clone(this.bcc) : '',
         currentAccount: currentAccount || this.accounts[0]?.value || '',
-        currentSignature: null,
+        currentSignature: 'none',
         currentSubject: this.subject,
         message: "",
         timestamp: bbn.fn.microtimestamp(),
@@ -135,6 +135,12 @@
       };
     },
     computed: {
+      currentSignatures(){
+        return [{
+          id: 'none',
+          name: bbn._('None')
+        }, ...this.signatures];
+      },
       aiEntityReplySource(){
         return bbn.fn.map(this.entities, e => {
           return {
@@ -189,7 +195,7 @@
           uid: this.source?.is_draft && this.source?.msg_unique_uid ? this.source.msg_unique_uid : null,
           email: {
             title: this.currentSubject,
-            text: this.message,
+            text: this.getClearMessage(),
             to: this.currentTo,
             cc: this.currentCc,
             bcc: this.currentBcc,
@@ -230,7 +236,7 @@
           }
         });
       },
-      openSignatureEditor(action) {
+      openSignatureEditor() {
         this.getPopup({
           component: 'appui-email-webmail-write-signatures',
           label: bbn._('Signature Editor'),
@@ -238,7 +244,7 @@
           height: '60vh',
           componentOptions: {
             source: this.signatures,
-            selected: this.currentSignature
+            selected: this.currentSignature === 'none' ? null : this.currentSignature,
           }
         })
       },
@@ -377,7 +383,7 @@
       },
       addSignature(signature, tmp = false) {
         if (signature?.length && bbn.fn.isUid(signature)) {
-          signature = bbn.fn.getField(this.signatures, 'signature', {id: signature}) || '';
+          signature = bbn.fn.getField(this.currentSignatures, 'signature', {id: signature}) || '';
         }
 
         if (signature?.length) {
@@ -474,12 +480,12 @@
       }
     },
     watch: {
-      signatures(){
+      currentSignatures(){
         this.getRef('signatures').updateData();
       },
       currentSignature(newVal){
-        if (newVal) {
-          const signature = bbn.fn.getField(this.signatures, 'signature', {id: this.currentSignature}) || '';
+        if (newVal && bbn.fn.isUid(newVal)) {
+          const signature = bbn.fn.getField(this.currentSignatures, 'signature', {id: this.currentSignature}) || '';
           if (signature.length) {
             this.addSignature(signature);
           }
@@ -493,14 +499,25 @@
         }
       },
       includeQuote(newVal){
-        if (this.isReply) {
-          if (newVal && (this.source?.html?.length || this.source?.plain?.length)) {
-            const m = this.source.html?.length ? this.source.html : nl2br(this.source.plain);
-            this.addQuote(m);
+        if (newVal) {
+          if (this.isReply) {
+            if (this.source?.html?.length || this.source?.plain?.length) {
+              const m = this.source.html?.length ? this.source.html : nl2br(this.source.plain);
+              this.addQuote(m);
+            }
+            else {
+              this.removeQuote();
+            }
+          }
+          else if (this.source?.quote?.length) {
+            this.addQuote(this.source.quote);
           }
           else {
             this.removeQuote();
           }
+        }
+        else {
+          this.removeQuote();
         }
       }
     }

@@ -3,6 +3,28 @@
     .bbn-toolbar-separator::before {
       content: none !important;
     }
+    .appui-email-webmail-write-signatures {
+      &:focus-within {
+        border-color: var(--selected-border) !important;
+      }
+      .bbn-leftlabel {
+        border: 0 !important;
+      }
+      bbn-dropdown {
+        border-radius: 0 !important;
+        .bbn-button-right, bbn-input {
+          border-top-right-radius: 0 !important;
+          border-bottom-right-radius: 0 !important;
+        }
+      }
+      .appui-email-webmail-write-signaturesbtn {
+        align-self: stretch;
+        height: auto;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-width: 0 0 0 var(--default-border-width);
+      }
+    }
     .appui-email-webmail-write-ailastbutton {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
@@ -17,11 +39,13 @@
       }
     }
   }
-  .appui-email-webmail-write-section {
-    display: flex;
-    align-items: baseline;
-    column-gap: var(--sspace);
-    flex-wrap: nowrap;
+  .appui-email-webmail-write-header {
+    > div {
+      display: flex;
+      align-items: baseline;
+      column-gap: var(--sspace);
+      flex-wrap: nowrap;
+    }
   }
   .appui-email-webmail-write-editor {
     bbn-toolbar.bbn-rte-toolbar {

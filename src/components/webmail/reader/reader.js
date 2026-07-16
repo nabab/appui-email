@@ -305,7 +305,9 @@
           }
         }, 0);
       },
-      onFrameLoaded(){
+      onFrameLoaded(ev){
+        ev.stopImmediatePropagation();
+        ev.stopPropagation();
         const f = this.getRef('frame');
         const doc = f.contentWindow.document;
         doc.addEventListener('click', e => {
