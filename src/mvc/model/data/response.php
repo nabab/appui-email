@@ -24,4 +24,4 @@ foreach($model->data['ids'] as $id) {
 
 $model->data['filters'] = $filters;
 
-return $em->getEmailByUID($model->data);
+return $em->getEmailByUid($model->data);
