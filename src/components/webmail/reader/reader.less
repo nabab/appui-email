@@ -1,0 +1,28 @@
+.appui-email-webmail-reader {
+  .appui-email-webmail-reader-toolbar {
+    span.appui-email-webmail-reader-toolbar-btngroup {
+      > .bbn-button {
+        border-radius: 0 !important;
+        border-width: 0 !important;
+        &:first-child {
+          border-top-left-radius: var(--default-border-radius) !important;
+          border-bottom-left-radius: var(--default-border-radius) !important;
+        }
+        &:last-child {
+          border-top-right-radius: var(--default-border-radius) !important;
+          border-bottom-right-radius: var(--default-border-radius) !important
+        };
+        &:not(:first-child)::before {
+          content: '';
+          border-left-color: var(--default-border) !important;
+          border-left-style: var(--default-border-style) !important;
+          border-left-width: var(--default-border-width) !important;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+        }
+      }
+    }
+  }
+}

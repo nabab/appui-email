@@ -27,7 +27,7 @@ $res = [
   'subject' => "",
   'to' => "",
   'accounts' => $accounts,
-  'attachment' => []
+  'attachments' => []
 ];
 
 if ($model->hasData('id', true)) {
@@ -51,13 +51,13 @@ if ($model->hasData('id', true)) {
   $subject = "";
   $originalMail = false;
   $entities = false;
-  $attachment = [];
+  $attachments = [];
   if ($model->hasData('action', true)) {
     switch ($model->data['action']) {
       case 'edit':
         $res['to'] = createEmailListString($email['to'] ?: []);
         $res['subject'] = $email['subject'];
-        $res['attachment'] = $email['attachment'] ?: [];
+        $res['attachments'] = $email['attachments'] ?: [];
         break;
       case 'reply':
         $res['to'] = createEmailListString($email['from'] ?: []);
@@ -77,7 +77,7 @@ if ($model->hasData('id', true)) {
         break;
       case 'forward':
         $res['subject'] = quoted_printable_decode('TR : ' . $email['subject']);
-        $res['attachment'] = $email['attachment'] ?: [];
+        $res['attachments'] = $email['attachments'] ?: [];
         $originalMail = true;
         break;
       default:

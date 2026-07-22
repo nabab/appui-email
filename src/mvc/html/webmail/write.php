@@ -5,7 +5,7 @@
                            :account="source.email?.id_account"
                            :accounts="source.accounts"
                            :signatures="source.signatures"
-                           :attachment="source.attachment"
+                           :attachment="source.attachments"
                            :is-reply="source.isReply"
                            :reply-to="source.reply_to"
                            :references="source.references"

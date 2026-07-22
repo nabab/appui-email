@@ -1,5 +1,7 @@
 <?php
 use bbn\X;
+/** @var bbn\Mvc\Controller $ctrl */
+
 if (isset($ctrl->post['limit'])) {
   if (!empty($ctrl->post['data'])) {
     if (isset($ctrl->post['data']['id_folder'])) {
@@ -14,13 +16,13 @@ if (isset($ctrl->post['limit'])) {
   $ctrl->action();
 }
 else {
-  $routes = $ctrl->getRoutes();
   $slots = [
     'reader' => [
       'toolbar' => []
     ],
   ];
-  foreach ($routes as $r) {
+
+  foreach ($ctrl->getRoutes() as $r) {
     if ($elements = $ctrl->getSubpluginModelGroup('webmail', $r['name'], 'appui-email')) {
       foreach ($elements as $name => $obj) {
         $n = explode('/', $name);
@@ -30,6 +32,18 @@ else {
             if (isset($slots[$n][$slot])) {
               array_push($slots[$n][$slot], ...(X::isAssoc($data) ? [$data] : $data));
             }
+          }
+        }
+      }
+    }
+  }
+
+  if ($projectElements = $ctrl->getPluginModel('webmail', [], 'appui-email')) {
+    foreach ($projectElements as $name => $obj) {
+      if (isset($slots[$name])) {
+        foreach ($obj as $slot => $data) {
+          if (isset($slots[$name][$slot])) {
+            array_push($slots[$name][$slot], ...(X::isAssoc($data) ? [$data] : $data));
           }
         }
       }

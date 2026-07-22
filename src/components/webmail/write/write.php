@@ -68,7 +68,7 @@
             style="border-color: var(--secondary-background) !important; background-color: var(--secondary-background) !important; color: var(--secondary-text) !important">
         <i class="nf nf-md-robot_outline bbn-lg"/>
       </span>
-      <span class="bbn-border bbn-radius bbn-vmiddle"
+      <span class="appui-email-webmail-write-toolbar-ai bbn-border bbn-radius bbn-vmiddle"
             style="border-color: var(--secondary-background) !important">
         <bbn-button label="<?= _('AI Correct') ?>"
                     @click="aiCorrect"
@@ -83,9 +83,7 @@
                       icon="nf nf-md-refresh_auto"
                       @click="$refs.aiRewriteContext.click()"
                       :notext="true"
-                      :class="['bbn-noborder', {
-                        'appui-email-webmail-write-ailastbutton': !entities?.length
-                      }]"
+                      class="bbn-noborder"
                       :style="entities?.length ? {borderRadius: '0'} : {}"/>
         </bbn-context>
         <bbn-context :source="aiEntityReplySource"
@@ -95,8 +93,8 @@
                       label="<?= _('AI Reply') ?>"
                       icon="nf nf-md-comment_processing_outline"
                       :notext="true"
-                      class="bbn-noborder appui-email-webmail-write-ailastbutton"
-                      @click="$refs.aiEntityReplyContext.click()"/>
+                      @click="$refs.aiEntityReplyContext.click()"
+                      class="bbn-noborder"/>
         </bbn-context>
       </span>
     </div>

@@ -25,9 +25,21 @@
         border-width: 0 0 0 var(--default-border-width);
       }
     }
-    .appui-email-webmail-write-ailastbutton {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+    .appui-email-webmail-write-toolbar-ai {
+      > *:not(:first-child) .bbn-button::before {
+        content: '';
+        border-left-color: var(--secondary-background) !important;
+        border-left-style: var(--default-border-style) !important;
+        border-left-width: var(--default-border-width) !important;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+      }
+      > *:last-child, > *:last-child .bbn-button {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
     }
     .appui-email-webmail-write-quoteswitch {
       &:focus-within {

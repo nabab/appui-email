@@ -1,5 +1,5 @@
 <!-- HTML Document -->
-<div :class="['appui-email-webmail-item', 'bbn-flex-column', 'bbn-radius', 'bbn-p', 'bbn-reactive', 'bbn-spadding', {'bbn-alt-background' : isSelected}]"
+<div :class="['appui-email-webmail-item', 'bbn-flex-column', 'bbn-radius', 'bbn-p', 'bbn-reactive', 'bbn-spadding', {'bbn-selected-background bbn-selected-text' : isSelected}]"
      @click="select">
   <span class="bbn-bottom-xspadding bbn-ellipsis"
         :style="{ fontWeight: source.is_read ? 'normal' : 'bold'}">

@@ -843,11 +843,20 @@
           delete this.accountsIdle[idAccount];
         }
       },
-      reloadMailList(){
+      reloadMailList(reset){
         return new Promise(resolve => {
           const list = this.getRef('mailList');
-          if (list?.updateData) {
-            list.updateData().then(() => resolve());
+          if (list) {
+            if (reset && (list.currentPage !== 1)) {
+              list.currentPage = 1;
+            }
+
+            if (list?.updateData) {
+              list.updateData().then(() => resolve());
+            }
+            else {
+              resolve();
+            }
           }
           else {
             resolve();
@@ -1134,7 +1143,7 @@
       currentFolder(){
         this.searchClear();
         this.$nextTick(() => {
-          this.reloadMailList();
+          this.reloadMailList(true);
         })
       }
     },
