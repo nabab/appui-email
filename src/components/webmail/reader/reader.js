@@ -28,10 +28,29 @@
         mainReader: isInThread ? this.closest('appui-email-webmail-reader') : this,
         currentSelected: this.thread ? this.source.thread?.[0]?.id : this.source.id,
         webmail: appui.getRegistered('appui-email-webmail'),
-        frameHeight: ''
+        isQuoteVisible: false,
+        frameHeight: '',
+        frameWidth: ''
       }
     },
     computed: {
+      elementStyle(){
+        const style = {};
+        if (this.isSelected) {
+          style.borderColor = 'var(--selected-background) !important';
+        }
+
+        if (this.isInThread && this.isQuoteVisible) {
+          const frame = this.getRef('frame');
+          bbn.fn.log('frame', frame?.offsetWidth, frame?.parentElement?.offsetWidth)
+          if (frame?.offsetWidth > frame?.parentElement?.offsetWidth) {
+            style.minWidth = 'calc(100% - 1rem)';
+            style.width = 'max-content';
+          }
+        }
+
+        return style;
+      },
       isSelected(){
         return this.isInThread
          && (this.mainReader.source.thread?.length > 1)
@@ -132,7 +151,8 @@
         this.mainReader.currentSelected = this.source.id;
       },
       formatDate(date) {
-        return bbn.dt(date).calendar();
+        const d = bbn.dt(date);
+        return d.diff(bbn.dt(), 'days') ? d.format('DD/MM/YYYY HH:mm') : d.calendar();
       },
       edit(){
         if (this.mainReader.currentSelected) {
@@ -301,7 +321,10 @@
         setTimeout(() => {
           if (!this.overlay) {
             const currentFrameHeight = doc.documentElement.scrollHeight + 'px';
+            const currentFrameWidth = doc.documentElement.scrollWidth + 'px';
             f.style.height = isShowQuoteVisible ? currentFrameHeight : this.frameHeight;
+            f.style.width = isShowQuoteVisible ? currentFrameWidth : this.frameWidth;
+            this.isQuoteVisible = isShowQuoteVisible
           }
         }, 0);
       },
@@ -324,7 +347,9 @@
           setTimeout(() => {
             if (!this.overlay) {
               this.frameHeight = doc.documentElement.scrollHeight + 'px';
+              this.frameWidth = doc.documentElement.scrollWidth + 'px';
               f.style.height = this.frameHeight;
+              f.style.width = this.frameWidth;
             }
 
             this.isFrameLoading = false;

@@ -55,7 +55,8 @@
     },
     methods: {
       formatDate(date) {
-        return bbn.dt(date).calendar();
+        const d = bbn.dt(date);
+        return d.diff(bbn.dt(), 'days') ? d.format('DD/MM/YYYY HH:mm') : d.calendar();
       },
       select() {
         this.$emit('select', this.source);

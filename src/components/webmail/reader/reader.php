@@ -1,4 +1,6 @@
-<div :class="['appui-email-webmail-reader', {'bbn-overlay bbn-flex-height': overlay || thread}]"
+<div :class="['appui-email-webmail-reader', {
+       'bbn-overlay bbn-flex-height': overlay || thread || (!thread && !isInThread)
+     }]"
      @click.stop="onSelect">
   <div bbn-if="!isInThread"
        class="bbn-spadding">
@@ -87,7 +89,8 @@
                       :selection="true"
                       ref="thread"
                       :sortable="true"
-                      :order="[{field: 'date', dir: 'DESC'}]"/>
+                      :order="[{field: 'date', dir: 'DESC'}]"
+                      scroll-axis="both"/>
   <template bbn-else>
     <div bbn-if="isInThread && index"
          class="bbn-w-100 bbn-header bbn-no-border bbn-xspadding bbn-radius bbn-top-space bbn-bottom-space"
@@ -153,18 +156,27 @@
                                            :mailbox="source.id_account"
                                            :mail="source.from_email"/> -->
     </div>
-    <div :class="['bbn-flex-fill', 'bbn-spadding', {'bbn-border bbn-radius-bottom': isSelected}]"
-         :style="{'border-color': isSelected ? 'var(--selected-background) !important' : ''}">
+    <div :class="['bbn-spadding', {
+           'bbn-flex-fill': overlay || thread || (!thread && !isInThread),
+           'bbn-border bbn-radius-bottom': isSelected
+         }]"
+         :style="elementStyle">
       <div class="bbn-100">
-        <bbn-frame bbn-if="source.id"
-                    :url="root + 'reader/' + source.id"
-                    :class="{'bbn-100': overlay, 'bbn-w-100': !overlay}"
-                    :reset-style="true"
-                    @load="onFrameLoaded"
-                    ref="frame"
-                    @click="onSelect"/>
+        <bbn-scroll bbn-forget="thread || overlay || isInThread">
+          <bbn-frame bbn-if="source.id"
+                     :url="root + 'reader/' + source.id"
+                     :class="{
+                       'bbn-100': overlay,
+                       'bbn-w-100': !overlay,
+                       'bbn-overlay': !thread && isFrameLoading && !isInThread
+                     }"
+                     :reset-style="true"
+                     @load="onFrameLoaded"
+                     ref="frame"
+                     @click="onSelect"/>
+        </bbn-scroll>
         <bbn-loader bbn-if="isFrameLoading"
-                    class="bbn-overlay bbn-middle bbn-background"/>
+                  class="bbn-overlay bbn-middle bbn-background"/>
       </div>
     </div>
   </template>

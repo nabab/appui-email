@@ -345,7 +345,7 @@
         if (this.ai && message?.length) {
           this.oldMessage = this.message;
           this.tmpElement.innerHTML = message;
-          if (this.currentSignature) {
+          if (bbn.fn.isUid(this.currentSignature)) {
             this.addSignature(this.currentSignature, true);
           }
 

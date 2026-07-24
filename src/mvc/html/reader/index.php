@@ -9,7 +9,7 @@
     <?= _("Hide quote") ?>
   </div>
   <div id="_bbn_quote_container"
-       style="display: none">
+       style="display: none; width: max-content;">
     <?= $quote ?>
   </div>
 <?php } ?>
