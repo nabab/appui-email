@@ -4,6 +4,7 @@ use bbn\User\Email;
 use bbn\X;
 use bbn\File\Dir;
 
+/** @var bbn\Mvc\Model $model */
 if ($model->hasData('id', true)) {
   $mediaCls = new Medias($model->db);
   $emailCls = new Email($model->db);
@@ -32,10 +33,11 @@ if ($model->hasData('id', true)) {
           ];
         }
       }
+
       break;
     case 'shared_media_all':
     case 'private_media_all':
-      if ($files = $emailCls->getAttachments($model->data['id'], $filename)) {
+      if ($files = $emailCls->getAttachments($model->data['id'])) {
         $added = 0;
         foreach ($files as $f) {
           $filename = $f['name'];

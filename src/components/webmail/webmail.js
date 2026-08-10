@@ -1127,7 +1127,7 @@
       appui.poll();
 
       if (this.source.accounts?.length) {
-        //bbn.fn.each(this.source.accounts, a => this.startAccountIdle(a.id));
+        bbn.fn.each(this.source.accounts, a => this.startAccountIdle(a.id));
       }
     },
     beforeDestroy(){
