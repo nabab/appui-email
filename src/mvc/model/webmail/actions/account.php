@@ -11,7 +11,7 @@ if ($model->hasData('action')) {
     case 'test':
     case 'insert':
       if ($model->hasData(['text', 'type', 'login', 'pass', 'email'], true)
-        && $model->hasData(['port', 'smtp', 'encryption', 'locale', 'validatecert'])
+        && $model->hasData(['port', 'smtp', 'encryption', 'locale', 'validatecert', 'autosync'])
         && ($code = $model->inc->options->code($model->data['type']))
       ) {
         $cfg = [
@@ -24,6 +24,7 @@ if ($model->hasData('action')) {
           'validatecert' => !empty($model->data['validatecert']) ? 1 : 0,
           'port' => $model->data['port'] ?? null,
           'smtp' => $model->data['smtp'] ?? null,
+          'autosync' => !empty($model->data['autosync']) ? 1 : 0,
           'locale' => $model->hasData('locale', true)
         ];
         try {
@@ -142,7 +143,7 @@ if ($model->hasData('action')) {
 
     case 'update':
       if ($model->hasData(['id', 'text', 'type', 'login', 'pass', 'email', 'folders', 'rules'], true)
-        && $model->hasData(['smtp', 'port', 'encryption', 'locale', 'validatecert'])
+        && $model->hasData(['smtp', 'port', 'encryption', 'locale', 'validatecert', 'autosync'])
         && ($code = $model->inc->options->code($model->data['type']))
         && is_array($model->data['folders'])
       ) {
@@ -156,6 +157,7 @@ if ($model->hasData('action')) {
           'validatecert' => !empty($model->data['validatecert']) ? 1 : 0,
           'port' => $model->data['port'] ?? null,
           'smtp' => $model->data['smtp'] ?? null,
+          'autosync' => !empty($model->data['autosync']) ? 1 : 0,
           'folders' => $model->data['folders'],
           'email' => $model->data['email'],
           'rules' => $model->data['rules'],

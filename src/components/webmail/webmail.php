@@ -45,10 +45,13 @@
         <div class="bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin"
              style="min-height: 2.5rem">
           <div bbn-if="syncId"
-               class="bbn-middle">
-            <bbn-loadicon class="bbn-right-sspace"/>
+               class="bbn-middle"
+               style="gap: var(--sspace)">
+            <bbn-loadicon class="bbn-vmiddle"/>
             <div class="bbn-ellipsis"
-                bbn-html="syncMessage"/>
+                 bbn-html="syncMessage"/>
+            <!--<i class="nf nf-fa-maximize bbn-p bbn-reactive"
+               @click="isNotificationBarVisible = true"/>-->
           </div>
           <div bbn-elseif="currentFolderObj"
                class="bbn-middle">
@@ -61,6 +64,15 @@
         </div>
       </div>
     </bbn-pane>
+    <div bbn-if="isNotificationBarVisible && syncMessage?.length"
+         class="bbn-bottom-left bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin bbn-vmiddle"
+         style="z-index: 1; max-width: 90%; min-height: 2.5rem; gap: var(--sspace)">
+      <i class="nf nf-fa-minimize bbn-p bbn-reactive"
+         @click="isNotificationBarVisible = false"/>
+      <bbn-loadicon class="bbn-vmiddle"/>
+      <div class="bbn-ellipsis"
+           bbn-html="syncMessage"/>
+    </div>
     <bbn-pane>
       <bbn-splitter :orientation="orientation"
                     :resizable="true"

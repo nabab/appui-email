@@ -75,6 +75,10 @@
                       :notext="true"
                       @click="addSmtp"/>
         </div>
+        <div class="bbn-label"><?= _("Auto synchronize") ?></div>
+        <bbn-switch :value="1"
+                    :novalue="0"
+                    bbn-model="source.autosync"/>
       </template>
     </div>
   </div>

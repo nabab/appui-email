@@ -1,6 +1,6 @@
 <?php
 use bbn\User\Email;
-/** @var $ctrl \bbn\Mvc\Controller */
+/** @var bbn\Mvc\Controller $ctrl */
 
 $ctrl->setStream();
 if (!empty($ctrl->post['account'])

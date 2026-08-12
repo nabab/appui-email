@@ -64,7 +64,8 @@
         treeSource: [],
         itemEvents: {
           select: item => this.selectMail(item)
-        }
+        },
+        isNotificationBarVisible: false
       }
     },
     computed: {
@@ -581,7 +582,6 @@
         return st;
       },
       selectMail(item) {
-        bbn.fn.log('SELECTMAIL', item);
         const idx = this.selectedMails.indexOf(item.id);
         if (idx === -1) {
           this.selectedMails.push(item.id);
@@ -638,6 +638,12 @@
 
                 this.$nextTick(() => {
                   this.updateTree();
+                  if (d.data.autosync) {
+                    this.startAccountIdle(d.data.id);
+                  }
+                  else {
+                    this.stopAccountIdle(d.data.id);
+                  }
                 })
               }
               else {
@@ -747,8 +753,13 @@
       },
       abortSync(){
         if (this.syncId) {
-          bbn.fn.abort(this.syncId);
-          this.syncId = false;
+          try {
+            bbn.fn.abort(this.syncId);
+          }
+          catch (e) {}
+          finally {
+            this.syncId = false;
+          }
         }
       },
       getAccountByFolder(idFolder){
@@ -834,13 +845,19 @@
           if (abort) {
             try {
               bbn.fn.abort(this.accountsIdle[idAccount].id);
-              this.accountsIdle[idAccount].aborter.abort();
-              bbn.fn._deleteLoader(this.accountsIdle[idAccount].id, {account: idAccount}, true)
             }
             catch (e) {}
+            finally {
+              this.accountsIdle[idAccount].stream?.aborter?.abort();
+              bbn.fn._deleteLoader(
+                this.accountsIdle[idAccount].id,
+                bbn._("Stop %s auto-syncronize", bbn.fn.getField(this.source.accounts, 'text', {id: idAccount})),
+                true
+              );
+              delete this.accountsIdle[idAccount];
+            }
           }
 
-          delete this.accountsIdle[idAccount];
         }
       },
       reloadMailList(reset){
@@ -1127,7 +1144,11 @@
       appui.poll();
 
       if (this.source.accounts?.length) {
-        bbn.fn.each(this.source.accounts, a => this.startAccountIdle(a.id));
+        bbn.fn.each(this.source.accounts, a => {
+          if (a.autosync) {
+            this.startAccountIdle(a.id);
+          }
+        });
       }
     },
     beforeDestroy(){

@@ -7,7 +7,7 @@ $ctrl->setStream();
 $emailClass = new Email($ctrl->db);
 $folders = [];
 
-function addFolders($list, &$folders){
+function addFolders(array $list, array &$folders){
   foreach ($list as $l) {
     if (!empty($l['items'])) {
       $items = $l['items'];
@@ -41,17 +41,27 @@ else if ($accounts = $emailClass->getAccountsIds()) {
 
 if (!empty($folders)) {
   set_time_limit(0);
-  $total = 0;
+  $total = [];
   foreach ($folders as $folder) {
+    $total[$folder['id']] = [
+      'added' => 0,
+      'deleted' => 0,
+      'flagged' => 0
+    ];
     try {
       $sync = $emailClass->syncEmails($folder);
-      foreach ($sync as $s) {
-        $total++;
+      foreach ($sync as $action => $r) {
+        $total[$folder['id']][$action] += $r;
         $ctrl->stream([
           'isSynchronizing' => true,
-          'synchronized' => $total
+          'id_account' => $folder['id_account'],
+          'id_folder' => $folder['id'],
+          'synchronized' => $total[$folder['id']][$action],
+          'action' => $action
         ]);
       }
+
+      $total[$folder['id']] = $sync->getReturn();
     }
     catch (\Exception $e) {
       X::log($e->getMessage(), "poller_email_error2");

@@ -4,6 +4,7 @@ use bbn\X;
 use bbn\Appui\Task;
 use bbn\Appui\Note;
 
+/** @var bbn\Mvc\Model $model */
 if ($model->hasData('action', true)) {
   $em = new Email($model->db);
   switch ($model->data['action']) {
@@ -70,11 +71,7 @@ if ($model->hasData('action', true)) {
             $id = null;
             if (!empty($idDraftsFolder)) {
               $sync = $em->syncEmails($idDraftsFolder);
-              $synchronized = 0;
-              foreach ($sync as $s) {
-                $synchronized++;
-              }
-
+              foreach ($sync as $s) {}
               $id = $em->getEmailIdByUniqueId($mailUid, $idDraftsFolder);
             }
 

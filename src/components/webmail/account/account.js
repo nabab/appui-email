@@ -13,6 +13,7 @@
     port: 993,
     validatecert: 0,
     smtp: '',
+    autosync: 1,
     locale: true
   };
   return {
