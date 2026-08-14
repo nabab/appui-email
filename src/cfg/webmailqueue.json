@@ -1,0 +1,85 @@
+{
+  "queue": {
+    "keys": {
+      "PRIMARY": {
+        "columns": [
+          "id"
+        ]
+      }
+    },
+    "cols": {
+      "id": [
+        "PRIMARY"
+      ],
+      "id_folder": [
+        "id_folder"
+      ],
+      "action": [
+        "action"
+      ],
+      "date_added": [
+        "date_added"
+      ],
+      "date_started": [
+        "date_started"
+      ],
+      "date_ping": [
+        "date_ping"
+      ],
+      "priority": [
+        "priority"
+      ]
+    },
+    "fields": {
+      "id": {
+        "type": "binary",
+        "null": 0,
+        "key": "PRI",
+        "maxlength": 16
+      },
+      "id_folder": {
+        "type": "binary",
+        "null": 0,
+        "key": "MUL",
+        "maxlength": 16
+      },
+      "action": {
+        "type": "varchar",
+        "null": 0,
+        "maxlength": 50
+      },
+      "date_added": {
+        "type": "decimal",
+        "null": 0,
+        "key": "MUL",
+        "maxlength": 14,
+        "decimals": 4
+      },
+      "date_started": {
+        "type": "decimal",
+        "null": 1,
+        "key": "MUL",
+        "default": "NULL",
+        "defaultExpression": 1,
+        "maxlength": 14,
+        "decimals": 4
+      },
+      "date_ping": {
+        "type": "decimal",
+        "null": 1,
+        "key": "MUL",
+        "default": "NULL",
+        "defaultExpression": 1,
+        "maxlength": 14,
+        "decimals": 4
+      },
+      "priority": {
+        "type": "tinyint",
+        "null": 0,
+        "signed": 0,
+        "default": 1,
+        "maxlength": 1
+      }
+    }
+  }
+}
