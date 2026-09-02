@@ -26,6 +26,9 @@
         selectedMode: "download",
         syncId: false,
         syncMessage: '',
+        syncNumMsg: 0,
+        syncQueue: [],
+        syncURL: appui.plugins['appui-email'] + '/webmail/sync',
         threads: true,
         accountsIdle: {},
         currentSearch: '',
@@ -132,6 +135,14 @@
         }
 
         return false;
+      },
+      syncProgress(){
+        if (this.syncQueue?.length) {
+          const completed = bbn.fn.filter(this.syncQueue, f => f.completed).length;
+          return completed / this.syncQueue.length * 100;
+        }
+
+        return 0;
       }
     },
     methods: {
@@ -639,6 +650,7 @@
                 this.$nextTick(() => {
                   this.updateTree();
                   if (d.data.autosync) {
+                    this.synchronize(d.data.id);
                     this.startAccountIdle(d.data.id);
                   }
                   else {
@@ -671,7 +683,7 @@
       onSyncClick(){
         this.synchronize(this.currentAccount, this.currentFolder);
       },
-      synchronize(idAccount, idFolder){
+      synchronize_old(idAccount, idFolder){
         if (!this.syncId) {
           const url = this.root + 'webmail/actions/sync';
           const data = {
@@ -690,7 +702,7 @@
           if (data.id_folder && data.id_account) {
             const acc = bbn.fn.getRow(this.source.accounts, {id: data.id_account});
             if (acc) {
-              const folder = bbn.fn.getRow(acc.folders, {id: data.id_folder});
+              const folder = this.getFolder(data.id_folder, acc.folders);
               if (folder) {
                 numMsg = Math.abs(folder.num_msg - folder.db_num_msg);
               }
@@ -751,6 +763,132 @@
           )
         }
       },
+      async synchronize(idAccount, idFolder){
+        idAccount = bbn.fn.isString(idAccount) ? idAccount : false;
+        idFolder = bbn.fn.isString(idFolder) ? idFolder : false;
+        const data = {
+          folders: []
+        };
+        const fromItems = items => {
+          bbn.fn.each(items, f => {
+            this.syncNumMsg += Math.abs(f.num_msg - f.db_num_msg);
+            if (!data.folders.includes(f.id)) {
+              data.folders.push(f.id);
+            }
+
+            if (f.items?.length) {
+              fromItems(f.items);
+            }
+          });
+        };
+        if (idFolder && idAccount) {
+          const acc = bbn.fn.getRow(this.source.accounts, {id: idAccount});
+          if (acc) {
+            const folder = this.getFolder(idFolder, acc.folders);
+            if (folder) {
+              this.syncNumMsg = Math.abs(folder.num_msg - folder.db_num_msg);
+              if (!data.folders.includes(idFolder)) {
+                data.folders.push(idFolder);
+              }
+            }
+          }
+        }
+        else if (idAccount) {
+          const acc = bbn.fn.getRow(this.source.accounts, {id: idAccount});
+          if (acc) {
+            fromItems(acc.folders);
+          }
+        }
+        else {
+          bbn.fn.each(this.source.accounts, a => {
+            fromItems(a.folders);
+          });
+        }
+
+        if (data.folders.length) {
+          await this.post(this.syncURL, data);
+        }
+
+        this.synchronizeStream();
+      },
+      synchronizeStream(){
+        if (!this.syncId) {
+          this.syncMessage = '<span>' + bbn._('Synchronizing') + '</span>';
+          this.syncQueue = [];
+          this.syncId = bbn.fn.getRequestId(this.syncURL, {sync: true});
+          const syncFolders = {};
+          bbn.fn.stream(
+            this.syncURL,
+            d => {
+              bbn.fn.log('mirkooooooo', d);
+              if (!d) {
+                bbn.fn.log('stream', d);
+              }
+
+              if (!d.success && d.data?.error) {
+                bbn.fn.warning(d.data.error);
+                appui.error(bbn._('Synchronization failed'));
+                this.syncMessage = '<span class="bbn-red">' + bbn._('Synchronization failed') + '</span>';
+                setTimeout(() => {
+                  this.syncId = false;
+                }, 3000);
+              }
+              else if (d.action) {
+                switch (d.action) {
+                  case 'queue':
+                    this.syncQueue = d.data;
+                    break;
+                  case 'sync':
+                    if (this.currentFolder
+                      && (d.folder === this.currentFolder)
+                    ) {
+                      if (d.synchronizing) {
+                        if (syncFolders[d.folder] === undefined) {
+                          syncFolders[d.folder] = 0;
+                        }
+
+                        syncFolders[d.folder] += d.data.added || 0;
+                        syncFolders[d.folder] += d.data.deleted || 0;
+                        syncFolders[d.folder] += d.data.flagged || 0;
+                      }
+                      if (d.completed || (syncFolders[d.folder] && syncFolders[d.folder] % 10 === 0)) {
+                        this.reloadMailListBackground();
+                      }
+
+                    }
+
+                    if (d.completed && (syncFolders[d.folder] !== undefined)) {
+                      delete syncFolders[d.folder];
+                    }
+
+                    break;
+                }
+              }
+              else if (d.success) {
+                this.syncMessage = '<span class="bbn-green">' + bbn._('Synchronization successful') + '</span>';
+                if (this.currentFolder
+                  && bbn.fn.getRow(this.syncQueue, {id: this.currentFolder})
+                ) {
+                  this.reloadMailListBackground();
+                }
+
+                setTimeout(() => {
+                  this.resetSyncVariables();
+                }, 3000);
+              }
+            },
+            {sync: true},
+            f => {
+              appui.error(bbn._('An error occured during the synchronization'));
+              this.resetSyncVariables();
+            },
+            a => {
+              bbn.fn.log('abort', a);
+              this.resetSyncVariables();
+            }
+          )
+        }
+      },
       abortSync(){
         if (this.syncId) {
           try {
@@ -758,9 +896,15 @@
           }
           catch (e) {}
           finally {
-            this.syncId = false;
+            this.resetSyncVariables();
           }
         }
+      },
+      resetSyncVariables(){
+        this.syncId = false;
+        this.syncMessage = '';
+        this.syncNumMsg = 0;
+        this.syncQueue = [];
       },
       getAccountByFolder(idFolder){
         const folder = this.getFolder(idFolder);
@@ -1146,19 +1290,16 @@
       if (this.source.accounts?.length) {
         bbn.fn.each(this.source.accounts, a => {
           if (a.autosync) {
+            this.synchronize(a.id)
             this.startAccountIdle(a.id);
           }
         });
       }
     },
     beforeDestroy(){
-      appui.unregister('appui-email-webmail');
-      if (this.syncId) {
-        bbn.fn.abort(this.syncId);
-        this.syncId = false;
-      }
-
+      this.abortSync();
       bbn.fn.iterate(this.accountsIdle, (val, idAccount) => this.stopAccountIdle(idAccount));
+      appui.unregister('appui-email-webmail');
     },
     watch: {
       currentFolder(){

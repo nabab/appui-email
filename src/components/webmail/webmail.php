@@ -44,14 +44,23 @@
         </div>
         <div class="bbn-header bbn-spadding bbn-no-border bbn-radius bbn-smargin"
              style="min-height: 2.5rem">
-          <div bbn-if="syncId"
-               class="bbn-middle"
-               style="gap: var(--sspace)">
-            <bbn-loadicon class="bbn-vmiddle"/>
-            <div class="bbn-ellipsis"
-                 bbn-html="syncMessage"/>
-            <!--<i class="nf nf-fa-maximize bbn-p bbn-reactive"
-               @click="isNotificationBarVisible = true"/>-->
+          <div bbn-if="syncId">
+            <div class="bbn-middle"
+                 style="gap: var(--sspace)">
+              <bbn-loadicon class="bbn-vmiddle"/>
+              <div class="bbn-ellipsis"
+                   bbn-html="syncMessage"/>
+              <!--<i class="nf nf-fa-maximize bbn-p bbn-reactive"
+                 @click="isNotificationBarVisible = true"/>-->
+            </div>
+            <div class="bbn-middle bbn-abs"
+                 style="bottom: var(--xsspace); left: var(--sspace); right: var(--sspace)">
+              <bbn-progressbar :value="syncProgress"
+                               :radius="true"
+                               :show-value="false"
+                               style="height: var(--xsspace)"
+                               class="bbn-no-border"/>
+            </div>
           </div>
           <div bbn-elseif="currentFolderObj"
                class="bbn-middle">

@@ -3,19 +3,26 @@ use bbn\User\Email;
 /** @var bbn\Mvc\Controller $ctrl */
 
 if ($email = new Email($ctrl->db)) {
-  if (!empty($ctrl->post['add'])) {
-    foreach ($ctrl->post['add'] as $idFolder) {
-      $email->addQueue([
-        'id_folder' => $idFolder,
-        'action' => 'sync'
-      ]);
+  if (array_key_exists('folders', $ctrl->post)) {
+    $res = ['success' => false];
+    if (!empty($ctrl->post['folders'])) {
+      foreach ($ctrl->post['folders'] as $idFolder) {
+        if ($email->addQueue($idFolder)) {
+          $res['success'] = true;
+        }
+      }
     }
+
+    $ctrl->obj->data = $res;
   }
   else {
     $ctrl->setStream();
     try {
       $email->startProcessQueue(
-        fn($m) => !empty($m['action']) && ($m['action'] === 'ping') ? $ctrl->pingStream() : $ctrl->stream($m)
+        'sync',
+        fn($m) => !empty($m['action']) && ($m['action'] === 'ping')
+          ? $ctrl->pingStream()
+          : $ctrl->stream($m)
       );
     }
     catch (Exception $e) {
@@ -28,10 +35,9 @@ if ($email = new Email($ctrl->db)) {
     }
 
     $email->stopProcessQueue();
+    $ctrl->stream([
+      'success' => true
+    ]);
   }
-
-  $ctrl->stream([
-    'success' => true
-  ]);
 }
 

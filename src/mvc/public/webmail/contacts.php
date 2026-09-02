@@ -6,14 +6,8 @@ if (empty($ctrl->post)) {
 	$ctrl->combo(_('My contacts'));
 }
 else {
-  try {
-    $search = $ctrl->post['filters']['conditions'][0]['value'];
-  }
-  catch (\Exception $e) {
-    $search = false;
-  }
-  if ($search) {
-    $search = trim($search);
+  if (!empty($ctrl->post['filters']['conditions'][0]['value'])) {
+    $search = trim($ctrl->post['filters']['conditions'][0]['value']);
     $search = trim($search, ';');
     $ctrl->post['filters'] = [
       'logic' => "OR",

@@ -31,7 +31,7 @@ if ($model->hasData('limit')) {
         foreach ($d['thread'] as $i => &$t) {
           if (!$i) {
             $t['id_task'] = $d['id_task'];
-            $t['is_task'] = $d['is_task'];
+            $t['is_task'] = !empty($d['id_task']);
             continue;
           }
 
