@@ -382,6 +382,9 @@
             this.source.login = nv;
           }
         }
+        else if (ov === this.source.login) {
+          this.source.login = '';
+        }
       },
       'source.encryption'(newVal){
         if (!newVal) {

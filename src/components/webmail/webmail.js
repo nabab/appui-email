@@ -27,6 +27,7 @@
         syncId: false,
         syncMessage: '',
         syncNumMsg: 0,
+        syncNumMsgProcessed: 0,
         syncQueue: [],
         syncURL: appui.plugins['appui-email'] + '/webmail/sync',
         threads: true,
@@ -137,12 +138,17 @@
         return false;
       },
       syncProgress(){
+        let ret = 0;
         if (this.syncQueue?.length) {
           const completed = bbn.fn.filter(this.syncQueue, f => f.completed).length;
-          return completed / this.syncQueue.length * 100;
+          const pCompleted = parseInt(completed / this.syncQueue.length * 100);
+          ret = (this.syncNumMsg ? (this.syncNumMsgProcessed / this.syncNumMsg * 100) : 0) + (pCompleted / (this.syncNumMsg ? this.syncQueue.length : 1));
+          if (pCompleted === 100) {
+            ret = pCompleted;
+          }
         }
 
-        return 0;
+        return parseInt(ret);
       }
     },
     methods: {
@@ -820,7 +826,6 @@
           bbn.fn.stream(
             this.syncURL,
             d => {
-              bbn.fn.log('mirkooooooo', d);
               if (!d) {
                 bbn.fn.log('stream', d);
               }
@@ -839,26 +844,33 @@
                     this.syncQueue = d.data;
                     break;
                   case 'sync':
-                    if (this.currentFolder
-                      && (d.folder === this.currentFolder)
-                    ) {
-                      if (d.synchronizing) {
-                        if (syncFolders[d.folder] === undefined) {
-                          syncFolders[d.folder] = 0;
-                        }
-
-                        syncFolders[d.folder] += d.data.added || 0;
-                        syncFolders[d.folder] += d.data.deleted || 0;
-                        syncFolders[d.folder] += d.data.flagged || 0;
-                      }
-                      if (d.completed || (syncFolders[d.folder] && syncFolders[d.folder] % 10 === 0)) {
-                        this.reloadMailListBackground();
+                    const syncStep = d.synchronizing
+                      && syncFolders[d.id_folder]
+                      && (syncFolders[d.id_folder] % 10 === 0);
+                    if (d.synchronizing) {
+                      if (syncFolders[d.id_folder] === undefined) {
+                        syncFolders[d.id_folder] = 0;
                       }
 
+                      this.syncNumMsgProcessed += d.data.added || 0;
+                      syncFolders[d.id_folder] += d.data.added || 0;
+                      syncFolders[d.id_folder] += d.data.deleted || 0;
+                      syncFolders[d.id_folder] += d.data.flagged || 0;
                     }
 
-                    if (d.completed && (syncFolders[d.folder] !== undefined)) {
-                      delete syncFolders[d.folder];
+                    if (d.completed || syncStep) {
+                      if (d.folder?.id_account) {
+                        this.updateFolder(d.folder.id_account, d.id_folder, d.folder);
+                      }
+                      else if (this.currentFolder
+                        && (d.id_folder === this.currentFolder)
+                      ) {
+                        this.reloadMailListBackground();
+                      }
+                    }
+
+                    if (d.completed && (syncFolders[d.id_folder] !== undefined)) {
+                      delete syncFolders[d.id_folder];
                     }
 
                     break;
@@ -904,6 +916,7 @@
         this.syncId = false;
         this.syncMessage = '';
         this.syncNumMsg = 0;
+        this.syncNumMsgProcessed = 0;
         this.syncQueue = [];
       },
       getAccountByFolder(idFolder){
@@ -995,7 +1008,7 @@
               this.accountsIdle[idAccount].stream?.aborter?.abort();
               bbn.fn._deleteLoader(
                 this.accountsIdle[idAccount].id,
-                bbn._("Stop %s auto-syncronize", bbn.fn.getField(this.source.accounts, 'text', {id: idAccount})),
+                bbn._("Stop %s auto-synchronize", bbn.fn.getField(this.source.accounts, 'text', {id: idAccount})),
                 true
               );
               delete this.accountsIdle[idAccount];
@@ -1231,10 +1244,12 @@
             && this.source.accounts?.length
           ) {
             const account = bbn.fn.getRow(this.source.accounts, {id: idAccount});
-            if (account) {
+            if (account?.folders?.length) {
               const folder = this.getFolder(idFolder, account.folders);
               if (folder) {
-                bbn.fn.iterate(folderData, (val, key) => folder[key] = val);
+                bbn.fn.iterate(folderData, (val, key) => {
+                  folder[key] = val;
+                });
                 this.updateTree();
               }
             }

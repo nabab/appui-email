@@ -18,7 +18,7 @@ if ($email = new Email($ctrl->db)) {
   else {
     $ctrl->setStream();
     try {
-      $email->startProcessQueue(
+      $email->startProcessingQueue(
         'sync',
         fn($m) => !empty($m['action']) && ($m['action'] === 'ping')
           ? $ctrl->pingStream()
@@ -34,7 +34,7 @@ if ($email = new Email($ctrl->db)) {
       ]);
     }
 
-    $email->stopProcessQueue();
+    $email->stopProcessingQueue();
     $ctrl->stream([
       'success' => true
     ]);
