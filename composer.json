@@ -1,24 +1,29 @@
 {
-  "name": "bbn/appui-email",
-  "description": "eMailing management for appui",
-  "keywords": ["emails","newsletter","appui"],
-  "homepage": "https://github.com/nabab/appui-email",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Thomas Nabet",
-      "email": "thomas.nabet@gmail.com",
-      "homepage": "https://bbn.solutions",
-      "role": "Developer"
-    }, {
-      "name": "Mirko Argentino",
-      "email": "mirko@bbn.solutions",
-      "homepage": "https://bbn.solutions",
-      "role": "Developer"
+    "name": "bbn\/appui-email",
+    "description": "eMailing management for appui",
+    "keywords": [
+        "emails",
+        "newsletter",
+        "appui"
+    ],
+    "homepage": "https:\/\/github.com\/nabab\/appui-email",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thomas Nabet",
+            "email": "thomas.nabet@gmail.com",
+            "homepage": "https:\/\/bbn.solutions",
+            "role": "Developer"
+        },
+        {
+            "name": "Mirko Argentino",
+            "email": "mirko@bbn.solutions",
+            "homepage": "https:\/\/bbn.solutions",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.5",
+        "bbn\/bbn": "^1.1"
     }
-  ],
-  "require": {
-    "php": ">=8.3",
-    "bbn/bbn": "dev-master"
-  }
 }
