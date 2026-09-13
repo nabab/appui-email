@@ -11,5 +11,5 @@ use bbn\Str;
 $em = new bbn\User\Email($model->db, $model->inc->user, $model->inc->pref);
 
 return [
-  'hashes' => $em->getHashes();
+  'hashes' => $em->getHashes()
 ];
