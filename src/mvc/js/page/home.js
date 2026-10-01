@@ -648,14 +648,14 @@
       let router = this.closest('bbn-router');
       let id = bbn.fn.search(router.views,'url', 'home');
       if ( id > -1 ){
-        router.views[id].static = true;
+        router.views[id].fixed = true;
       }
     },
     mounted(){
       appui.register('appui-email', this);
       this.clearGetInfo();
       let current = this.closest('bbn-router').closest('bbn-container').currentURL,
-            bit = current.split('/').pop();
+          bit = current.split('/').pop();
       if (bit === 'home') {
         bit = 'all';
       }
@@ -663,7 +663,7 @@
       this.$nextTick(() => {
         if (bit === 'all') {
           let router = this.getRef('tableRouter');
-          if (bbn.fn.isVue(router)) {
+          if (router) {
             router.route('all')
           }
         }

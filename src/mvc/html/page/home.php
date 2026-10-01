@@ -42,8 +42,13 @@
 		</bbn-splitter>
 	</bbn-pane>
   <bbn-pane>
-    <bbn-router :autoload="false" class="bbn-h-100" :single="true" ref="tableRouter">
-      <bbn-container :pinned="true" :load="false" :url="tableURL">
+    <bbn-router :autoload="false"
+                class="bbn-h-100"
+                :single="true"
+                ref="tableRouter">
+      <bbn-container :pinned="true"
+                     :load="false"
+                     :url="tableURL">
         <bbn-table ref="table"
                    @ready="setSelected"
                    :source="source.root + 'data/home'"
