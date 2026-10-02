@@ -1,12 +1,7 @@
 <?php
-/**
- * Created by BBN Solutions.
- * User: Mirko Argentino
- * Date: 20/03/2018
- * Time: 15:39
- *
- * @var $model \bbn\Mvc\Model
- */
+use bbn\Mvc\Model;
+
+/** @var Model $model */
 if ($model->checkAction(['content', 'title', 'sender'], true)) {
   $attachments = [];
   $medias = [];
@@ -18,7 +13,7 @@ if ($model->checkAction(['content', 'title', 'sender'], true)) {
         && ($o = $mailings->getMailing($model->data['id_parent']))
     ) {
       // Getting its medias
-      $medias = $mailings->getMedias($model->data['id_parent'], $o['version']);
+      $medias = $mailings->getMedias($model->data['id_parent']);
     }
     // Path where temp files are stored
     $temp_path = $model->userTmpPath().$model->data['ref'].'/';
@@ -39,6 +34,7 @@ if ($model->checkAction(['content', 'title', 'sender'], true)) {
       }
     }
   }
+
   $data = empty($model->data['sent']) ? [] : $model->getPluginModel('data/mailist', $model->data, 'emails');
   if ($model->data = $mailings->add([
     'content' => $model->data['content'],
@@ -65,6 +61,7 @@ if ($model->checkAction(['content', 'title', 'sender'], true)) {
   else{
     $message = _('The mailing has been inserted but will not be sent until a delivery date is chosen');
   }
+
   return [
     'success' => true,
     'count' => $model->getModel(APPUI_EMAIL_ROOT.'data/count'),

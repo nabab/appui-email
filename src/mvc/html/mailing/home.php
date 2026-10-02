@@ -170,7 +170,15 @@
           <bbns-column :width="40"
                        :buttons="renderButtons"
                        cls="bbn-c"/>
-          </bbns-column>
+          <bbns-column field="id_note"
+                       :invisible="true"
+                       :editable="false"/>
+          <bbns-column field="version"
+                       :invisible="true"
+                       :editable="false"/>
+          <bbns-column field="id_parent"
+                       :invisible="true"
+                       :editable="false"/>
         </bbn-table>
       </div>
     </bbn-pane>

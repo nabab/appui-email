@@ -5,14 +5,20 @@
  * Date: 20/03/2018
  * Time: 18:00
  *
- * @var $model \bbn\Mvc\Model
  */
 
+use bbn\Mvc\Model;
+use bbn\Appui\Mailing;
+
+/** @var Model $model */
+
 $success = false;
-if ( !empty($model->data['id']) && !empty($model->data['state']) && (($model->data['state'] === 'ready') || ($model->data['state'] === 'cancelled')) ){
-  
-  $mailings = new \bbn\Appui\Mailing($model->db);
-  
+if (!empty($model->data['id'])
+  && !empty($model->data['state'])
+  && (($model->data['state'] === 'ready') || ($model->data['state'] === 'cancelled'))
+) {
+
+  $mailings = new Mailing($model->db);
   $success = $mailings->delete($model->data['id']);
   return [
     'success' => $success,

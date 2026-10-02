@@ -370,13 +370,21 @@
       },
       duplicate(row, ob){
         if ( row.id ){
-          let tmp = bbn.fn.extend({}, row, {state: 'ready', num_accuses: 0, sent: null});
+          let tmp = bbn.fn.extend(
+            true,
+            {},
+            row,
+            {
+              state: 'ready',
+              num_accuses: 0,
+              sent: null
+            }
+          );
           bbn.fn.happy('tmp')
           bbn.fn.log(tmp, row)
           this.getRef('table').copy(tmp, {
-            label: bbn._("Mailing edit"),
-            width: this.getPopup().defaultWidth,
-            height: this.getPopup().defaultHeight,
+            label: bbn._("Mailing duplicate"),
+            width: '80%',
             data: {id_parent: row.id}
           }, 0);
         }
