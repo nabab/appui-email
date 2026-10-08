@@ -7,7 +7,7 @@
  *
  */
 
-/* @var $model bbn\Mvc\Model */
+/** @var $model bbn\Mvc\Model */
 
 if (
     (!empty($model->data['recipients']) || empty($model->data['sent']) ) &&
