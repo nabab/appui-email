@@ -8,7 +8,8 @@
           @success="success"
           @failure="failure"
           :disabled="isNumLoading"
-          @cancel="onFormCancel">
+          @cancel="onFormCancel"
+          class="appui-email-form">
   <appui-note-toolbar-version bbn-show="source.row.hasVersions"
                               :source="source.row"
                               :data="{id: source.row.id_note}"
